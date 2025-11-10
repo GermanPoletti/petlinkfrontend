@@ -15,6 +15,21 @@
   animation: menuDropdown 160ms ease-out forwards;
 }
 
+/* Variantes para reutilización */
+.menuUp {
+  top: auto;
+  bottom: calc(100% + 8px); /* se despliega hacia arriba del trigger */
+  right: 0;
+  transform: translateY(8px);
+  animation: menuDropUp 160ms ease-out forwards;
+}
+
+.neutral {
+  background: var(--accent);
+  border: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12), inset 0 0 0 1px var(--bordersdivs);
+}
+
 .menuItem {
   width: 100%;
   text-align: left;
@@ -30,6 +45,9 @@
 .menuItem:hover {
   background: rgba(0,0,0,0.05);
 }
+.menuItem:active {
+  background: rgba(0,0,0,0.10);
+}
 
 @media (max-width: 640px) {
   .menu {
@@ -43,5 +61,10 @@
 
 @keyframes menuDropdown {
   from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes menuDropUp {
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }

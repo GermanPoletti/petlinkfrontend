@@ -13,12 +13,13 @@ function Login() {
 
         <h1 className={styles.title}>Iniciar Sesión</h1>
 
-        {/* GATO ENCIMA DEL INPUT EMAIL */}
-        <div className={styles.imageWrapper}>
-          <img src={loginCat} alt="Gato" className={styles.catImage} />
+        {/* Campo de Email con overlay del gato sobre el input */}
+        <div className={styles.field}>
+          <div className={`${styles.imageWrapper} ${styles.catWrapper}`}>
+            <img src={loginCat} alt="Gato" className={styles.catImage} />
+          </div>
+          <input type="email" placeholder="Email" className={styles.input} />
         </div>
-
-        <input type="email" placeholder="Email" className={styles.input} />
         <input type="password" placeholder="Password" className={styles.input} />
 
         <BtnPrimary

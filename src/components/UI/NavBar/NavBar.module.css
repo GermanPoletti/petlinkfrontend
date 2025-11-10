@@ -6,6 +6,7 @@
   width: 100%;
   padding: 0 28px;
   box-sizing: border-box;
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.35);
   overflow: visible; /* permite que el menú se muestre debajo del avatar */
 
   /* Layout de 3 columnas: izquierda, centro, derecha */
@@ -117,4 +118,17 @@
   .misChats { display: none; }
   .chatButton { width: 32px; height: 32px; }
   .chatIcon { width: 24px; height: 24px; }
+}
+
+/* Ultra-compacto para 390px de ancho (iPhone 12 Pro) */
+@media (max-width: 420px) {
+  .navbar {
+    height: 56px;
+    padding: 0 12px;
+  }
+  .centerGroup { gap: 6px; }
+  .rightGroup { gap: 12px; }
+  .profileButton { width: 44px; height: 44px; }
+  .chatButton { width: 28px; height: 28px; }
+  .chatIcon { width: 22px; height: 22px; }
 }

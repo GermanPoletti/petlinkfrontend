@@ -65,3 +65,23 @@
 .active .label {
   color: var(--textprimary);
 }
+
+/* --- MODO COMPACTO PARA PANTALLAS MUY PEQUEÑAS (ej. iPhone 12 Pro) --- */
+@media (max-width: 420px) {
+  .btnOfertas {
+    width: clamp(44px, 12vw, 56px);
+    padding: 8px;
+    border-radius: 24px;
+    gap: 0;
+  }
+
+  .label { display: none; }
+  .btnOfertas::before {
+    content: "O";
+    font-family: "Preahvihear", Helvetica;
+    font-size: clamp(16px, 4vw, 20px);
+    color: currentColor;
+    line-height: 1;
+    display: inline-block;
+  }
+}

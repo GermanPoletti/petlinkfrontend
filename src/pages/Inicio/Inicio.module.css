@@ -214,8 +214,6 @@
   }
 }
 
-.feedSection {}
-
 .feedHeader {
   color: var(--textprimary);
   font-family: "Reddit Mono-Regular", Helvetica;
@@ -235,8 +233,23 @@
 
 .notifications {
   margin-top: 12px;
-  font-family: "Lato", Helvetica;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.notificationText {
+  font-family: "Roboto", Helvetica;
+  font-size: 20px; /* igual al BtnLink.label */
   color: var(--textprimary);
+}
+
+.notificationAction {
+  /* BtnLink inline y sin tamaño fijo */
+  display: inline-flex;
+  width: auto;
+  height: auto;
 }
 
 .sidebar {
@@ -245,25 +258,4 @@
   gap: 12px;
 }
 
-.panel {
-  background-color: var(--primary-green-light);
-  border-radius: 12px;
-  border: 1px solid var(--bordersdivs);
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.panelText {
-  color: var(--textprimary);
-  font-family: "Lato", Helvetica;
-  font-size: 16px;
-  margin: 0;
-}
-
-.panelImage {
-  width: 96px;
-  height: auto;
-  object-fit: cover;
-}
+/* panel styles moved into reusable components */

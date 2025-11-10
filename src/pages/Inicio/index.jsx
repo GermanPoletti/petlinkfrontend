@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { BtnLink } from "@/components/UI/Buttons/BtnLink";
 import { CardMainpage } from "@/components/UI/CardMainpage";
 import { PagesTemplate } from "@/components/UI/PagesTemplate";
-import image12 from "@/assets/images/image-12.png";
+import badgeCat from "@/assets/images/badge-Cat.png";
 import registerDog from "@/assets/images/register-Dog.png";
 import styles from "./Inicio.module.css";
+import ContributionPanel from "@/components/UI/Community/ContributionPanel";
+import DonatorPanel from "@/components/UI/Community/DonatorPanel";
 
 export const Inicio = () => {
   const navigate = useNavigate();
@@ -46,21 +48,15 @@ export const Inicio = () => {
             />
           </div>
           <div className={styles.notifications}>
-            <span>Tienes nuevas notificaciones.</span>{' '}
-            <BtnLink text="Hecha un vistazo." onClick={() => navigate('/crear-inicio')} />
+            <span className={styles.notificationText}>Tienes nuevas notificaciones.</span>
+            <BtnLink className={styles.notificationAction} text="Hecha un vistazo." onClick={() => navigate('/crear-inicio')} />
           </div>
         </section>
 
         {/* Columna derecha: Paneles resumidos */}
         <aside className={styles.sidebar}>
-          <div className={styles.panel}>
-            <p className={styles.panelText}>Esta semana has contribuido a: 4 personas</p>
-            <img className={styles.panelImage} alt="Perro" src={registerDog} />
-          </div>
-          <div className={styles.panel}>
-            <p className={styles.panelText}>Estás entre los 200 donadores!</p>
-            <img className={styles.panelImage} alt="Gato" src={image12} />
-          </div>
+          <ContributionPanel contributionsCount={4} imageUrl={registerDog} />
+          <DonatorPanel donorsTotal={200} imageUrl={badgeCat} />
         </aside>
       </main>
     </PagesTemplate>

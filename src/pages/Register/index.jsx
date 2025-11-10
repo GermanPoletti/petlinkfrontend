@@ -12,12 +12,13 @@ function Register() {
       <div className={styles.panel}>
         <h1 className={styles.title}>Registrarse</h1>
 
-        {/* PERRO ENCIMA DEL INPUT EMAIL */}
-        <div className={styles.imageWrapper}>
-          <img src={registerDog} alt="Perro" className={styles.dogImage} />
+        {/* Campo de Email con overlay del perro sobre el input */}
+        <div className={styles.field}>
+          <div className={`${styles.imageWrapper} ${styles.dogWrapper}`}>
+            <img src={registerDog} alt="Perro" className={styles.dogImage} />
+          </div>
+          <input type="email" placeholder="Email" className={styles.input} />
         </div>
-
-        <input type="email" placeholder="Email" className={styles.input} />
         <input type="password" placeholder="Password" className={styles.input} />
 
         <BtnPrimary

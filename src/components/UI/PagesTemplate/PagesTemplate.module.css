@@ -19,7 +19,8 @@
 
 .fab {
   position: fixed;
-  right: 20px;
-  bottom: 20px;
+  /* Respeta las safe-areas en iOS (notch/barras) y asegura visibilidad */
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
   z-index: 50;
 }

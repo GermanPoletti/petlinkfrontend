@@ -1,36 +1,21 @@
 .btnLink {
-  display: flex;
-  height: 23px;
+  display: inline-flex;
+  align-items: center;
   position: relative;
-  width: 60px;
-  transition: top 0.2s ease;
-}
-
-.predeterminado {
-  top: 20px;
-}
-
-.hover {
-  top: 63px;
-}
-
-.on-click {
-  top: 106px;
+  width: auto;
+  height: auto;
 }
 
 .label {
   align-items: center;
-  display: flex;
-  flex: 1;
+  display: inline-flex;
   font-family: "Roboto", Helvetica;
   font-size: 20px;
   font-weight: 400;
-  justify-content: center;
   letter-spacing: 0;
-  line-height: normal;
-  text-align: center;
+  line-height: 1.2;
+  text-align: left;
   white-space: nowrap;
-  width: 60px;
   color: var(--textlink-blue-text);
   transition: color 0.2s ease;
 }

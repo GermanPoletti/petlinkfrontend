@@ -11,48 +11,53 @@
 
 .panel {
   background-color: var(--primary-green-tabs);
-  border-radius: 50px;
-  padding: 60px 40px;
+  border-radius: 40px; /* mobile-first */
+  padding: 32px 24px; /* mobile-first */
   width: 100%;
-  max-width: 500px;
+  max-width: 420px; /* mobile-first */
   text-align: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  position: relative; /* Para posicionar el perro respecto a este contenedor */
+  position: relative; /* posiciona overlays respecto al panel */
 }
 
 .title {
   color: var(--textprimary);
   font-family: "Preahvihear", Helvetica;
-  font-size: 48px;
+  font-size: 32px; /* mobile-first */
   font-weight: 400;
-  margin: 0 0 40px 0;
+  margin: 0 0 24px 0;
 }
 
 .imageWrapper {
-  /* Posicionar el gato respecto a .panel */
   position: absolute;
-  left: 50px; /* alinea con el padding interno del panel */
-  top: 80px; /* ajusta para colocarlo encima del input (modificar si es necesario) */
   z-index: 20;
   pointer-events: none;
   display: block;
 }
+.dogWrapper { /* perro emergiendo por encima del input */
+  right: 12px;
+  top: -40px;
+}
 
 .dogImage {
-  width: 120px; /* tamaño visible similar al diseño */
+  width: clamp(88px, 24vw, 120px);
   height: auto;
   object-fit: contain;
+}
+
+.field { /* contenedor del input para posicionar overlays internos */
+  position: relative;
+  margin: 12px 0;
 }
 
 .input {
   background-color: var(--bordersbackground);
   border: 2px solid var(--bordersdivs);
   border-radius: 20px;
-  padding: 16px 20px;
+  padding: 14px 18px; /* mobile-first */
   font-size: 16px;
   color: var(--textsecondary);
   width: 100%;
-  margin: 12px 0;
   display: block;
   box-sizing: border-box;
   transition: border-color 0.2s;
@@ -63,34 +68,45 @@
   outline: none;
 }
 
-.registerButton { /* Estilos para el botón de registro */
+.registerButton {
   width: 100%;
-  height: 50px;
-  margin-top: 20px;
-  font-size: 18px; 
+  height: 48px;
+  margin-top: 16px;
+  font-size: 16px; 
 }
 
-.loginPrompt { /* Estilos para el contenedor del prompt de inicio de sesión */
+.loginPrompt {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin-top: 30px;
-  font-size: 18px;
+  margin-top: 24px;
+  font-size: 16px;
 }
 
-.linkText { /* Estilos para el texto "¿Ya tienes cuenta?" */
+.linkText {
   color: white;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .link {
   color: var(--textlink-blue-text);
   text-decoration: none;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .link:hover {
   color: var(--textlink-blue-text-light);
+}
+
+/* Escalado para pantallas medianas y grandes */
+@media (min-width: 640px) {
+  .panel { border-radius: 50px; padding: 60px 40px; max-width: 500px; }
+  .title { font-size: 48px; margin-bottom: 40px; }
+  .input { padding: 16px 20px; }
+  .registerButton { height: 50px; font-size: 18px; margin-top: 20px; }
+  .loginPrompt { font-size: 18px; }
+  .linkText, .link { font-size: 18px; }
+  .dogWrapper { right: 20px; top: -48px; }
 }

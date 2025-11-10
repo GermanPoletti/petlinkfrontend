@@ -1,0 +1,35 @@
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: var(--cardbg, #e8f5e9);
+  border: 1px solid var(--borderscolor, #d0dfd2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  gap: 12px;
+}
+
+.text {
+  color: var(--textcolor, #1b3932);
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.25rem;
+}
+
+.image {
+  width: clamp(36px, 14vw, 60px);
+  height: auto;
+}
+
+@media (min-width: 768px) {
+  .panel {
+    padding: 16px;
+  }
+  .text {
+    font-size: 1rem;
+  }
+  .image {
+    width: clamp(48px, 8vw, 72px);
+  }
+}
