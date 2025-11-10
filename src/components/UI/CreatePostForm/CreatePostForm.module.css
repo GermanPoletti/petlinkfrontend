@@ -1,0 +1,68 @@
+.form {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.titleHeading {
+  color: var(--textprimary);
+  font-family: "Preahvihear", Helvetica, Arial, sans-serif;
+  font-size: 22px;
+  margin: 0 0 8px 0;
+}
+
+.label {
+  color: var(--textprimary);
+  font-family: "Lato", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+.required { color: var(--error); }
+
+.inputWithCounter {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.input {
+  background: var(--bordersbackground);
+  border: none;
+  box-shadow: inset 0 0 0 1px var(--bordersdivs);
+  border-radius: 16px;
+  height: 42px;
+  padding: 0 12px;
+  color: var(--textprimary);
+  font-family: "Lato", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+}
+
+.counter { color: var(--textsecondary); font-size: 12px; }
+
+.dropdown { width: 100%; }
+
+.location { width: 100%; }
+
+.fieldGroup { display: grid; gap: 6px; }
+
+.attachRow { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.hiddenInput { display: none; }
+.attachInfo { color: var(--textsecondary); font-size: 13px; }
+
+.textarea {
+  background: var(--bordersbackground);
+  border: none;
+  box-shadow: inset 0 0 0 1px var(--bordersdivs);
+  border-radius: 16px;
+  padding: 10px 12px;
+  color: var(--textprimary);
+  font-family: "Lato", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+}
+
+.actions { display: flex; justify-content: flex-end; }
+
+@media (min-width: 900px) {
+  .form { padding: 24px; gap: 20px; }
+  .titleHeading { font-size: 24px; }
+}

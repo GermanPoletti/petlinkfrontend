@@ -10,6 +10,9 @@ import Ofertas from '@/pages/Ofertas';
 import MyPosts from '@/pages/MyPosts';
 import Profile from '@/pages/Profile';
 import UserConfig from '@/pages/UserConfig';
+import CrearOferta from '@/pages/CrearOferta';
+import CrearPropuesta from '@/pages/CrearPropuesta';
+import Propuestas from '@/pages/Propuestas';
 
 function App() {
   return (
@@ -22,9 +25,12 @@ function App() {
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/ofertas" element={<Ofertas />} />
+        <Route path="/propuestas" element={<Propuestas />} />
         <Route path="/mis-publicaciones" element={<MyPosts />} />
         <Route path="/perfil" element={<Profile />} />
         <Route path="/configuracion" element={<UserConfig />} />
+        <Route path="/crear-oferta" element={<CrearOferta />} />
+        <Route path="/crear-propuesta" element={<CrearPropuesta />} />
       </Routes>
     </div>
   );

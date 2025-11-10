@@ -35,8 +35,8 @@
   display: block;
 }
 .catWrapper { /* gato acostado sobre el borde superior del input */
-  left: 12px;
-  top: -18px;
+  left: 0px;
+  top: -65px;
 }
 
 .catImage {
@@ -111,5 +111,5 @@
   .loginButton { height: 50px; font-size: 18px; margin-top: 20px; }
   .links { font-size: 18px; }
   .linkText, .link { font-size: 18px; }
-  .catWrapper { left: 20px; top: -24px; }
+  .catWrapper { left: 0px; top: -83px; }
 }

@@ -1,44 +1,25 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { useReducer } from "react";
-import * as classes from "./style.module.css";
+import * as classes from "./BtnBack.module.css";
+import backIcon from "@/assets/images/icons/backarrow.png";
 
-export const BackArrow = ({ propiedad1, className }) => {
-  const [state, dispatch] = useReducer(reducer, {
-    propiedad1: propiedad1 || "predeterminado",
-  });
-
+export const BtnBack = ({ className, onClick, alt = "Volver" }) => {
   return (
-    <div
-      className={`${classes.backArrow} ${classes[state.propiedad1]} ${className || ""}`}
-      onMouseEnter={() => {
-        dispatch("mouse_enter");
-      }}
-      onMouseLeave={() => {
-        dispatch("mouse_leave");
-      }}
-    />
+    <button
+      className={`${classes.btnBack} ${className || ""}`}
+      onClick={onClick}
+      aria-label={alt}
+      type="button"
+    >
+      <img src={backIcon} alt={alt} className={classes.icon} />
+    </button>
   );
 };
 
-function reducer(state, action) {
-  switch (action) {
-    case "mouse_enter":
-      return {
-        ...state,
-        propiedad1: "hover",
-      };
-
-    case "mouse_leave":
-      return {
-        ...state,
-        propiedad1: "predeterminado",
-      };
-  }
-
-  return state;
-}
-
-BackArrow.propTypes = {
-  propiedad1: PropTypes.oneOf(["on-click", "predeterminado", "hover"]),
+BtnBack.propTypes = {
+  className: PropTypes.string,
+  onClick: PropTypes.func,
+  alt: PropTypes.string,
 };
+
+export default BtnBack;

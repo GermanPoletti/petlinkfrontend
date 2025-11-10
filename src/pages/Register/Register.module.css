@@ -35,8 +35,8 @@
   display: block;
 }
 .dogWrapper { /* perro emergiendo por encima del input */
-  right: 12px;
-  top: -40px;
+  left: 20px;
+  top: -73px;
 }
 
 .dogImage {
@@ -108,5 +108,5 @@
   .registerButton { height: 50px; font-size: 18px; margin-top: 20px; }
   .loginPrompt { font-size: 18px; }
   .linkText, .link { font-size: 18px; }
-  .dogWrapper { right: 20px; top: -48px; }
+  .dogWrapper { left: 20px; top: -93px; }
 }

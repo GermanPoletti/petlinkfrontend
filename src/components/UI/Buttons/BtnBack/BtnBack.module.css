@@ -1,22 +1,32 @@
-.backArrow {
-  background-size: 100% 100%;
-  height: 50px;
-  left: 20px;
-  position: relative;
-  width: 50px;
+.btnBack {
+  background-color: var(--primary-green);
+  border-radius: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(0,0,0,0.4);
+
+  width: clamp(40px, 6.5vw, 50px);
+  height: clamp(40px, 6.5vw, 50px);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
 }
 
-.predeterminado {
-  background-image: url(backarrow50.png);
-  top: 20px;
+.btnBack:hover {
+  opacity: 1;
+  background-color: var(--primary-green-light);
+  border-color: var(--primary-green-dark);
 }
 
-.hover {
-  background-image: url(backarrow.png);
-  top: 90px;
+.btnBack:active {
+  background-color: var(--accent);
+  border-color: var(--primary-green);
 }
 
-.on-click {
-  background-image: url(backarrow50.png);
-  top: 160px;
+.icon {
+  width: clamp(18px, 3.5vw, 24px);
+  height: clamp(18px, 3.5vw, 24px);
+  filter: none;
 }

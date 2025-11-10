@@ -21,12 +21,12 @@ export const Inicio = () => {
   const handleOpenMenu = () => {
     console.log("Abrir menú desplegable");
   };
-  
+
   return (
     <PagesTemplate
       userImageUrl={userData.profilePic}
       onProfileClick={handleOpenMenu}
-      onNewPostClick={() => navigate('/crear-inicio')}
+      onNewPostClick={(tipo) => navigate(tipo === 'propuesta' ? '/crear-propuesta' : '/crear-oferta')}
     >
       {/* Contenido principal con enfoque mobile-first */}
       <main className={styles.contentGrid}>
@@ -49,7 +49,7 @@ export const Inicio = () => {
           </div>
           <div className={styles.notifications}>
             <span className={styles.notificationText}>Tienes nuevas notificaciones.</span>
-            <BtnLink className={styles.notificationAction} text="Hecha un vistazo." onClick={() => navigate('/crear-inicio')} />
+            <BtnLink className={styles.notificationAction} text="Echa un vistazo." onClick={() => navigate('/inicio')} />
           </div>
         </section>
 

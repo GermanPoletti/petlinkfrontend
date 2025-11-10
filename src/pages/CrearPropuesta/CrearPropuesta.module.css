@@ -1,0 +1,2 @@
+.page { width: 100%; }
+@media (min-width: 900px) { .page { max-width: 900px; margin: 0 auto; } }

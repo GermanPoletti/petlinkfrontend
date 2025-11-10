@@ -60,7 +60,7 @@ export const LandingPage = () => {
           <BtnPrimary
             className={classes.btnPrimary}
             divClassName={classes.btnPrimaryText}
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/inicio')}
             propiedad1="predeterminado"
             text="Explorar publicaciones"
           />

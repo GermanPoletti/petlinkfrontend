@@ -1,0 +1,27 @@
+.root { display: grid; gap: 6px; position: relative; }
+.label { color: var(--textprimary); font-family: "Lato", Helvetica, Arial, sans-serif; font-size: 14px; }
+.required { color: var(--error); }
+
+.inputRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  background: var(--bordersbackground);
+  box-shadow: inset 0 0 0 1px var(--bordersdivs);
+  border-radius: 16px;
+}
+.valid { box-shadow: inset 0 0 0 1px var(--primary-green); }
+.invalid { box-shadow: inset 0 0 0 1px var(--bordersdivs); }
+
+.input { height: 42px; padding: 0 12px; border: none; background: transparent; color: var(--textprimary); font-size: 16px; }
+.clear { background: transparent; border: none; color: var(--textsecondary); font-size: 18px; cursor: pointer; padding: 0 10px; }
+.clear:hover { color: var(--textprimary); }
+
+.menu { position: absolute; top: calc(100% + 8px); left: 0; min-width: 100%; background: var(--bordersbackground); border-radius: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.12), inset 0 0 0 1px var(--bordersdivs); padding: 8px 0; z-index: 1000; }
+.option { width: 100%; background: transparent; border: none; padding: 10px 16px; color: var(--textprimary); text-align: left; cursor: pointer; }
+.option:hover { background: rgba(0,0,0,0.05); }
+.option:active { background: rgba(0,0,0,0.10); }
+
+.hints { display: inline-flex; align-items: center; gap: 10px; }
+.hintBtn { background: transparent; border: none; color: var(--textsecondary); cursor: pointer; }
+.helper { color: var(--textsecondary); font-size: 12px; }
