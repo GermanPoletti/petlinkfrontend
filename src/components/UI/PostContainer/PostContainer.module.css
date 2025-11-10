@@ -1,0 +1,93 @@
+.container {
+  background-color: var(--accent);
+  border-radius: 26px;
+  height: 583px;
+  left: 100px;
+  position: relative;
+  top: 2072px;
+  width: 1197px;
+}
+
+.postImage {
+  height: 79.42%;
+  left: 57.81%;
+  object-fit: cover;
+  position: absolute;
+  top: 8.23%;
+  width: 38.85%;
+}
+
+.title {
+  color: var(--textprimary);
+  font-family: "Preahvihear-Regular", Helvetica;
+  font-size: 32px;
+  font-weight: 400;
+  height: 9.95%;
+  left: 2.26%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 4.97%;
+  width: 15.20%;
+}
+
+.description {
+  color: var(--textprimary);
+  font-family: "Lato-Light", Helvetica;
+  font-size: 27px;
+  font-weight: 300;
+  height: 43.91%;
+  left: 2.26%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 16.64%;
+  width: 53.72%;
+}
+
+.publishedDate {
+  color: var(--textsecondary);
+  font-family: "Reddit Mono-Regular", Helvetica;
+  font-size: 20px;
+  font-weight: 400;
+  height: 4.46%;
+  left: 80.79%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 2.74%;
+  width: 16.96%;
+}
+
+.locationContainer {
+  height: 39px;
+  left: 2.26%;
+  position: absolute;
+  top: calc(50.00% + 244px);
+  width: 16.21%;
+}
+
+.locationImage {
+  aspect-ratio: 1;
+  height: 39px;
+  left: 0;
+  object-fit: cover;
+  position: absolute;
+  top: calc(50.00% - 20px);
+  width: 20.10%;
+}
+
+.locationText {
+  color: var(--textsecondary);
+  font-family: "Reddit Mono-Light", Helvetica;
+  font-size: 24px;
+  font-weight: 300;
+  height: 74.36%;
+  left: 24.23%;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 12.82%;
+  width: 74.74%;
+}
+
