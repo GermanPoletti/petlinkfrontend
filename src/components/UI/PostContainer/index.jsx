@@ -20,12 +20,6 @@ export const PostContainer = ({
       <div className={classes.content}>
         {title && <h3 className={classes.title}>{title}</h3>}
         {description && <p className={classes.description}>{description}</p>}
-        <div className={classes.metaRow}>
-          <span className={classes.location}>📍 {location}</span>
-          {publishedAt && (
-            <span className={classes.published}>Publicado hace: {publishedAt}</span>
-          )}
-        </div>
       </div>
 
       {/* Columna derecha: imagen (si existe) */}
@@ -37,7 +31,14 @@ export const PostContainer = ({
             src={imageUrl || postImageFallback}
           />
         </div>
+        
       )}
+      <div className={classes.metaRow}>
+          <span className={classes.location}>📍 {location}</span>
+          {publishedAt && (
+            <span className={classes.published}>Publicado hace: {publishedAt}</span>
+          )}
+        </div>
 
       {/* Fila de acciones: izquierda/derecha con misma dimensión y poco intrusivas */}
       {(leftAction || rightAction) && (

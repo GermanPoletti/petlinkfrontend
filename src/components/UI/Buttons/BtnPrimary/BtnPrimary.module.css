@@ -29,15 +29,27 @@
   color: var(--textprimary);
 }
 
-.label { font-family: "Preahvihear", Helvetica; font-size: 16px; font-weight: 400; }
+.label {
+  font-family: "Preahvihear", Helvetica;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.labelSm {
+  font-family: "Preahvihear", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+}
 
 /* Variante pequeña para compactar en PostContainer acciones */
 .sm {
-  padding: 8px 12px;
-  gap: 6px;
-  border-radius: 16px;
+  padding: 6px 10px;
+  gap: 4px;
+  border-radius: 14px;
 }
 
 @media (min-width: 768px) {
-  .btnPrimary { padding: 12px 20px; }
+  .btnPrimary {
+    padding: 12px 20px;
+  }
 }

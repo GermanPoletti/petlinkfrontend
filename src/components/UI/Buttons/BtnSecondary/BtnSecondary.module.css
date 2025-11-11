@@ -5,12 +5,13 @@
   border-radius: 20px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
 
+  /* Padding y Flexbox para centrar contenido */
   padding: 10px 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  
+
   /* Transiciones y cursor */
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
@@ -28,8 +29,27 @@
   color: var(--primary-green);
 }
 
-.label { font-family: "Preahvihear", Helvetica; font-size: 16px; font-weight: 400; }
+.label {
+  font-family: "Preahvihear", Helvetica;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.labelSm {
+  font-family: "Preahvihear", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* Variante pequeña para compactar en PostContainer acciones */
+.sm {
+  padding: 6px 10px;
+  gap: 4px;
+  border-radius: 14px;
+}
 
 @media (min-width: 768px) {
-  .btnSecondary { padding: 12px 20px; }
+  .btnSecondary {
+    padding: 12px 20px;
+  }
 }
