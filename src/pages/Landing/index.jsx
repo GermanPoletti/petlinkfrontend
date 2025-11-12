@@ -25,15 +25,25 @@ export const LandingPage = () => {
         {/* Hijo 1: Logo */}
         <div className={classes.logo}>PetLink</div>
 
-        {/* Hijo 2: Botón */}
-        <BtnSecondary
-          className={classes.btnSecondary}
-          divClassName={classes.btnSecondaryText}
-          text="Iniciar Sesión"
-          onClick={() => {
-            navigate('/login');
-          }}
-        />
+        {/* Hijo 2: Botones de acción */}
+        <div className={classes.headerButtons}>
+          <BtnPrimary
+            className={classes.btnPrimary}
+            divClassName={classes.btnPrimaryText}
+            text="Registrarse"
+            onClick={() => {
+              navigate('/register');
+            }}
+          />
+          <BtnSecondary
+            className={classes.btnSecondary}
+            divClassName={classes.btnSecondaryText}
+            text="Iniciar Sesión"
+            onClick={() => {
+              navigate('/login');
+            }}
+          />
+        </div>
       </div>
 
       {/* ===== CONTENIDO PRINCIPAL (NUEVO) ===== */}

@@ -29,6 +29,16 @@
   font-weight: 400;
 }
 
+.headerButtons {
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+}
+
+.headerButtons .btnPrimary {
+  height: 50px;
+  width: 188px;
+}
+
 /* --- 3. CONTENIDO PRINCIPAL --- */
 .mainContent {
   width: 100%;

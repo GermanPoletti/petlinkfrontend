@@ -10,6 +10,7 @@ function Register() {
   const { showToast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   const isValidPassword = (value) => typeof value === 'string' && value.length >= 8;
@@ -21,6 +22,10 @@ function Register() {
     }
     if (!isValidPassword(password)) {
       showToast('La contraseña debe tener al menos 8 caracteres.', { type: 'error' });
+      return;
+    }
+    if (password !== confirmPassword) {
+      showToast('Las contraseñas no coinciden.', { type: 'error' });
       return;
     }
     // Simula registro exitoso: guarda usuario/token y navega
@@ -45,6 +50,7 @@ function Register() {
           <input type="email" placeholder="Email" className={styles.input} value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <input type="password" placeholder="Password (mín. 8 caracteres)" className={styles.input} value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input type="password" placeholder="Confirmar Password" className={styles.input} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
 
         <BtnPrimary
           text="Registrarse"

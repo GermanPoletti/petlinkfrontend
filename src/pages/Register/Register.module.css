@@ -20,6 +20,11 @@
   position: relative; /* posiciona overlays respecto al panel */
 }
 
+/* Añade margen uniforme a los inputs directos en el panel */
+.panel > .input {
+  margin: 12px 0;
+}
+
 .title {
   color: var(--textprimary);
   font-family: "Preahvihear", Helvetica;
@@ -109,4 +114,8 @@
   .loginPrompt { font-size: 18px; }
   .linkText, .link { font-size: 18px; }
   .dogWrapper { left: 20px; top: -93px; }
+  /* Ajusta margen de inputs directos en pantallas grandes */
+  .panel > .input {
+    margin: 12px 0;
+  }
 }
