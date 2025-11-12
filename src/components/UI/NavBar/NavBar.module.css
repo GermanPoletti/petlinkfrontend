@@ -37,24 +37,6 @@
   position: relative; /* ancla el menú bajo el avatar */
 }
 
-/*
-.btnOfertas {
-  /* Ya no necesita position, left, top 
-}
-.btnPropuestas {
-  /* Ya no necesita position, left, top 
-}
-*/
-
-/* --- 7. MIS CHATS --- */
-.misChats {
-  color: var(--accent);
-  font-family: "Roboto", Helvetica;
-  font-size: 28px;
-  font-weight: 400;
-  cursor: pointer;
-}
-
 /* Botón de chat con icono */
 .chatButton {
   width: 36px;

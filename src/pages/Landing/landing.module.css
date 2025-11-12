@@ -23,10 +23,24 @@
 }
 
 .logo {
+  /* Estilos para el logo de imagen */
+  height: 64px; /* Altura base para el logo de imagen */
+  width: auto; /* Mantener la proporción */
+  object-fit: contain; /* Asegurar que la imagen se ajuste sin recortarse */
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espacio entre el logo y el texto */
+}
+
+.logoText {
   color: #ffffff;
   font-family: "Preahvihear", Helvetica;
   font-size: 32px;
   font-weight: 400;
+  display: none; /* Ocultar por defecto (mobile-first) */
 }
 
 .headerButtons {
@@ -183,6 +197,12 @@
 
 /* --- 4. MEDIA QUERIES  --- */
 
+@media (min-width: 800px) {
+  .logoText {
+    display: block; /* Mostrar el texto en resoluciones mayores a 800px */
+  }
+}
+
 /* Para tablets y móviles (ej. menos de 800px) */
 @media (max-width: 800px) {
 
@@ -233,6 +253,10 @@
   }
 
   .logo {
+    height: 48px;
+  }
+
+  .logoText {
     font-size: 28px;
   }
 }
@@ -241,7 +265,13 @@
 @media (max-width: 480px) {
 
   .headerBackground {
-    padding: 0 15px;
+    padding: 15px;
+    min-height: 70px;
+    /* Revertir flex-direction y justify-content para mantener logo a la izquierda y botones a la derecha */
+  }
+
+  .logo {
+    height: 64px;
   }
 
   .btnPrimary {
@@ -268,6 +298,19 @@
   }
 
 
+  .headerButtons {
+    /* flex-direction: column; */
+    align-items: flex-end; /* Alinea los botones apilados a la derecha */
+    gap: 10px; /* Revertir el espaciado entre los botones al valor original */
+  }
+
+  .headerButtons .btnPrimary,
+  .btnSecondary {
+    width: 100%;
+    max-width: 188px; /* Revertir el ancho máximo al valor original */
+  }
+
+
   .backgroundShape {
     border-radius: 0;
     width: 100%;
@@ -276,4 +319,5 @@
     left: 0;
     transform: none;
   }
+
 }

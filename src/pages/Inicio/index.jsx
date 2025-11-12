@@ -14,7 +14,7 @@ const Inicio = () => {
   const navigate = useNavigate();
 
   const userData = {
-    profilePic: "https://url-de-la-foto-del-usuario.com/img.png" /*mock por el momento*/
+    profilePic: "https://url-de-la-foto-del-usuario.com/" /*mock por el momento*/
   };
 
   const handleOpenMenu = () => {

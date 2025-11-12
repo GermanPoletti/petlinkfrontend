@@ -3,6 +3,7 @@ import { BtnPrimary } from "@/components/UI/Buttons/BtnPrimary";
 import { BtnSecondary } from "@/components/UI/Buttons/BtnSecondary";
 import landingDog from "@/assets/images/landing-dog.png";
 import landingCat from "@/assets/images/landing-cat.png";
+import logoPopCat from "@/assets/images/icons/logo-pop-cat.png"; // Importar el nuevo logo
 import * as classes from "./landing.module.css";
 import { useNavigate } from 'react-router-dom';
 
@@ -23,7 +24,10 @@ export const LandingPage = () => {
       <div className={classes.headerBackground}>
         
         {/* Hijo 1: Logo */}
-        <div className={classes.logo}>PetLink</div>
+        <div className={classes.logoContainer}>
+          <img src={logoPopCat} alt="PetLink Logo" className={classes.logo} />
+          <div className={classes.logoText}>PetLink</div>
+        </div>
 
         {/* Hijo 2: Botones de acción */}
         <div className={classes.headerButtons}>
