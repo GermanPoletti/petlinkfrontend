@@ -34,7 +34,7 @@ function Register() {
       localStorage.setItem('authToken', 'dummy-token');
     } catch {}
     showToast('Registro exitoso. ¡Bienvenido!', { type: 'success' });
-    navigate('/inicio');
+    navigate('/editar-perfil');
   };
 
   return (

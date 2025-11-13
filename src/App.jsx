@@ -8,7 +8,7 @@ import './App.css';
 import { NavBar } from '@/components/UI/NavBar';
 import Ofertas from '@/pages/Ofertas';
 import MyPosts from '@/pages/MyPosts';
-import Profile from '@/pages/Profile';
+import Perfil from '@/pages/Perfil';
 import UserConfig from '@/pages/UserConfig';
 import CrearOferta from '@/pages/CrearOferta';
 import CrearPropuesta from '@/pages/CrearPropuesta';
@@ -17,6 +17,9 @@ import PropuestaAmpliada from '@/pages/PropuestaAmpliada';
 import OfertaAmpliada from '@/pages/OfertaAmpliada';
 import MiPublicacionAmpliada from '@/pages/MiPublicacionAmpliada';
 import ModificarPublicacion from '@/pages/ModificarPublicacion';
+import EditarPerfil from '@/pages/EditarPerfil';
+
+
 
 function App() {
   return (
@@ -35,10 +38,11 @@ function App() {
         <Route path="/mi-publicacion-ampliada" element={<MiPublicacionAmpliada />} />
         <Route path="/modificar-publicacion" element={<ModificarPublicacion />} />
         <Route path="/mis-publicaciones" element={<MyPosts />} />
-        <Route path="/perfil" element={<Profile />} />
+        <Route path="/perfil" element={<Perfil />} />
         <Route path="/configuracion" element={<UserConfig />} />
         <Route path="/crear-oferta" element={<CrearOferta />} />
         <Route path="/crear-propuesta" element={<CrearPropuesta />} />
+        <Route path="/editar-perfil" element={<EditarPerfil />} />
       </Routes>
     </div>
   );
