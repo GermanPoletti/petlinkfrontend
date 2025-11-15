@@ -35,7 +35,7 @@ function App() {
         <Route path="/propuestas" element={<Propuestas />} />
         <Route path="/propuesta-ampliada/:id" element={<PropuestaAmpliada />} />
         <Route path="/oferta-ampliada/:id" element={<OfertaAmpliada />} />
-        <Route path="/mi-publicacion-ampliada" element={<MiPublicacionAmpliada />} />
+        <Route path="/mi-publicacion-ampliada/:id" element={<MiPublicacionAmpliada />} />
         <Route path="/modificar-publicacion" element={<ModificarPublicacion />} />
         <Route path="/mis-publicaciones" element={<MyPosts />} />
         <Route path="/perfil" element={<Perfil />} />

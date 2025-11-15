@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BtnPrimary } from "@/components/UI/Buttons/BtnPrimary";
 import { BtnSecondary } from "@/components/UI/Buttons/BtnSecondary";
 import landingDog from "@/assets/images/landing-dog.png";
@@ -9,6 +9,20 @@ import { useNavigate } from 'react-router-dom';
 
 export const LandingPage = () => {
   const navigate = useNavigate();
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // Tu función handleLogin (aunque ya no se usa en el botón)
   const handleLogin = () => {
@@ -34,7 +48,7 @@ export const LandingPage = () => {
           <BtnPrimary
             className={classes.btnPrimary}
             divClassName={classes.btnPrimaryText}
-            text="Registrarse"
+            text={windowWidth <= 447 ? "Registrar" : "Registrarse"}
             onClick={() => {
               navigate('/register');
             }}
@@ -42,7 +56,7 @@ export const LandingPage = () => {
           <BtnSecondary
             className={classes.btnSecondary}
             divClassName={classes.btnSecondaryText}
-            text="Iniciar Sesión"
+            text={windowWidth <= 447 ? "Iniciar" : "Iniciar Sesión"}
             onClick={() => {
               navigate('/login');
             }}
@@ -52,6 +66,7 @@ export const LandingPage = () => {
 
       {/* ===== CONTENIDO PRINCIPAL (NUEVO) ===== */}
       {/* Este 'main' es el contenedor Grid para las 2 columnas */}
+      {/* Usará position: relative para contener las imágenes */}
       <main className={classes.mainContent}>
 
         {/* --- COLUMNA 1: TEXTO --- */}

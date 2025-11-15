@@ -202,14 +202,16 @@
 
 .contentGrid {
   display: grid;
-  grid-template-columns: 1fr; /* móvil */
+  grid-template-columns: 1fr;
+  /* móvil */
   gap: 16px;
   padding: 16px;
 }
 
 @media (min-width: 900px) {
   .contentGrid {
-    grid-template-columns: 1fr minmax(250px, 360px); /* izquierda: feed, derecha: sidebar */
+    grid-template-columns: 1fr minmax(250px, 360px);
+    /* izquierda: feed, derecha: sidebar */
     align-items: center;
     padding: 16px 32px 16px 16px;
   }
@@ -242,7 +244,8 @@
 
 .notificationText {
   font-family: "Roboto", Helvetica;
-  font-size: 20px; /* igual al BtnLink.label */
+  font-size: 20px;
+  /* igual al BtnLink.label */
   color: var(--textprimary);
 }
 

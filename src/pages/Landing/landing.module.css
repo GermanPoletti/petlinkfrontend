@@ -24,15 +24,19 @@
 
 .logo {
   /* Estilos para el logo de imagen */
-  height: 64px; /* Altura base para el logo de imagen */
-  width: auto; /* Mantener la proporción */
-  object-fit: contain; /* Asegurar que la imagen se ajuste sin recortarse */
+  height: 64px;
+  /* Altura base para el logo de imagen */
+  width: auto;
+  /* Mantener la proporción */
+  object-fit: contain;
+  /* Asegurar que la imagen se ajuste sin recortarse */
 }
 
 .logoContainer {
   display: flex;
   align-items: center;
-  gap: 10px; /* Espacio entre el logo y el texto */
+  gap: 10px;
+  /* Espacio entre el logo y el texto */
 }
 
 .logoText {
@@ -40,12 +44,14 @@
   font-family: "Preahvihear", Helvetica;
   font-size: 32px;
   font-weight: 400;
-  display: none; /* Ocultar por defecto (mobile-first) */
+  display: none;
+  /* Ocultar por defecto (mobile-first) */
 }
 
 .headerButtons {
   display: flex;
-  gap: 10px; /* Espacio entre los botones */
+  gap: 10px;
+  /* Espacio entre los botones */
 }
 
 .headerButtons .btnPrimary {
@@ -199,7 +205,8 @@
 
 @media (min-width: 800px) {
   .logoText {
-    display: block; /* Mostrar el texto en resoluciones mayores a 800px */
+    display: block;
+    /* Mostrar el texto en resoluciones mayores a 800px */
   }
 }
 
@@ -300,14 +307,15 @@
 
   .headerButtons {
     /* flex-direction: column; */
-    align-items: flex-end; /* Alinea los botones apilados a la derecha */
-    gap: 10px; /* Revertir el espaciado entre los botones al valor original */
+    align-items: flex-end;
+    /* Alinea los botones apilados a la derecha */
+    gap: 10px;
   }
 
   .headerButtons .btnPrimary,
   .btnSecondary {
     width: 100%;
-    max-width: 188px; /* Revertir el ancho máximo al valor original */
+    max-width: 188px;
   }
 
 
@@ -318,6 +326,15 @@
     /*Si cambiaste el ancho, puedes reposicionarlo */
     left: 0;
     transform: none;
+  }
+
+  @media (max-width: 447px) {
+
+    .headerButtons .btnPrimary,
+    .btnSecondary {
+      width: 100%;
+      max-width: 188px;
+    }
   }
 
 }
