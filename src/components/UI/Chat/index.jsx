@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import styles from "./Chat.module.css";
 import { useChat } from "@/context/ChatContext";
-import backArrow from "@/assets/images/icons/backarrow.png";
+import Close from "@/assets/images/icons/Close.png";
 import handshake from "@/assets/images/icons/handshake.png";
 
 function MessageBubble({ text, time, variant = "received" }) {
@@ -45,7 +45,7 @@ export function ChatPanel() {
       <aside className={`${styles.chatPanel} ${isOpen ? styles.open : ''}`} aria-label="panel de chat" aria-hidden={!isOpen}>
         <div className={styles.header}>
           <button className={styles.backButton} onClick={closeChat} aria-label="Cerrar chat">
-            <img src={backArrow} alt="Volver" />
+            <img src={Close} alt="Cerrar" />
           </button>
           <div className={styles.headerCenter}>
             <span className={styles.postTitle}>{headerPost}</span>

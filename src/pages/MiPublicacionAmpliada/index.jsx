@@ -1,6 +1,7 @@
 import React from "react";
 import PagesTemplate from "@/components/UI/PagesTemplate";
 import { PostContainer } from "@/components/UI/PostContainer";
+import { Frame as UserChatList } from "@/components/UI/UserChatList";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BtnSecondary, BtnDanger } from "@/components/UI/Buttons";
 import { useToast } from "@/components/UI/Toast";
@@ -23,6 +24,7 @@ function MiPublicacionAmpliada() {
             location={post.location}
             publishedAt={post.publishedAt}
           />
+          <UserChatList chats={[]} postTitle={post.title} />
           <div className={classes.actionsWrap}>
             <div className={classes.leftAction}>
               <BtnSecondary

@@ -1,9 +1,11 @@
 /* Tarjeta del feed, estilo uniforme */
 .card {
   display: grid;
-  grid-template-columns: 1fr minmax(180px, 260px);
+  grid-template-columns: 1fr; /* Mobile-first: una sola columna por defecto */
   align-items: center;
   gap: 16px;
+  box-sizing: border-box;
+  min-width: 0;
 
   background-color: var(--accent);
   border: 1px solid var(--bordersdivs);
@@ -14,6 +16,11 @@
   cursor: pointer;
 }
 
+.content {
+  width: 100%;
+  min-width: 0;
+}
+
 
 .title {
   color: var(--textprimary);
@@ -21,6 +28,7 @@
   font-size: clamp(18px, 2.2vw, 22px);
   font-weight: 400;
   margin: 0 0 8px 0;
+  word-break: break-word;
 }
 
 .category {
@@ -38,29 +46,34 @@
   font-size: clamp(13px, 1.6vw, 15px);
   line-height: 1.4;
   margin: 0 0 12px 0;
+  word-break: break-word;
 }
 
 .metaRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   color: var(--textsecondary);
   font-family: "Reddit Mono", Helvetica;
   font-size: 12px;
 }
 
 .location {
-  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .published {
-  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .imageWrap {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 0;
 }
 
 .image {
@@ -74,23 +87,43 @@
 .feedContainer {
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   scroll-snap-type: y mandatory;
 }
 
 .page {
   scroll-snap-align: start;
-  padding: 16px 24px;
+  padding: 0; /* Padding para móviles */
+}
+
+@media (min-width: 641px) {
+  .page {
+    padding: 16px 24px; /* Padding para pantallas más grandes */
+  }
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr; /* Mobile-first: una sola columna por defecto */
   gap: 20px;
+  box-sizing: border-box;
 }
 
 @media (min-width: 641px) { /* Aplicar dos columnas a partir de 641px */
   .grid {
-    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    grid-template-columns: repeat(2, minmax(250px, 1fr));
+  }
+}
+
+@media (min-width: 641px) {
+  .card {
+    grid-template-columns: 1fr minmax(180px, 260px); /* Dos columnas para pantallas más grandes */
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 12px; /* Reducir el padding para pantallas muy pequeñas */
   }
 }
 
@@ -100,5 +133,13 @@
   }
   .image {
     height: 160px;
+  }
+}
+
+@media (max-width: 767px) {
+  .metaRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px; /* Pequeño espacio entre location y published */
   }
 }
