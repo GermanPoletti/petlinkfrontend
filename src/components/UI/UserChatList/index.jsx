@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import * as classes from "./UserChatList.module.css";
+import { useChat } from "@/context/ChatContext";
 
 export const Frame = ({ postTitle }) => {
     const [users, setUsers] = useState([]);
+    const { openChatForPublication } = useChat();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -34,7 +36,11 @@ export const Frame = ({ postTitle }) => {
 
             <div className={classes.chatContainer} data-m3-mode="green-LT">
                 {users.map((chat) => (
-                    <div className={classes.chatItem} key={chat.id}>
+                    <div className={classes.chatItem} key={chat.id} onClick={() => openChatForPublication({
+                        publicationId: chat.id,
+                        postTitle: postTitle,
+                        counterpartUsername: chat.username || chat.email,
+                    })}>
                         <div className={classes.chatContent}>
                             <div className={classes.chatDetails}>
 

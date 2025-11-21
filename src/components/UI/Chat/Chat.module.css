@@ -61,8 +61,8 @@
   justify-content: space-between;
 }
 
-.postTitle { color: var(--textprimary); font-weight: 600; }
-.username { color: var(--textsecondary); }
+.postTitle { color: var(--textprimary); font-family: 'Preahvihear', Helvetica; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+.username { color: var(--textprimary); font-family: 'Preahvihear', Helvetica; }
 .headerIcon { width: 20px; height: 20px; opacity: 0.8; }
 
 .messages {
