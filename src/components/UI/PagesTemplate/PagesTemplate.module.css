@@ -9,11 +9,18 @@
 .content {
   flex: 1;
   padding: 16px;
+  padding-top: 70px;
 }
 
-@media (min-width: 900px) {
+@media (max-width: 640px) {
   .content {
-    padding: 24px;
+    padding-top: 64px;
+  }
+}
+
+@media (max-width: 420px) {
+  .content {
+    padding-top: 56px;
   }
 }
 

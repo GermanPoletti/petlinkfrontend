@@ -5,6 +5,7 @@ import * as classes from "./NavBar.module.css";
 
 import { BtnOfertas } from "@/components/UI/Buttons/BtnOfertas";
 import { BtnHome } from "@/components/UI/Buttons/BtnHome";
+import backarrowIcon from "@/assets/images/icons/backarrow.png";
 
 import defaultAvatar from "@/assets/images/icons/Profile.png";
 import chatIcon from "@/assets/images/icons/Chat.png";
@@ -75,7 +76,10 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
     <div className={classes.navbar}>
       {/* Izquierda: Home */}
       <div className={classes.leftGroup}>
-        <BtnHome onClick={() => navigate("/inicio")} />
+                <BtnHome onClick={() => navigate("/inicio")} />
+        <button className={classes.backButton} onClick={() => navigate(-1)} aria-label="Volver atrás">
+          <img src={backarrowIcon} alt="Volver" className={classes.backIcon} />
+        </button>
       </div>
 
       {/* Centro: Propuestas y Ofertas, siempre centrados */}
@@ -105,7 +109,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
       <div className={classes.rightGroup} ref={rightGroupRef}>
         <button
           className={classes.chatButton}
-          onClick={() => toggleChat({ postTitle: "Chats", counterpartUsername: "" })}
+          onClick={() => toggleChat()}
           aria-label="Abrir/Cerrar chat"
         >
           <img src={chatIcon} alt="Chat" className={classes.chatIcon} />

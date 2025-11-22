@@ -7,7 +7,7 @@
   /* padding: [arriba] [lados] [abajo];
     Añadimos 80px arriba para dejar espacio al botón flotante.
   */
-  padding: 80px 0 16px;
+  padding: 0 0 16px;
 
   width: 100%;
   max-width: 1400px; 
@@ -19,7 +19,7 @@
   .contentGrid {
     /* Izquierda (feed) 1fr, Derecha (sidebar) 360px */
     grid-template-columns: 1fr minmax(250px, 360px);
-    padding: 24px 32px;
+    padding: 0 32px;
   }
 }
 
