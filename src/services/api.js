@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: "http://localhost:8000",
   timeout: 10000,
 });
 
@@ -10,5 +10,13 @@ api.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
+api.interceptors.response.use(
+  (res) => res.data, 
+  (err) => {
+    const message = err.response?.data?.detail || err.message;
+    return Promise.reject(new Error(message));
+  }
+);
 
 export default api;

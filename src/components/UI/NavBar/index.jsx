@@ -6,7 +6,7 @@ import * as classes from "./NavBar.module.css";
 import { BtnOfertas } from "@/components/UI/Buttons/BtnOfertas";
 import { BtnHome } from "@/components/UI/Buttons/BtnHome";
 import backarrowIcon from "@/assets/images/icons/backarrow.png";
-
+import { useAuthApi } from "@/hooks/useAuthApi";
 import defaultAvatar from "@/assets/images/icons/Profile.png";
 import chatIcon from "@/assets/images/icons/Chat.png";
 import { useChat } from "@/context/ChatContext";
@@ -22,13 +22,30 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
   const { toggleChat } = useChat();
   const { showToast } = useToast();
   const [isAdmin, setIsAdmin] = useState(false);
+  const { logoutUser } = useAuthApi();
+
   const handleLogout = () => {
-    try {
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("user");
-    } catch (e) {}
-    navigate("/", { replace: true });
-    showToast("Sesión cerrada", { type: "success" });
+
+
+    logoutUser.mutate(undefined,{
+      onSuccess: () => {
+          console.log("logedout")
+          showToast("Logged Out", { type: "success" });
+          navigate("/login");
+        },
+        onError: (error) => {
+          const msg = error.response?.data?.detail || "Error al loguarse";
+          showToast(msg, { type: "error" });
+        
+      } 
+    })
+
+    // try {
+    //   localStorage.removeItem("authToken");
+    //   localStorage.removeItem("user");
+    // } catch (e) {}
+    // navigate("/", { replace: true });
+    // showToast("Sesión cerrada", { type: "success" });
   };
 
   // Cerrar al hacer click fuera

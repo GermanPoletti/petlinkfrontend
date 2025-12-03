@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LandingPage } from '@/pages/Landing';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
@@ -23,34 +24,38 @@ import BackOfficeReportes from '@/pages/BackOffice/Reportes';
 import BackOfficeModeradores from '@/pages/BackOffice/Moderadores';
 import EditarPerfil from '@/pages/EditarPerfil';
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <div className="app">
-      <Routes>
-        <Route path="/NavBar" element={<NavBar />} />
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot" element={<Forgot />} />
-        <Route path="/inicio" element={<Inicio />} />
-        <Route path="/ofertas" element={<Ofertas />} />
-        <Route path="/propuestas" element={<Propuestas />} />
-        <Route path="/propuesta-ampliada/:id" element={<PropuestaAmpliada />} />
-        <Route path="/oferta-ampliada/:id" element={<OfertaAmpliada />} />
-        <Route path="/mi-publicacion-ampliada/:id" element={<MiPublicacionAmpliada />} />
-        <Route path="/modificar-publicacion" element={<ModificarPublicacion />} />
-        <Route path="/mis-publicaciones" element={<MyPosts />} />
-        <Route path="/perfil" element={<Perfil />} />
-        <Route path="/configuracion" element={<UserConfig />} />
-        <Route path="/crear-oferta" element={<CrearOferta />} />
-        <Route path="/crear-propuesta" element={<CrearPropuesta />} />
-        <Route path="/back-office/dashboard" element={<BackOfficeDashboard />} />
-        <Route path="/back-office/usuarios" element={<BackOfficeUsuarios />} />
-        <Route path="/back-office/reportes" element={<BackOfficeReportes />} />
-        <Route path="/back-office/moderadores" element={<BackOfficeModeradores />} />
-        <Route path="/editar-perfil" element={<EditarPerfil />} />
-      </Routes>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className="app">
+        <Routes>
+          <Route path="/NavBar" element={<NavBar />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot" element={<Forgot />} />
+          <Route path="/inicio" element={<Inicio />} />
+          <Route path="/ofertas" element={<Ofertas />} />
+          <Route path="/propuestas" element={<Propuestas />} />
+          <Route path="/propuesta-ampliada/:id" element={<PropuestaAmpliada />} />
+          <Route path="/oferta-ampliada/:id" element={<OfertaAmpliada />} />
+          <Route path="/mi-publicacion-ampliada/:id" element={<MiPublicacionAmpliada />} />
+          <Route path="/modificar-publicacion" element={<ModificarPublicacion />} />
+          <Route path="/mis-publicaciones" element={<MyPosts />} />
+          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/configuracion" element={<UserConfig />} />
+          <Route path="/crear-oferta" element={<CrearOferta />} />
+          <Route path="/crear-propuesta" element={<CrearPropuesta />} />
+          <Route path="/back-office/dashboard" element={<BackOfficeDashboard />} />
+          <Route path="/back-office/usuarios" element={<BackOfficeUsuarios />} />
+          <Route path="/back-office/reportes" element={<BackOfficeReportes />} />
+          <Route path="/back-office/moderadores" element={<BackOfficeModeradores />} />
+          <Route path="/editar-perfil" element={<EditarPerfil />} />
+        </Routes>
+      </div>
+    </QueryClientProvider>
   );
 }
 

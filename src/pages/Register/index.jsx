@@ -4,7 +4,7 @@ import { BtnPrimary } from "@/components/UI/Buttons/BtnPrimary";
 import styles from './Register.module.css';
 import registerDog from '@/assets/images/register-Dog.png';
 import { useToast } from '@/components/UI/Toast';
-import { registerUser } from '@/services/auth';
+import { useAuthApi } from "@/hooks/useAuthApi";
 
 function Register() {
   const navigate = useNavigate();
@@ -12,12 +12,16 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+
+  const {registerUser} = useAuthApi()
+  const isSubmitting = registerUser.isPending;
 
   const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   const isValidPassword = (value) => typeof value === 'string' && value.length >= 8;
 
-  const onRegister = async () => {
+  const onRegister = (e) => {
+    e.preventDefault();
+
     if (!isValidEmail(email)) {
       showToast('Email inválido. Usa un correo electrónico válido.', { type: 'error' });
       return;
@@ -31,26 +35,43 @@ function Register() {
       return;
     }
 
-  try {
-  setLoading(true);
-  const data = await registerUser({ email, password });
+    registerUser.mutate({email, password},
+      {
+        onSuccess: () => {
+          showToast("¡Registro exitoso! Bienvenido a PetLink", { type: "success" })
+          navigate("/inicio")
+        },
+        onError: (error) => {
+          const msg = error.response?.data?.detail || "Error al registrarse";
+          if (error.response?.status === 409 || msg.includes("already exists")) {
+            showToast("Este email ya está registrado", { type: "error" });
+          } else {
+          showToast(msg, { type: "error" });
+        }
+      } 
+    }
+    )
 
-  localStorage.setItem('authToken', data.token);
-  localStorage.setItem('user', JSON.stringify(data.user || { email, role: 'user' }));
+//   try {
+//   setLoading(true);
+//   const data =  registerUser({ email, password });
 
-  showToast('¡Registro exitoso! Bienvenido a PetLink', { type: 'success' });
-  navigate('/inicio');
+//   localStorage.setItem('authToken', data.token);
+//   localStorage.setItem('user', JSON.stringify(data.user || { email, role: 'user' }));
 
-} catch (err) {
-  const msg = err.response?.data?.message || 'Error al registrarse';
-  if (err.response?.status === 409) {
-    showToast('Este email ya está registrado', { type: 'error' });
-  } else {
-    showToast(msg, { type: 'error' });
-  }
-} finally {
-  setLoading(false);
-}
+//   showToast('¡Registro exitoso! Bienvenido a PetLink', { type: 'success' });
+//   navigate('/inicio');
+
+// } catch (err) {
+//   const msg = err.response?.data?.message || 'Error al registrarse';
+//   if (err.response?.status === 409) {
+//     showToast('Este email ya está registrado', { type: 'error' });
+//   } else {
+//     showToast(msg, { type: 'error' });
+//   }
+// } finally {
+//   setLoading(false);
+// }
   };
   {
     return (
@@ -71,6 +92,7 @@ function Register() {
           <BtnPrimary
             text="Registrarse"
             className={styles.registerButton}
+            disabled = {isSubmitting}
             onClick={onRegister}
           />
   
