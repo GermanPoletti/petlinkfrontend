@@ -9,21 +9,6 @@ export default function LocationAutocomplete({ label = "Ubicación", placeholder
   const [query, setQuery] = useState(value || "");
   const rootRef = useRef(null);
 
-  const suggestions = useMemo(() => {
-    // Sugerencias mock locales. Reemplazar por API.
-    const base = [
-      "Argentina, Buenos Aires, Zárate",
-      "Argentina, Buenos Aires, Campana",
-      "Argentina, Buenos Aires, Baradero",
-      "Argentina, Buenos Aires, Alsina",
-      "Argentina, Córdoba, Córdoba",
-      "Argentina, Santa Fe, Rosario",
-    ];
-    if (!query) return base.slice(0, 4);
-    const q = query.toLowerCase();
-    return base.filter((s) => s.toLowerCase().includes(q)).slice(0, 6);
-  }, [query]);
-
   useEffect(() => {
     function onDocClick(e) {
       if (open && rootRef.current && !rootRef.current.contains(e.target)) setOpen(false);
@@ -50,23 +35,19 @@ export default function LocationAutocomplete({ label = "Ubicación", placeholder
       <div className={`${classes.inputRow} ${isValidLocation(query) ? classes.valid : classes.invalid}`}>
         <input
           value={query}
-          onChange={(e) => { setQuery(e.target.value); onChange?.(e.target.value); }}
-          placeholder={placeholder}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            onChange?.(e.target.value);
+          }}
+          placeholder={placeholder || "País, Provincia, Ciudad"}
           className={classes.input}
         />
         {!!query && (
-          <button type="button" className={classes.clear} onClick={clear} aria-label="Limpiar">×</button>
+          <button type="button" className={classes.clear} onClick={clear} aria-label="Limpiar">
+            ×
+          </button>
         )}
       </div>
-      {open && (
-        <div className={classes.menu}>
-          {suggestions.map((s) => (
-            <button key={s} className={classes.option} onClick={() => { setQuery(s); onChange?.(s); setOpen(false); }}>
-              {s}
-            </button>
-          ))}
-        </div>
-      )}
       <div className={classes.hints}>
         <button type="button" className={classes.hintBtn} onClick={() => setOpen((o) => !o)}>
           {open ? "Ocultar sugerencias" : "Mostrar sugerencias"}

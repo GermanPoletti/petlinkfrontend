@@ -14,8 +14,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res.data, 
   (err) => {
-    const message = err.response?.data?.detail || err.message;
-    return Promise.reject(new Error(message));
+    // const message = err.response?.data?.detail || err.message;
+    return Promise.reject(err);
   }
 );
 

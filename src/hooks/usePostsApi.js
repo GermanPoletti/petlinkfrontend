@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import * as postApi from "../services/postService"; // Corregido el path
 
 export const usePostsApi = () => {
@@ -26,6 +26,37 @@ export const usePostsApi = () => {
       queryFn: () => postApi.getPostsByUser(user_id),
       enabled: !!user_id,
     });
+
+  // --------------------
+  // INFINITE SCROLL (NUEVO)
+  // --------------------
+  const useInfinitePosts = (filters = {}) => {
+  return useInfiniteQuery({
+    queryKey: ["posts", "infinite", filters],
+    queryFn: ({ pageParam = 0 }) =>
+      postApi.getPosts({ ...filters, skip: pageParam, limit: 10 }),
+
+    getNextPageParam: (lastPage, allPages) => {
+      // allPages tiene todas las páginas cargadas
+      const totalLoaded = allPages.flatMap(p => p.posts).length;
+      
+      // Si la última página trajo menos de 10 → no hay más
+      if (lastPage.posts.length < 10) {
+        return undefined;
+      }
+      
+      // Si limit_reached es false → hay más
+      if (!lastPage.limit_reached) {
+        return totalLoaded; // ← skip para la próxima página
+      }
+      
+      return undefined;
+    },
+
+    initialPageParam: 0,
+    staleTime: 1000 * 60 * 5,
+  });
+};
 
   // --------------------
   // MUTATIONS
@@ -60,6 +91,7 @@ export const usePostsApi = () => {
     useGetPosts,
     useGetPostById,
     useGetPostsByUser,
+    useInfinitePosts,
     createPost,
     patchPost,
     deletePost,

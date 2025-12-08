@@ -1,7 +1,7 @@
-import api from "./axios";
+import api from "./api";
 
 export const createChat = (post_id) =>
-  api.post("/chats/", { post_id });
+  api.post("/chats/", post_id );
 
 export const getMyChats = (filters = {}) =>
   api.get("/chats/me", { params: filters });

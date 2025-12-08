@@ -9,30 +9,30 @@ function Login() {
   const navigate = useNavigate();
   const { loginUser } = useAuthApi();
 
-  // Estado local del formulario
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Esto es clave: extraemos los estados de React Query
-  const isLoading = loginUser.isPending;  // v5+ (antes era isLoading)
+
+  const isLoading = loginUser.isPending;  
   const isError = loginUser.isError;
   const error = loginUser.error;
 
   const handleLogin = (e) => {
-    e.preventDefault(); // ← importante: evita que recargue la página
+    e.preventDefault(); 
     
     loginUser.mutate(
       { username: email, password },
       {
         onSuccess: (data) => {
-          // data es lo que devuelve tu backend (incluye el token normalmente)
+
           const token = data?.access_token;
           if (token) {
-            localStorage.setItem("authToken", token); // ← guardamos el token
+            localStorage.setItem("authToken", token); 
+            localStorage.setItem("userId", data?.user_id)
           }
           navigate("/inicio");
         },
-        // onError no es necesario si manejamos el error abajo
       }
     );
   };
@@ -73,7 +73,7 @@ function Login() {
           onClick={handleLogin}
           disabled={isLoading}
         />
-
+        
         <div className={styles.links}>
           <div className={styles.linkLine}>
             <span className={styles.linkText}>¿No tienes una cuenta?</span>{' '}

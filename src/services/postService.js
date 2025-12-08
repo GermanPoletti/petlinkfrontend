@@ -1,10 +1,10 @@
-import { api } from "./api"; 
+import  api  from "./api"; 
 
 
 export const createPost = (data) => 
   api.post("/posts/", data);
 
-export const getPosts = (filters) =>
+export const getPosts = (filters) => 
   api.get("/posts/", { params: filters });
 
 export const searchPosts = (keyword) =>

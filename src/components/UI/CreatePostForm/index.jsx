@@ -6,10 +6,12 @@ import CategoryDropdown from "@/components/UI/Dropdown/CategoryDropdown";
 import LocationAutocomplete from "@/components/UI/CreatePostForm/LocationAutocomplete";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/UI/Toast";
+import { usePostsApi } from "@/hooks/usePostsApi";
 
 export default function CreatePostForm({ type = "oferta", mode = "create", initialData = {} }) {
   const navigate = useNavigate();
   const { showToast } = useToast?.() || { showToast: () => {} };
+  const { createPost } = usePostsApi();
 
   const [title, setTitle] = useState(initialData.title || "");
   const [category, setCategory] = useState(initialData.category || null);
@@ -32,8 +34,10 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
   const valid = useMemo(() => {
     const hasTitle = title.trim().length > 0 && title.trim().length <= maxTitle;
     const hasCategory = !!category;
-    const hasLocation = validateLocation(location);
+    const hasLocation = validateLocation(location) || true;
     const hasMessage = message.trim().length > 0;
+    console.log(hasTitle, hasCategory,hasLocation,hasMessage);
+    
     return hasTitle && hasCategory && hasLocation && hasMessage;
   }, [title, category, location, message]);
 
@@ -75,27 +79,55 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
   }
 
   function onSubmit() {
-    if (!valid) {
-      showToast?.("Completa los campos obligatorios", { type: "error" });
-      return;
-    }
-    const confirm = window.confirm("¿Deseas publicar esta " + (type === "propuesta" ? "propuesta" : "oferta") + "?");
-    if (!confirm) return;
-    // TODO: Enviar al backend. Simulamos creación y vamos a la página ampliada
-    const newPost = {
-      title: title.trim(),
-      description: message.trim(),
-      imageUrl: null, // podría mapearse desde files
-      location: location.trim(),
-      publishedAt: "justo ahora",
-    };
-    showToast?.("Publicación creada", { type: "success" });
-    if (type === "propuesta") {
-      navigate("/propuesta-ampliada", { state: newPost });
-    } else {
-      navigate("/oferta-ampliada", { state: newPost });
-    }
+  if (!valid) {
+    showToast?.("Completa los campos obligatorios", { type: "error" });
+    return;
   }
+
+  const parts = location.split(",").map(p => p.trim());
+  // if (parts.length !== 3) {
+  //   showToast?.("Ubicación inválida", { type: "error" });
+  //   return;
+  // }
+
+  const [city_id, province, city] = parts;
+
+  const postData = {
+    title: title.trim(),
+    message: message.trim(),
+    category,
+    city_id,
+    province,
+    city,
+    post_type_id: 2, // "oferta" o "propuesta"
+  };
+
+  createPost.mutate(postData, {
+    onSuccess: async (newPost) => {
+      showToast?.("Publicación creada", { type: "success" });
+
+      // // Si hay archivos → subirlos después
+      // if (files.length > 0) {
+      //   try {
+      //     await uploadMedia.mutateAsync({
+      //       postId: newPost.id,
+      //       files,
+      //     });
+      //     showToast?.("Imágenes subidas", { type: "success" });
+      //   } catch (err) {
+      //     showToast?.("Post creado pero error al subir imágenes", { type: "warning" });
+      //   }
+      // }
+
+      // Navegar al feed o al detalle
+      const route = type === "propuesta" ? "/propuestas" : "/ofertas";
+      navigate(route, { replace: true });
+    },
+    onError: (err) => {
+      showToast?.("Error al crear publicación", { type: "error" });
+    },
+  });
+}
 
   return (
     <form className={classes.form} onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
@@ -189,7 +221,13 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
 
       {/* Publicar */}
       <div className={classes.actions}>
-        <BtnPrimary text={mode === "edit" ? "Guardar cambios" : "Publicar"} onClick={onSubmit} size="sm" />
+        <BtnPrimary 
+          text={mode === "edit" ? "Guardar cambios" : "Publicar"} 
+          onClick={onSubmit} 
+          size="sm" 
+          disabled={createPost.isPending}
+        />
+        {createPost.isPending && <span className={classes.loading}>Publicando...</span>}
       </div>
     </form>
   );

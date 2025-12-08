@@ -15,6 +15,6 @@ export const loginUser = ({ username, password }) => {
 
 export const logout = () => {
  
-  // localStorage.removeItem('authToken')
-  return api.post("/auth/logout")
+  localStorage.removeItem('authToken')
+  api.post("/auth/logout")
 }

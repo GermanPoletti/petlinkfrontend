@@ -6,30 +6,42 @@ const ChatContext = createContext(null);
 
 export function ChatProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
+  const [activeChatId, setActiveChatId] = useState(null);
 
-  const openChat = (chat = null) => {
-    if (chat) setActiveChat(chat);
+  const openChat = (chatId) => {
+    setActiveChatId(chatId); 
     setIsOpen(true);
   };
 
-  const toggleChat = (chat = null) => {
-    if (chat) setActiveChat(chat);
-    setIsOpen((prev) => !prev);
+const toggleChat = () => {
+    if (isOpen) {
+      closeChat();
+    } else {
+      // Si hay un chat activo, lo abre. Si no, solo abre el panel vacío
+      setIsOpen(true);
+    }
   };
 
   const openChatForPublication = ({ publicationId, postTitle, counterpartUsername }) => {
-    setActiveChat({ publicationId, postTitle, counterpartUsername });
     setIsOpen(true);
   };
 
-  const closeChat = () => {
-    setIsOpen(false);
-  };
 
-  const value = useMemo(
-    () => ({ isOpen, activeChat, openChat, toggleChat, openChatForPublication, closeChat }),
-    [isOpen, activeChat]
+ const closeChat = () => {
+     setIsOpen(false);
+     setActiveChatId(null);
+   };
+
+const value = useMemo(
+    () => ({
+      isOpen,
+      activeChatId,           
+      openChat,               
+      closeChat,
+      openChatForPublication, 
+      toggleChat,
+    }),
+    [isOpen, activeChatId]
   );
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

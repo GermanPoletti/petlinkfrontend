@@ -34,7 +34,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
           navigate("/login");
         },
         onError: (error) => {
-          const msg = error.response?.data?.detail || "Error al loguarse";
+          const msg = error.response?.data?.detail || "Error al desloguear";
           showToast(msg, { type: "error" });
         
       } 

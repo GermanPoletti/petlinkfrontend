@@ -1,144 +1,140 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./Chat.module.css";
 import { useChat } from "@/context/ChatContext";
+import { useChatsApi } from "@/hooks/useChatsApi";
+import { useToast } from "@/components/UI/Toast";
 import Close from "@/assets/images/icons/Close.png";
 import handshake from "@/assets/images/icons/handshake.png";
 
-function MessageBubble({ text, time, variant = "received" }) {
-  const cls = useMemo(() => {
-    return [styles.message, variant === "sent" ? styles.sent : styles.received].join(" ");
-  }, [variant]);
+function MessageBubble({ msg }) {
+  const isSent = msg.is_from_current_user === true;
   return (
-    <div className={cls}>
-      <div className={styles.messageText}>{text}</div>
-      {time && <div className={styles.messageTime}>{time}</div>}
+    <div className={`${styles.message} ${isSent ? styles.sent : styles.received}`}>
+      <div className={styles.messageText}>{msg.content}</div>
+      <div className={styles.messageTime}>
+        {new Date(msg.created_at).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </div>
     </div>
   );
 }
 
 export function ChatPanel() {
-  const { isOpen, activeChat, closeChat } = useChat();
-  const [messages, setMessages] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const { isOpen, activeChatId, closeChat } = useChat();
+  const { showToast } = useToast();
+  const { useGetChatDetail, sendMessage } = useChatsApi();
+
+  const { data: chatData, isLoading, error } = useGetChatDetail(activeChatId);
+
+  const [input, setInput] = useState("");
+  const sendMutation = sendMessage;
   const dropdownRef = useRef(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  // Mock API call to fetch messages
-  const fetchMessages = async (publicationId) => {
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    if (publicationId === "1") {
-      return [
-        { id: 1, text: "¡Hola! ¿Todavía tienes el perrito en adopción?", time: "10:00 AM", variant: "received" },
-        { id: 2, text: "¡Sí! Sigue disponible. ¿Te gustaría conocerlo?", time: "10:05 AM", variant: "sent" },
-        { id: 3, text: "Me encantaría. ¿Cuándo sería un buen momento?", time: "10:10 AM", variant: "received" },
-      ];
-    } else if (publicationId === "2") {
-      return [
-        { id: 1, text: "Hola, ¿la gatita de la publicación sigue buscando hogar?", time: "09:30 AM", variant: "received" },
-        { id: 2, text: "Así es, es muy cariñosa. ¿Tienes alguna pregunta?", time: "09:35 AM", variant: "sent" },
-      ];
-    }
-    return [];
-  };
-
+  // Cierra dropdown al hacer click fuera
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setShowDropdown(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dropdownRef]);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  useEffect(() => {
-    if (activeChat?.publicationId) {
-      fetchMessages(activeChat.publicationId).then((data) => {
-        setMessages(data);
-      });
-    } else {
-      setMessages([]); // Clear messages if no active chat
-    }
-  }, [activeChat?.publicationId]);
-  const [input, setInput] = useState("");
+  const handleSend = () => {
+    const text = input.trim();
+    if (!text || !activeChatId) return;
 
-  const headerPost = activeChat?.postTitle ?? "Chats";
-  const headerUser = activeChat?.counterpartUsername ?? "";
-
-  const onSend = async () => {
-    const trimmed = input.trim();
-    if (!trimmed) return;
-
-    // Mock API call to send message
-    const sendMessage = async (messageContent) => {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      return { id: Date.now(), text: messageContent, time: new Date().toLocaleTimeString(), variant: "sent" };
-    };
-
-    const newMessage = await sendMessage(trimmed);
-
-    setMessages((prev) => [
-      ...prev,
-      newMessage,
-    ]);
-    setInput("");
+   sendMessage.mutate(
+      { chat_id: activeChatId, message: text },
+      {
+        onSuccess: () => {
+          setInput("");
+        },
+        onError: () => {
+          showToast("Error al enviar mensaje", { type: "error" });
+        },
+      }
+    );
   };
+
+  if (!isOpen) return null;
+
+  // Datos para el header
+  const postTitle = chatData?.post?.title || "Chat";
+  const counterpartUsername = chatData?.counterpart?.username || "Usuario";
 
   return (
     <>
-      {isOpen && <div className={styles.backdrop} onClick={closeChat} aria-hidden />}
-      <aside className={`${styles.chatPanel} ${isOpen ? styles.open : ''}`} aria-label="panel de chat" aria-hidden={!isOpen}>
+      <div className={styles.backdrop} onClick={closeChat} />
+
+      <aside className={`${styles.chatPanel} ${styles.open}`}>
+        {/* HEADER */}
         <div className={styles.header}>
-          <button className={styles.backButton} onClick={closeChat} aria-label="Cerrar chat">
+          <button onClick={closeChat} aria-label="Cerrar">
             <img src={Close} alt="Cerrar" />
           </button>
+
           <div className={styles.headerCenter} ref={dropdownRef}>
-            <span className={styles.postTitle}>{headerPost}</span>
-            <button className={styles.handshakeButton} onClick={() => setShowDropdown((prev) => !prev)} aria-label="Acuerdo">
+            <span className={styles.postTitle}>{postTitle}</span>
+            <button
+              className={styles.handshakeButton}
+              onClick={() => setShowDropdown((p) => !p)}
+              aria-label="Acuerdo"
+            >
               <img src={handshake} alt="Handshake" className={styles.handshakeIcon} />
             </button>
-            <span className={styles.username}>{headerUser}</span>
+            <span className={styles.username}>@{counterpartUsername}</span>
+
             {showDropdown && (
               <div className={styles.dropdownMenu}>
                 <button className={styles.dropdownItem}>
-                  <span className={styles.checkIcon}>✔</span> Sí
+                  <span className={styles.checkIcon}>Sí</span> Acordamos
                 </button>
                 <button className={styles.dropdownItem}>
-                  <span className={styles.crossIcon}>✖</span> No
+                  <span className={styles.crossIcon}>No</span> No llegamos a acuerdo
                 </button>
               </div>
             )}
           </div>
         </div>
 
-      <div className={styles.messages}>
-        {messages.map((m) => (
-          <MessageBubble key={m.id} text={m.text} time={m.time} variant={m.variant} />
-        ))}
-      </div>
+        {/* MENSAJES */}
+        <div className={styles.messages}>
+          {isLoading && <div className={styles.loading}>Cargando mensajes...</div>}
+          {error && <div className={styles.error}>Error al cargar el chat</div>}
+          {!isLoading &&
+            !error &&
+            chatData?.messages?.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
+        </div>
 
-      <div className={styles.inputBar}>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              onSend();
-            } else if (e.key === "Enter" && e.shiftKey) {
-              // Allow new line
-            }
-          }}
-          placeholder="Mensaje"
-          className={styles.textInput}
-        />
-        <button onClick={onSend} className={styles.sendButton} aria-label="Enviar">
-          ➤
-        </button>
-      </div>
-    </aside>
+        {/* INPUT */}
+        <div className={styles.inputBar}>
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            placeholder="Escribe un mensaje..."
+            className={styles.textInput}
+            rows={1}
+          />
+          <button
+            onClick={handleSend}
+            disabled={sendMutation.isPending || !input.trim()}
+            className={styles.sendButton}
+          >
+            Send
+          </button>
+        </div>
+      </aside>
     </>
   );
 }

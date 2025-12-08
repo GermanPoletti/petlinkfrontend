@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useContext, useMemo, useState, useCallback } from "react";
 import * as classes from "./Toast.module.css";
 
 const ToastContext = createContext(null);
@@ -8,15 +8,17 @@ export function ToastProvider({ children }) {
 
   const removeToast = (id) => setToasts((prev) => prev.filter((t) => t.id !== id));
 
-  const showToast = (message, { type = "info", duration = 3000 } = {}) => {
+  // AQUÍ ESTÁ LA CLAVE: useCallback
+  const showToast = useCallback((message, { type = "info", duration = 3000 } = {}) => {
     const id = Date.now() + Math.random();
     setToasts((prev) => [...prev, { id, message, type }]);
     if (duration > 0) {
       setTimeout(() => removeToast(id), duration);
     }
-  };
+  }, []); // ← dependencias vacías → NUNCA cambia
 
-  const value = useMemo(() => ({ showToast }), []);
+  // Ahora el objeto también está memoizado y depende de showToast estable
+  const value = useMemo(() => ({ showToast }), [showToast]);
 
   return (
     <ToastContext.Provider value={value}>
