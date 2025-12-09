@@ -99,7 +99,7 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
     city_id,
     province,
     city,
-    post_type_id: 2, // "oferta" o "propuesta"
+    post_type_id: type === "oferta" ? 1 : type === "necesidad" ? 2 : null, // "oferta" o "propuesta"
   };
 
   createPost.mutate(postData, {
@@ -223,7 +223,7 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
       <div className={classes.actions}>
         <BtnPrimary 
           text={mode === "edit" ? "Guardar cambios" : "Publicar"} 
-          onClick={onSubmit} 
+          type="submit"  
           size="sm" 
           disabled={createPost.isPending}
         />

@@ -4,88 +4,120 @@ import { CardsFeed } from "@/components/UI/Cards";
 import * as classes from "./MyPosts.module.css";
 import { useNavigate } from "react-router-dom";
 import FilterBar from "@/components/UI/FilterBar";
+import { usePostsApi } from "@/hooks/usePostsApi";
+import { useToast } from "@/components/UI/Toast";
+import { useQueryClient } from "@tanstack/react-query";
+
 
 function MyPosts() {
   const navigate = useNavigate();
   const [keywordSearchTerm, setKeywordSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [locationSearchTerm, setLocationSearchTerm] = useState("");
-  const [myPosts, setMyPosts] = useState([]);
+  const queryClient = useQueryClient();
+  const { useInfinitePosts } = usePostsApi();
+  const { showToast } = useToast();
 
   const handleCardClick = (post) => {
     navigate(`/mi-publicacion-ampliada/${post.id}`, { state: post });
   };
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-  };
-
-  const handleLocationChange = (location) => {
-    setLocationSearchTerm(location);
-  };
-
-  const handleKeywordChange = (keyword) => {
-    setKeywordSearchTerm(keyword);
-  };
-
   useEffect(() => {
-    const fetchMyPosts = async () => {
-      try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=10&_start=20');
-        const data = await response.json();
-        const categories = ["Veterinaria", "Tránsito", "Alimentos/Donación", "Paseos"];
-        const locations = ["Palermo", "Belgrano", "Caballito", "Recoleta", "Villa Crespo", "Nuñez", "Flores", "Almagro"];
-
-        const mappedMyPosts = data.map(post => ({
-          id: `mypost-${post.id}`,
-          title: post.title,
-          description: post.body,
-          imageUrl: `https://picsum.photos/200/300?random=${post.id}`,
-          location: locations[Math.floor(Math.random() * locations.length)],
-          publishedAt: new Date().toISOString(),
-          type: "mypost",
-          category: categories[Math.floor(Math.random() * categories.length)],
-        }));
-        setMyPosts(mappedMyPosts);
-      } catch (error) {
-        console.error("Error fetching my posts:", error);
-      }
+    return () => {
+      queryClient.removeQueries({ queryKey: ["posts", "infinite"] });
     };
-
-    fetchMyPosts();
   }, []);
 
-  const filteredMyPosts = myPosts.filter((post) => {
-    const matchesKeyword =
-      keywordSearchTerm === "" ||
-      post.title.toLowerCase().includes(keywordSearchTerm.toLowerCase()) ||
-      post.description.toLowerCase().includes(keywordSearchTerm.toLowerCase());
+  const filters = {
+    user_id: localStorage.getItem('userId'),
+    category: selectedCategory || undefined,
+    city: locationSearchTerm,
+    keyword: keywordSearchTerm || undefined,
+  };
 
-    const matchesCategory =
-      selectedCategory === "" || post.category === selectedCategory;
+  const {
+    data,
+    isPending,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfinitePosts(filters);
+  
+  // Aplanar todas las páginas
+    const allPosts = data?.pages.flatMap(page => page.posts) || [];
+  
+    // Observer para el último card
+    const observer = React.useRef();
+    const lastCardRef = React.useCallback(
+      (node) => {
+        if (isPending || isFetchingNextPage) return;
+        if (observer.current) observer.current.disconnect();
+        
+        observer.current = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting && hasNextPage) {
+            fetchNextPage();
+          }
+        });
+        
+        if (node) observer.current.observe(node);
+      },
+      [isPending, isFetchingNextPage, hasNextPage, fetchNextPage]
+    );
+  
+  
+    const mappedMyPosts = allPosts.map(post => ({
+      id: post.id,
+      userId: post.user_id,
+      title: post.title,
+      description: post.message,
+      imageUrl: post.multimedia?.[0]?.url || "https://placehold.co/600x400",
+      location: post.city_name || "Sin ubicación",
+      publishedAt: post.created_at,
+      type: post.post_type_id === 1 ? "propuesta" : "oferta",
+      category: post.category,
+      likes: post.likes_count || 0,
+    }));
 
-    const matchesLocation =
-      locationSearchTerm === "" ||
-      (post.location &&
-        post.location.toLowerCase().includes(locationSearchTerm.toLowerCase()));
+    useEffect(() => {
+        if (isError) {
+          showToast("Error al cargar las ofertas", { type: "error" });
+        }
+    }, [isError, error, showToast]);
 
-    return matchesKeyword && matchesCategory && matchesLocation;
-  });
+  
 
   return (
     <PagesTemplate>
       <main className={classes.page}>
         <h2 className={classes.title}>Mis Publicaciones</h2>
         <FilterBar
-          onCategoryChange={handleCategoryChange}
-          onLocationChange={handleLocationChange}
-          onKeywordChange={handleKeywordChange}
-          selectedCategory={selectedCategory}
-          keywordSearchTerm={keywordSearchTerm}
-          locationSearchTerm={locationSearchTerm}
+        onCategoryChange={setSelectedCategory}
+        onLocationChange={setLocationSearchTerm}
+        onKeywordChange={setKeywordSearchTerm}
+        selectedCategory={selectedCategory}
+        keywordSearchTerm={keywordSearchTerm}
+        locationSearchTerm={locationSearchTerm}
         />
         <div className={classes.feedWrap}>
-          <CardsFeed items={filteredMyPosts} onCardClick={handleCardClick} />
+          {isPending && <p>Cargando propuestas...</p>}
+          {isError && <p>Error cargando propuestas</p>}
+          <CardsFeed
+            items={mappedMyPosts}
+            onCardClick={handleCardClick}
+          />
+          {/* El último card activa el scroll */}
+          {mappedMyPosts.length > 0 && (
+            <div ref={lastCardRef} style={{ height: "1px" }} />
+          )}
+
+          {isFetchingNextPage && <p>Cargando más ofertas...</p>}
+          {!hasNextPage && mappedMyPosts.length > 0 && (
+            <p style={{ textAlign: "center", color: "#666" }}>
+              No hay más propuestas
+            </p>
+          )}
         </div>
       </main>
     </PagesTemplate>
