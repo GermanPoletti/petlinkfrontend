@@ -11,15 +11,20 @@ function EditarPerfil() {
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [username, setUsername] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
   const { patchMe } = useUsersApi()
+  const [nameIsChecked, setNameIsChecked] = useState(false);
+  const [lastNameIsChecked, setLastNameIsChecked] = useState(false);
+  const [usernameIsChecked, setUsernameIsChecked] = useState(false);
+
   const handleSave = () => {
     
     const data = {}
 
-    if (nombres) data.first_name = nombres
-    if (apellidos) data.last_name = apellidos
-    if (username) data.username = username
+
+    //TODO: estilizar checkbox para eliminar los datos
+    if (nombres) {data.first_name = nombres} else if(nameIsChecked){data.first_name = null};
+    if (apellidos) {data.last_name = apellidos} else if(lastNameIsChecked){data.last_name = null}
+    if (username) {data.username = username} else if(usernameIsChecked){data.username = null}
     
     patchMe.mutate(data,{
        onSuccess: () => {
@@ -50,6 +55,8 @@ function EditarPerfil() {
             value={nombres}
             onChange={(e) => setNombres(e.target.value)}
           />
+          <input type="checkbox" name="borrarNombre" checked={nameIsChecked} onChange={setNameIsChecked} />
+          <label for="borrarNombre">Delete</label>
         </div>
 
         {/* Campo de Apellidos */}
@@ -61,6 +68,8 @@ function EditarPerfil() {
             value={apellidos}
             onChange={(e) => setApellidos(e.target.value)}
           />
+          <input type="checkbox" name="borrarApellido"  checked={lastNameIsChecked} onChange={setLastNameIsChecked}/>
+          <label for="borrarApellido">Delete</label>
         </div>
 
         {/* Campo de Username */}
@@ -72,17 +81,9 @@ function EditarPerfil() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-        </div>
+          <input type="checkbox" name="borrarUsername" checked={usernameIsChecked} onChange={setUsernameIsChecked}/>
+          <label for="borrarApellido">Delete</label>
 
-        {/* Campo de Fecha de Nacimiento */}
-        <div className={styles.field}>
-          <input
-            type="text"
-            placeholder="Fecha de Nacimiento (dd/mm/aaaa)"
-            className={styles.input}
-            value={fechaNacimiento}
-            onChange={(e) => setFechaNacimiento(e.target.value)}
-          />
         </div>
 
         <BtnSecondary

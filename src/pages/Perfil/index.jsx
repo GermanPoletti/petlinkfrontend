@@ -1,38 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BtnSecondary } from "@/components/UI/Buttons/BtnSecondary";
+import { BtnPrimary } from "@/components/UI/Buttons/BtnPrimary";
 import PagesTemplate from "@/components/UI/PagesTemplate";
 import styles from './Perfil.module.css';
-import { useUsersApi } from '@/hooks/useUsersApi'
+import { useUsersApi } from '@/hooks/useUsersApi';
 
 function Perfil() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [nombres, setNombres] = useState('');
-  const [apellidos, setApellidos] = useState('');
-  const [username, setUsername] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
-  const {useGetMe} = useUsersApi()
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-  } = useGetMe()
-  
-  useEffect(()=>{
-    console.log(data);
-    
-    setEmail(data?.email)
-    setNombres(data?.user_info?.first_name)
-    setApellidos(data?.user_info?.last_name)
-    setUsername(data?.user_info?.username)
-  },[data]) 
+  const { useGetMe } = useUsersApi();
+
+  const { data, isLoading, isError } = useGetMe();
+
+  useEffect(() => {
+    if (isError) {
+      console.error("Error cargando perfil");
+    }
+  }, [isError]);
 
   const handleEditProfile = () => {
     navigate('/editar-perfil');
   };
 
+  if (isLoading) return <PagesTemplate><div>Cargando perfil...</div></PagesTemplate>;
+  if (isError) return <PagesTemplate><div>Error al cargar perfil</div></PagesTemplate>;
 
   return (
     <PagesTemplate>
@@ -40,32 +30,31 @@ function Perfil() {
         <div className={styles.panel}>
           <h1 className={styles.title}>Mi Perfil</h1>
 
-          <div className={styles.field}>
-            <p className={styles.dataText}><strong>Email:</strong> {email}</p>
+          <div className={styles.dataItem}>
+            <div className={styles.dataLabel}>Email</div>
+            <div className={styles.dataValue}>{data?.email || "No definido"}</div>
           </div>
 
-          <div className={styles.field}>
-            <p className={styles.dataText}><strong>Nombres:</strong> {nombres}</p>
+          <div className={styles.dataItem}>
+            <div className={styles.dataLabel}>Nombres</div>
+            <div className={styles.dataValue}>{data?.user_info?.first_name || "No definido"}</div>
           </div>
 
-          <div className={styles.field}>
-            <p className={styles.dataText}><strong>Apellidos:</strong> {apellidos}</p>
+          <div className={styles.dataItem}>
+            <div className={styles.dataLabel}>Apellidos</div>
+            <div className={styles.dataValue}>{data?.user_info?.last_name || "No definido"}</div>
           </div>
 
-          <div className={styles.field}>
-            <p className={styles.dataText}><strong>Username:</strong> {username}</p>
+          <div className={styles.dataItem}>
+            <div className={styles.dataLabel}>Username</div>
+            <div className={styles.dataValue}>@{data?.user_info?.username || "sin username"}</div>
           </div>
 
-          <div className={styles.field}>
-            <p className={styles.dataText}><strong>Fecha de Nacimiento:</strong> {fechaNacimiento}</p>
-          </div>
-
-          <BtnSecondary
+          <BtnPrimary
             text="Editar Perfil"
             className={styles.editButton}
             onClick={handleEditProfile}
           />
-
         </div>
       </div>
     </PagesTemplate>
