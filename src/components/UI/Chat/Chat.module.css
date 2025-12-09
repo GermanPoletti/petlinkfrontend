@@ -46,9 +46,9 @@
   transition: opacity 160ms ease, box-shadow 120ms ease, background-color 120ms ease;
 }
 .backButton img {
-  width: 24px;
-  height: 24px;
-  /* transform: scaleX(-1); */ /* orientación hacia la derecha para cerrar el panel derecho */
+  width: 35px;
+  height: 35px;
+  transform: scaleX(-1); /* flecha apuntando hacia la derecha */
 }
 .backButton:hover { opacity: 0.75; }
 .backButton:active { box-shadow: 0 0 0 3px rgba(46,125,50,0.45); background-color: rgba(46,125,50,0.12); }
@@ -58,7 +58,7 @@
   align-items: center;
   gap: 8px;
   flex: 1;
-  justify-content: space-between;
+  justify-content: center; /* Centra título, botón de acuerdo y username */
   position: relative; /* Para posicionar el dropdown */
 }
 

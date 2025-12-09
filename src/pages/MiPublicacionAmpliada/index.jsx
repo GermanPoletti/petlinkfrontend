@@ -24,7 +24,7 @@ function MiPublicacionAmpliada() {
             location={post.location}
             publishedAt={post.publishedAt}
           />
-          <UserChatList chats={[]} postTitle={post.title} />
+          <UserChatList postId={post.id} postTitle={post.title} />
           <div className={classes.actionsWrap}>
             <div className={classes.leftAction}>
               <BtnSecondary
