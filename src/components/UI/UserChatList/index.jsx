@@ -3,15 +3,16 @@ import * as classes from "./UserChatList.module.css";
 import { useChat } from "@/context/ChatContext";
 import { useChatsApi } from "@/hooks/useChatsApi";
 
+
 // Lista de chats reales asociados a una publicación específica (del dueño)
 export const Frame = ({ postId, postTitle }) => {
   const { openChat } = useChat();
   const { useGetMyChats } = useChatsApi();
 
   const { data, isLoading, error } = useGetMyChats({ post_id: postId });
-
+  console.log(data)
   const chats = Array.isArray(data) ? data : data?.results || data?.items || [];
-
+  
   return (
     <div className={classes.frame}>
       <p className={classes.title}>Viendo los chats para la publicación: {postTitle}</p>
@@ -24,7 +25,7 @@ export const Frame = ({ postId, postTitle }) => {
         )}
         {!isLoading && !error &&
           chats.map((chat) => {
-            const username = chat?.counterpart?.username || chat?.counterpart_username || chat?.user?.username || "Usuario";
+            const username = chat?.receiver?.user_info?.username || chat?.receiver?.email || "Usuario";
             const lastMessage = chat?.last_message?.content || chat?.lastMessage || "";
             const lastInteractionHours = chat?.last_interaction_hours ?? "";
             return (

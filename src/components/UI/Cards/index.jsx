@@ -22,6 +22,7 @@ export const FeedCard = ({
   imageUrl,
   location,
   publishedAt,
+  username,
   className,
   onClick,
 }) => {
@@ -36,6 +37,7 @@ export const FeedCard = ({
       <div className={classes.content}>
         <h3 className={classes.title}>{title}</h3>
         {category && <p className={classes.category}>{category}</p>}
+        {username && <p className={classes.username}>👤 {username}</p>}
         <p className={classes.description}>{description}</p>
         <div className={classes.metaRow}>
           <span className={classes.location}>📍 {location}</span>
