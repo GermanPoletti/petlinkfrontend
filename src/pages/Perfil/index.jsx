@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { BtnSecondary } from "@/components/UI/Buttons/BtnSecondary";
 import PagesTemplate from "@/components/UI/PagesTemplate";
 import styles from './Perfil.module.css';
+import { useUsersApi } from '@/hooks/useUsersApi'
 
 function Perfil() {
   const navigate = useNavigate();
@@ -11,18 +12,22 @@ function Perfil() {
   const [apellidos, setApellidos] = useState('');
   const [username, setUsername] = useState('');
   const [fechaNacimiento, setFechaNacimiento] = useState('');
-
-  useEffect(() => {
-    // Cargar datos del usuario desde localStorage
-    const storedEmail = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).email : '';
-    const storedProfile = localStorage.getItem('profile') ? JSON.parse(localStorage.getItem('profile')) : {};
-
-    setEmail(storedEmail);
-    setNombres(storedProfile.nombres || '');
-    setApellidos(storedProfile.apellidos || '');
-    setUsername(storedProfile.username || '');
-    setFechaNacimiento(storedProfile.fechaNacimiento || '');
-  }, []);
+  const {useGetMe} = useUsersApi()
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+  } = useGetMe()
+  
+  useEffect(()=>{
+    console.log(data);
+    
+    setEmail(data?.email)
+    setNombres(data?.user_info?.first_name)
+    setApellidos(data?.user_info?.last_name)
+    setUsername(data?.user_info?.username)
+  },[data]) 
 
   const handleEditProfile = () => {
     navigate('/editar-perfil');

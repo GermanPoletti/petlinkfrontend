@@ -3,20 +3,33 @@ import { useNavigate } from 'react-router-dom';
 import { BtnPrimary } from "@/components/UI/Buttons/BtnPrimary";
 import { BtnSecondary } from "@/components/UI/Buttons/BtnSecondary";
 import styles from './EditarPerfil.module.css';
-
+import { useToast } from '@/components/UI/Toast';
+import { useUsersApi } from '@/hooks/useUsersApi'
 function EditarPerfil() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [username, setUsername] = useState('');
   const [fechaNacimiento, setFechaNacimiento] = useState('');
-
+  const { patchMe } = useUsersApi()
   const handleSave = () => {
-    // Lógica para guardar los datos del perfil
-    console.log({ nombres, apellidos, username, fechaNacimiento });
-    // Aquí podrías integrar una llamada a una API para actualizar el perfil
-    localStorage.setItem('profile', JSON.stringify({ nombres, apellidos, username, fechaNacimiento }));
-    navigate('/perfil'); // Navegar al perfil después de guardar
+    
+    const data = {}
+
+    if (nombres) data.first_name = nombres
+    if (apellidos) data.last_name = apellidos
+    if (username) data.username = username
+    
+    patchMe.mutate(data,{
+       onSuccess: () => {
+         navigate('/perfil')
+       },
+       onError: (err) => showToast(err, {type: "error"})
+     }
+     )    
+
+     navigate('/perfil'); // Navegar al perfil después de guardar
   };
 
   const handleSkip = () => {

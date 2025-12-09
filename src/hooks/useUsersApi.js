@@ -35,7 +35,7 @@ export const useUsersApi = () => {
   });
 
   const patchMe = useMutation({
-    mutationFn: userApi.patchMe,
+    mutationFn: (data) => userApi.patchMe(data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["me"] }),
   });
 
