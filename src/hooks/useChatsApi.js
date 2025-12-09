@@ -7,11 +7,13 @@ export const useChatsApi = () => {
   // --------------------
   // QUERIES
   // --------------------
-  const useGetMyChats = (filters) =>
-    useQuery({
-      queryKey: ["myChats", filters],
-      queryFn: () => chatApi.getMyChats(filters),
-    });
+ const useGetMyChats = (filters) =>
+  useQuery({
+    queryKey: ["myChats", filters?.post_id],
+    queryFn: () => chatApi.getMyChats(filters),
+    enabled: !!filters?.post_id, 
+  });
+
 
   const useGetChatDetail = (chat_id) =>
     useQuery({
