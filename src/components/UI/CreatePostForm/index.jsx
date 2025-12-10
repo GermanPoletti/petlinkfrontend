@@ -11,13 +11,13 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
 
   const navigate = useNavigate();
   const { showToast } = useToast?.() || { showToast: () => {} };
-  const { createPost } = usePostsApi();
+  const { createPost, patchPost } = usePostsApi();
 
   const [title, setTitle] = useState(initialData.title || "");
   const [category, setCategory] = useState(initialData.category || null);
   const [location, setLocation] = useState(initialData.location || "");
   const [message, setMessage] = useState(initialData.description || "");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState(initialData.image_url);
   const [preview, setPreview] = useState(null);
 
   const maxTitle = 30;
@@ -90,24 +90,40 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
     if (file) {
       formData.append("file", file);
     }
+    if(mode == "edit"){
+      const post_id = initialData?.id
+      console.log(post_id);
+      
+      patchPost.mutate({post_id, data: formData}, {
+        onSuccess: () => {
+          showToast?.("Publicación modificada", { type: "success" });
+          const route = type === "propuesta" ? "/propuestas" : "/ofertas";
+          navigate(route, { replace: true });
+        },
+        onError: () => {
+          showToast?.("Error al crear publicación", { type: "error" });
+        },
+      });
+    }else{
+      createPost.mutate(formData, {
+        onSuccess: () => {
+          showToast?.("Publicación creada", { type: "success" });
+          const route = type === "propuesta" ? "/propuestas" : "/ofertas";
+          navigate(route, { replace: true });
+        },
+        onError: () => {
+          showToast?.("Error al crear publicación", { type: "error" });
+        },
+      });
 
-    createPost.mutate(formData, {
-      onSuccess: () => {
-        showToast?.("Publicación creada", { type: "success" });
-        const route = type === "propuesta" ? "/propuestas" : "/ofertas";
-        navigate(route, { replace: true });
-      },
-      onError: () => {
-        showToast?.("Error al crear publicación", { type: "error" });
-      },
-    });
+    }
   }
 
   return (
     <form className={classes.form} onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
 
       <h1 className={classes.titleHeading}>
-        {mode === "edit" ? "Modificar publicación" : "Publicar oferta"}
+        {mode === "edit" ? "Modificar publicación" : `Publicar ${type}`}
       </h1>
 
       {/* Título */}

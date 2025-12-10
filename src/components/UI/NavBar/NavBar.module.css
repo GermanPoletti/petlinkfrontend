@@ -90,6 +90,8 @@
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
 }
+
+
 .chatIcon {
   width: clamp(18px, 3.5vw, 24px);
   height: clamp(18px, 3.5vw, 24px);
@@ -107,6 +109,8 @@
   background-color: var(--accent);
   border-color: var(--primary-green);
 }
+
+
 
 /* --- 8. PERFIL --- */
 .profileButton {

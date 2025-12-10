@@ -14,7 +14,12 @@ export const loginUser = ({ username, password }) => {
 };
 
 export const logout = () => {
- 
-  localStorage.removeItem('authToken')
-  api.post("/auth/logout")
+  const token = localStorage.getItem('authToken')
+  localStorage.clear()
+  if(token){
+    api.post("/auth/logout").catch(() => {})
+  }else{
+    window.location.replace("/")  
+  }
+   
 }

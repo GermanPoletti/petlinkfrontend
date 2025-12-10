@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { LandingPage } from '@/pages/Landing';
+import { useEffect } from 'react';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Forgot from '@/pages/Forgot';
@@ -26,6 +27,45 @@ import EditarPerfil from '@/pages/EditarPerfil';
 
 
 function App() {
+  useEffect(() => {
+    const checkExpiredToken = () => {
+      const expiresAt = localStorage.getItem("tokenExpiresAt");
+      if (!expiresAt) return;
+
+      const timeLeft = parseInt(expiresAt) - Date.now();
+
+      if (timeLeft <= 0) {
+        // localStorage.removeItem("authToken");
+        // localStorage.removeItem("tokenExpiresAt");
+        localStorage.clear()
+        window.location.replace("/");
+        return;
+      }
+
+      // Re-armamos el timer por si recargaste
+      if (window.logoutTimer) clearTimeout(window.logoutTimer);
+
+      window.logoutTimer = setTimeout(() => {
+        // localStorage.removeItem("authToken");
+        // localStorage.removeItem("tokenExpiresAt");
+        localStorage.clear()
+        window.location.replace("/");
+      }, timeLeft);
+    };
+
+    checkExpiredToken();
+
+    const handleStorage = (e) => {
+      if (e.key === "authToken" && !e.newValue) {
+        window.location.replace("/");
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
   return (
     
       <div className="app">

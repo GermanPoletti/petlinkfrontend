@@ -68,7 +68,7 @@ export const usePostsApi = () => {
 
   
   const patchPost = useMutation({
-    mutationFn: ({ post_id, data }) => postApi.patchPost(post_id, data),
+    mutationFn: ( {post_id, data} ) => postApi.patchPost(post_id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["posts"] }),
   });
 

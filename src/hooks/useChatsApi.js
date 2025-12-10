@@ -7,11 +7,12 @@ export const useChatsApi = () => {
   // --------------------
   // QUERIES
   // --------------------
- const useGetMyChats = (filters) =>
+ const useGetMyChats = (filters, userId) =>
   useQuery({
     queryKey: ["myChats", filters?.post_id],
     queryFn: () => chatApi.getMyChats(filters),
-    enabled: !!filters?.post_id, 
+    // enabled: !!filters?.post_id, 
+    enabled: !!userId
   });
 
 
@@ -22,6 +23,7 @@ export const useChatsApi = () => {
       enabled: !!chat_id,
     });
 
+ 
   // --------------------
   // MUTATIONS
   // --------------------

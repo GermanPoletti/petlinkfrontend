@@ -55,8 +55,14 @@ function EditarPerfil() {
             value={nombres}
             onChange={(e) => setNombres(e.target.value)}
           />
-          <input type="checkbox" name="borrarNombre" checked={nameIsChecked} onChange={() => setNameIsChecked(prev => !prev)}/>
-          <label for="borrarNombre">Delete</label>
+         <button
+            type="button"
+            className={styles.deleteBtn}
+            onClick={() => setNameIsChecked(prev => !prev)}
+            data-active={nameIsChecked}
+         >
+    {nameIsChecked ? "Borrado" : "Borrar nombres"}
+  </button>
         </div>
 
         {/* Campo de Apellidos */}
@@ -68,8 +74,14 @@ function EditarPerfil() {
             value={apellidos}
             onChange={(e) => setApellidos(e.target.value)}
           />
-          <input type="checkbox" name="borrarApellido"  checked={lastNameIsChecked} onChange={() => setLastNameIsChecked(prev => !prev)}/>
-          <label for="borrarApellido">Delete</label>
+         <button
+            type="button"
+            className={styles.deleteBtn}
+            onClick={() => setLastNameIsChecked(prev => !prev)}
+            data-active={lastNameIsChecked}
+         >
+    {lastNameIsChecked ? "Borrado" : "Borrar apellidos"}
+  </button>
         </div>
 
         {/* Campo de Username */}
@@ -81,8 +93,14 @@ function EditarPerfil() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <input type="checkbox" name="borrarUsername" checked={usernameIsChecked} onChange={() => setUsernameIsChecked(prev => !prev)}/>
-          <label for="borrarApellido">Delete</label>
+          <button
+           type="button"
+           className={styles.deleteBtn}
+           onClick={() => setUsernameIsChecked(prev => !prev)}
+            data-active={usernameIsChecked}
+          >
+    {usernameIsChecked ? "Borrado" : "Borrar username"}
+  </button>
 
         </div>
 

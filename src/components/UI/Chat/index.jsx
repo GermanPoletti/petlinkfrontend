@@ -6,11 +6,12 @@ import { useToast } from "@/components/UI/Toast";
 import backarrowIcon from "@/assets/images/icons/backarrow.png";
 import handshake from "@/assets/images/icons/handshake.png";
 
-function MessageBubble({ msg }) {
-  const isSent = msg.is_from_current_user === true;
+function MessageBubble({ msg, currentUserId }) {
+  const isMine = msg.sender_id === currentUserId || msg.is_from_current_user === true;
+
   return (
-    <div className={`${styles.message} ${isSent ? styles.sent : styles.received}`}>
-      <div className={styles.messageText}>{msg.content}</div>
+    <div className={`${styles.message} ${isMine ? styles.sent : styles.received}`}>
+      <div className={styles.messageText}>{msg.message || msg.content}</div>
       <div className={styles.messageTime}>
         {new Date(msg.created_at).toLocaleTimeString([], {
           hour: "2-digit",
@@ -22,17 +23,26 @@ function MessageBubble({ msg }) {
 }
 
 export function ChatPanel() {
-  const { isOpen, activeChatId, closeChat } = useChat();
+  const { isOpen, activeChatId, setActiveChatId, closeChat, chatsData } = useChat();
   const { showToast } = useToast();
-  const { useGetChatDetail, sendMessage, resolveChat } = useChatsApi();
-
+  const { useGetChatDetail, sendMessage, resolveChat, useGetMyChats } = useChatsApi();
+  const currentUserId = Number(localStorage.getItem("userId"));
+  // const { data: chatsData, isLoading: isLoadingChats, error: errorChats } = useGetMyChats(undefined, currentUserId); // Obtener todos los chats
   const { data: chatData, isLoading, error } = useGetChatDetail(activeChatId);
-
+  console.log("CHAT DATA ->", chatData);
+  console.log("CHATS DATA ->", chatsData);
+  
   const [input, setInput] = useState("");
-  const sendMutation = sendMessage;
   const dropdownRef = useRef(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const currentUserId = Number(localStorage.getItem("userId"));
+
+  const handleChatSelect = (chatId) => {
+    setActiveChatId(chatId)
+  };
+
+  useEffect(() => {
+    console.log("activ id changed", activeChatId, isOpen);
+  }, [activeChatId]);
 
   // Cierra dropdown al hacer click fuera
   useEffect(() => {
@@ -64,7 +74,7 @@ export function ChatPanel() {
 
   const isOwner =
     !!chatData &&
-    (chatData?.post?.user_id === currentUserId || chatData?.post?.user?.id === currentUserId);
+    (chatData?.receiver_id === currentUserId);
 
   const handleResolve = (completed) => {
     if (!activeChatId) return;
@@ -91,8 +101,39 @@ export function ChatPanel() {
   if (!isOpen) return null;
 
   // Datos para el header
-  const postTitle = chatData?.post?.title || "Chat";
-  const counterpartUsername = chatData?.counterpart?.username || "Usuario";
+  const postTitle = chatData?.post_title;
+  const getCounterpartName = () => {
+  if (!chatData) return "Usuario";
+  
+
+  // Determinar con quién estoy hablando
+  const isInitiator = chatData.initiator_id === currentUserId;
+
+  const username = isInitiator 
+    ? chatData.receiver_username 
+    : chatData.initiator_username;
+
+  // Si tiene username → usarlo
+  if (username && username.trim()) {
+    return username.trim();
+  }
+
+  // Si no tiene username → usar parte local del email
+  const email = isInitiator 
+    ? chatData.receiver_email 
+    : chatData.initiator_email;
+
+  if (email) {
+    return email.split("@")[0];
+  }
+
+  return "Usuario";
+};
+
+const tempHanlder = () => {
+  setActiveChatId(null)
+}
+const counterpartUsername = getCounterpartName();
 
   return (
     <>
@@ -101,13 +142,15 @@ export function ChatPanel() {
       <aside className={`${styles.chatPanel} ${styles.open}`}>
         {/* HEADER */}
         <div className={styles.header}>
-          <button onClick={closeChat} aria-label="Cerrar" className={styles.backButton}>
+          {activeChatId && 
+          <button onClick={tempHanlder} aria-label="Cerrar" className={styles.backButton}>
             <img src={backarrowIcon} alt="Cerrar" />
-          </button>
+          </button>}
 
-          <div className={styles.headerCenter} ref={dropdownRef}>
-            <span className={styles.postTitle}>{postTitle}</span>
+          <div className={styles.headerCenter}>
+            <span className={styles.postTitle}>{postTitle} -</span>
             {isOwner && (
+              
               <button
                 className={styles.handshakeButton}
                 onClick={() => setShowDropdown((p) => !p)}
@@ -115,9 +158,10 @@ export function ChatPanel() {
               >
                 <img src={handshake} alt="Handshake" className={styles.handshakeIcon} />
               </button>
+              
             )}
-            <span className={styles.username}>@{counterpartUsername}</span>
 
+            <span className={styles.postTitle}>{activeChatId ? `- ${counterpartUsername}` : "Lista de Chats:"}</span>
             {showDropdown && isOwner && (
               <div className={styles.dropdownMenu}>
                 <button className={styles.dropdownItem} onClick={() => handleResolve(true)}>
@@ -131,39 +175,71 @@ export function ChatPanel() {
           </div>
         </div>
 
-        {/* MENSAJES */}
-        <div className={styles.messages}>
-          {isLoading && <div className={styles.loading}>Cargando mensajes...</div>}
-          {error && <div className={styles.error}>Error al cargar el chat</div>}
-          {!isLoading &&
-            !error &&
-            chatData?.messages?.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
-        </div>
+        {/* LISTA DE CHATS */}
+        {!activeChatId &&
+        <div className={styles.chatList}>
+          {isLoading && <div>Cargando chats...</div>}
+          {error && <div>Error al cargar los chats</div>}
 
-        {/* INPUT */}
-        <div className={styles.inputBar}>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            placeholder="Escribe un mensaje..."
-            className={styles.textInput}
-            rows={1}
-          />
-          <button
-            onClick={handleSend}
-            disabled={sendMutation.isPending || !input.trim()}
-            className={styles.sendButton}
-          >
-            Send
-          </button>
+        {chatsData?.length === 0 ? (
+              <div className={styles.noChats}>No tienes chats disponibles</div>
+            ) : (
+              chatsData?.map((chat) => (
+                <div
+                  key={chat.id}
+                  className={styles.chatItem}
+                  onClick={() => handleChatSelect(chat.id)}
+                >
+                  <span>{chat.receiver?.user_info?.username || chat.receiver?.email}</span>
+                </div>
+              ))
+            )}
         </div>
+        }
+
+        {/* MENSAJES */}
+        {activeChatId && (
+          <div className={styles.messages}>
+            {isLoading && <div>Cargando...</div>}
+            {error && <div>Error al cargar mensajes</div>}
+            {chatData?.messages?.map((msg) => (
+            <MessageBubble 
+              key={msg.id} 
+              msg={msg} 
+              currentUserId={currentUserId} 
+           />
+          ))}
+          </div>
+        )}
+
+        {/* INPUT DE MENSAJE */}
+        {activeChatId && (
+          <div className={styles.inputBar}>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              placeholder="Escribe un mensaje..."
+              className={styles.textInput}
+              rows={1}
+            />
+            <button
+              onClick={handleSend}
+              disabled={!input.trim()}
+              className={styles.sendButton}
+            >
+              Send
+            </button>
+          </div>
+        )}
       </aside>
     </>
   );
 }
+
+

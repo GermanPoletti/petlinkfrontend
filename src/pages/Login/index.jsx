@@ -22,19 +22,32 @@ function Login() {
     e.preventDefault(); 
     
     loginUser.mutate(
-      { username: email, password },
-      {
-        onSuccess: (data) => {
+    { username: email, password },
+    {
+      onSuccess: (res) => {
+        
+        localStorage.setItem("authToken", res.access_token);
+        localStorage.setItem("tokenExpiresAt", res.expires_at);
+        localStorage.setItem("userId", res.user_id)
+        const timeLeft = res.expires_at - Date.now();
 
-          const token = data?.access_token;
-          if (token) {
-            localStorage.setItem("authToken", token); 
-            localStorage.setItem("userId", data?.user_id)
-          }
-          navigate("/inicio");
-        },
-      }
-    );
+        if (window.logoutTimer) clearTimeout(window.logoutTimer);
+
+        window.logoutTimer = setTimeout(() => {
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("tokenExpiresAt");
+          window.location.replace("/");
+        }, timeLeft);
+
+        navigate("/inicio");
+      },
+      onError: (err) => {
+        
+        console.log("ERROR LOGIN:", err);
+        alert("Usuario o contraseña incorrecta");
+      },
+    }
+  );
   };
 
   return (

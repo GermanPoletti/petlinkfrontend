@@ -14,9 +14,16 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res.data, 
   (err) => {
-    // const message = err.response?.data?.detail || err.message;
+    // SI ES 401 → sacamos al usuario y cortamos todo
+    if (err.response?.status === 401) {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("tokenExpiresAt");
+      // Forzamos salida sin romper React Query
+      window.location.replace("/");
+      // No devolvemos nada más → React Query ve error pero ya estamos afuera
+    }
+    // Dejamos que el error siga su camino normal (React Query lo va a manejar)
     return Promise.reject(err);
-  }
-);
+});
 
 export default api;
