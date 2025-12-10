@@ -170,14 +170,14 @@
 .messageTime {
   color: var(--textsecondary);
   font-family: "Roboto", Helvetica;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 400;
   letter-spacing: 0.4px;
   line-height: 16px;
   position: relative;
   white-space: nowrap;
   width: fit-content;
-  margin-left: auto; /* Empujar a la derecha */
+  margin-left: 0; /* Empujar a la derecha */
   align-self: center; /* Centrar verticalmente */
   flex-shrink: 0; /* Asegurar que no se encoja */
 }

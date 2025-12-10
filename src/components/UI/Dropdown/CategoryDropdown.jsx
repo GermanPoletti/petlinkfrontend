@@ -40,7 +40,7 @@ export default function CategoryDropdown({
       <label className={classes.label}>
         {label} <span className={classes.required}>*</span>
       </label>
-      <button className={classes.control} onClick={() => setOpen((o) => !o)} aria-haspopup="listbox" aria-expanded={open}>
+      <button  type="button" className={classes.control} onClick={() => setOpen((o) => !o)} aria-haspopup="listbox" aria-expanded={open}>
         <span className={classes.value}>{selected ? selected.label : placeholder}</span>
         <span className={`${classes.chevron} ${open ? classes.chevronUp : classes.chevronDown}`}>▾</span>
       </button>
@@ -51,6 +51,7 @@ export default function CategoryDropdown({
           )}
           {normalized.map((it) => (
             <button
+             type="button" 
               key={it.value}
               role="option"
               className={`${classes.option} ${selected && selected.value === it.value ? classes.selected : ""}`}

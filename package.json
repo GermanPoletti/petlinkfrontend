@@ -10,11 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.12",
     "axios": "^1.13.0",
+    "chart": "^0.1.2",
+    "chart.js": "^4.5.1",
     "prop-types": "^15.8.1",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.4"
+    "react": "^19.2.1",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.2.1",
+    "react-router-dom": "^7.9.4",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

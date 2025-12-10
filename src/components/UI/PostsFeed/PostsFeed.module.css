@@ -1,0 +1,20 @@
+.page {
+  padding: 16px;
+}
+
+.title {
+  margin: 8px 16px;
+  color: var(--textprimary);
+  font-family: "Preahvihear", Helvetica;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.feedWrap {
+  margin-top: 8px;
+}
+
+@media (min-width: 768px) {
+  .page { padding: 20px; }
+  .title { font-size: 24px; }
+}

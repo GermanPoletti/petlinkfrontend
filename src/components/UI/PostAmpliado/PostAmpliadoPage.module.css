@@ -1,0 +1,108 @@
+.reportModalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.reportModal {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.reportModal h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.reasonsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.reasonBtn {
+  padding: 14px;
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 16px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reasonBtn:hover {
+  background: #e74c3c;
+  color: white;
+  border-color: #e74c3c;
+}
+
+.cancelBtn {
+  color: #666;
+  background: none;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.reasonBtnSelected {
+  background: #e74c3c !important;
+  color: white !important;
+  border-color: #e74c3c !important;
+}
+
+.customReasonWrapper {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.customReasonTextarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.customReasonTextarea:focus {
+  outline: none;
+  border-color: #e74c3c;
+}
+
+.sendCustomBtn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sendCustomBtn:hover {
+  background: #c0392b;
+}
+
+.sendCustomBtn:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+}

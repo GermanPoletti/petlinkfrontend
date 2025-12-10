@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: "http://localhost:8000",
   timeout: 10000,
 });
 
@@ -9,6 +9,21 @@ api.interceptors.request.use((config) => {
   const token = localStorage.getItem('authToken');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
+});
+
+api.interceptors.response.use(
+  (res) => res.data, 
+  (err) => {
+    // SI ES 401 → sacamos al usuario y cortamos todo
+    if (err.response?.status === 401) {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("tokenExpiresAt");
+      // Forzamos salida sin romper React Query
+      window.location.replace("/");
+      // No devolvemos nada más → React Query ve error pero ya estamos afuera
+    }
+    // Dejamos que el error siga su camino normal (React Query lo va a manejar)
+    return Promise.reject(err);
 });
 
 export default api;

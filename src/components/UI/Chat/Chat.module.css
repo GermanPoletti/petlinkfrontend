@@ -46,9 +46,9 @@
   transition: opacity 160ms ease, box-shadow 120ms ease, background-color 120ms ease;
 }
 .backButton img {
-  width: 24px;
-  height: 24px;
-  /* transform: scaleX(-1); */ /* orientación hacia la derecha para cerrar el panel derecho */
+  width: 35px;
+  height: 35px;
+  transform: scaleX(-1); /* flecha apuntando hacia la derecha */
 }
 .backButton:hover { opacity: 0.75; }
 .backButton:active { box-shadow: 0 0 0 3px rgba(46,125,50,0.45); background-color: rgba(46,125,50,0.12); }
@@ -58,7 +58,7 @@
   align-items: center;
   gap: 8px;
   flex: 1;
-  justify-content: space-between;
+  justify-content: center; /* Centra título, botón de acuerdo y username */
   position: relative; /* Para posicionar el dropdown */
 }
 
@@ -124,6 +124,78 @@
 
 .headerIcon { width: 20px; height: 20px; opacity: 0.8; }
 
+/* Estilo general para la lista de chats */
+.chatList {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  padding: 0px 16px;
+  border-radius: 0px;
+  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); */
+  max-height: 100%; /* Limitar la altura máxima para permitir scroll */
+  overflow-y: auto; /* Scroll si es necesario */
+}
+
+/* Estilo para cada item de chat */
+.chatItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Hover cuando el mouse pasa sobre un chat */
+.chatItem:hover {
+  background-color: var(--primary-green-light);
+  transform: translateY(-2px);
+}
+
+/* Estilo del nombre de usuario */
+.chatItem span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  word-wrap: break-word; /* Asegura que los nombres largos no salgan del contenedor */
+}
+
+/* Estilo para mostrar "Cargando..." */
+.chatList > div {
+  color: #555;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Estilo de error */
+.chatList > .error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Agregar una línea horizontal para separar elementos */
+.chatItem + .chatItem {
+  border-top: 1px solid #ddd;
+}
+
+/* Estilo del icono de la foto de perfil o avatar (si decides agregarlo) */
+.chatItem .avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+
 .messages {
   flex: 1;
   overflow-y: auto;
@@ -173,7 +245,7 @@
   background: var(--primary-green);
   color: white;
   border-radius: 50%;
-  width: 36px;
+  width: 42px;
   height: 36px;
   cursor: pointer;
 }
