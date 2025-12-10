@@ -4,11 +4,12 @@ import { BtnPrimary } from "@/components/UI/Buttons/BtnPrimary";
 import styles from './Login.module.css';
 import loginCat from '@/assets/images/login-Cat.png';
 import { useAuthApi } from "@/hooks/useAuthApi";
+import { useToast } from "../../components/UI/Toast";
 
 function Login() {
   const navigate = useNavigate();
   const { loginUser } = useAuthApi();
-
+  const { showToast } = useToast()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,7 +45,7 @@ function Login() {
       onError: (err) => {
         
         console.log("ERROR LOGIN:", err);
-        alert("Usuario o contraseña incorrecta");
+        showToast(err.response?.data?.detail, {type : "error"});
       },
     }
   );

@@ -16,8 +16,7 @@ api.interceptors.response.use(
   (err) => {
     // SI ES 401 → sacamos al usuario y cortamos todo
     if (err.response?.status === 401) {
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("tokenExpiresAt");
+      localStorage.clear()
       // Forzamos salida sin romper React Query
       window.location.replace("/");
       // No devolvemos nada más → React Query ve error pero ya estamos afuera

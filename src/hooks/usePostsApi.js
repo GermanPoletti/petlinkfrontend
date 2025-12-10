@@ -13,6 +13,12 @@ export const usePostsApi = () => {
       queryFn: () => postApi.getPosts(filters),
     });
 
+    const useGetPostCount = () => 
+    useQuery({
+      queryKey: ["countPost"], 
+      queryFn: () => postApi.countAllPost(),
+      refetchInterval: 10000,})
+
   const useGetPostById = (post_id) =>
     useQuery({
       queryKey: ["post", post_id],
@@ -54,7 +60,7 @@ export const usePostsApi = () => {
     },
 
     initialPageParam: 0,
-    staleTime: 1000 * 60 * 5,
+    // staleTime: 1000 * 60 * 5,
   });
 };
 
@@ -90,6 +96,7 @@ export const usePostsApi = () => {
 
   return {
     useGetPosts,
+    useGetPostCount,
     useGetPostById,
     useGetPostsByUser,
     useInfinitePosts,

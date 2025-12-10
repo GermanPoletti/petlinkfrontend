@@ -19,12 +19,44 @@ export const useUsersApi = () => {
       queryFn: userApi.getMe,
     });
 
+    const useGetMyRole = (role) =>
+    useQuery({
+      queryKey: ["myRole", role],
+      queryFn: () => userApi.getMyRole(role),
+    });
+
   const useGetUserById = (user_id) =>
     useQuery({
       queryKey: ["user", user_id],
       queryFn: () => userApi.getUserById(user_id),
       enabled: !!user_id,
     });
+
+
+
+  const useGetUsersCount = () => 
+    useQuery({
+      queryKey: ["countUsers"], 
+      queryFn: () => userApi.countAllUsers(),
+      refetchInterval: 10000,
+  });
+
+
+const downloadUsersExcel = async (startDate, endDate) => {
+    
+      const blob = await userApi.exportUsersToExcel(startDate, endDate);
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `usuarios_${startDate}_a_${endDate}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    
+  };
+  
 
   // --------------------
   // MUTATIONS
@@ -53,6 +85,9 @@ export const useUsersApi = () => {
     useGetAllUsers,
     useGetMe,
     useGetUserById,
+    useGetMyRole,
+    useGetUsersCount,
+    downloadUsersExcel,
     deleteMe,
     patchMe,
     patchUserRole,

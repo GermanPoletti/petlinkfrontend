@@ -13,6 +13,8 @@ export const loginUser = ({ username, password }) => {
   });
 };
 
+export const isAdmin = () => api.get("auth/is_admin");
+
 export const logout = () => {
   const token = localStorage.getItem('authToken')
   localStorage.clear()

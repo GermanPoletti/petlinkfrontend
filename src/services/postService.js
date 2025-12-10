@@ -13,7 +13,7 @@ export const searchPosts = (keyword) =>
   api.get("/posts/search", { params: { keyword } });
 
 export const getPostsByUser = (user_id) =>
-  api.get(`/posts/${user_id}`);
+  api.get(`/posts/user/${user_id}`);
 
 export const getPostById = (post_id) =>
   api.get(`/posts/${post_id}`);
@@ -26,3 +26,5 @@ export const deletePost = (post_id) =>
 
 export const likePost = (post_id) =>
   api.post(`/posts/${post_id}/like`);
+
+export const countAllPost = () => api.get("/posts/count")

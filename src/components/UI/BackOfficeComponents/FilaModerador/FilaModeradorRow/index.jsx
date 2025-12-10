@@ -3,9 +3,11 @@ import * as classes from "./FilaModeradorRow.module.css";
 import { BtnSecondary, BtnDanger } from "@/components/UI/Buttons";
 
 export const FilaModeradorRow = ({ user, onEdit, onSuspend, onActivate }) => {
-  const isModerator = user.role === "moderator";
-  const isActive = user.status === "activo";
-  const isInactive = user.status === "inactivo";
+
+  
+  const isModerator = user.role_id === 2;
+  const isActive = user.status_id === 1;
+  const isInactive = user.status_id === 2;
 
   return (
     <div className={classes.row}>
