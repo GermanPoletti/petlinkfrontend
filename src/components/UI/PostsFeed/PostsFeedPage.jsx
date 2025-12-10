@@ -6,7 +6,7 @@ import * as classes from "./PostsFeed.module.css";
 import FilterBar from "@/components/UI/FilterBar";
 import { usePostsApi } from "@/hooks/usePostsApi";
 import { useToast } from "@/components/UI/Toast";
-import { useQueryClient } from "@tanstack/react-query";
+// import { useQueryClient } from "@tanstack/react-query";
 
 function PostsFeedPage({
   type,               
@@ -21,7 +21,6 @@ function PostsFeedPage({
   const [locationSearchTerm, setLocationSearchTerm] = useState("");
   const [keywordSearchTerm, setKeywordSearchTerm] = useState("");
 
-  const queryClient = useQueryClient();
   const { useInfinitePosts } = usePostsApi();
   const { showToast } = useToast();
 
@@ -77,11 +76,12 @@ function PostsFeedPage({
     likes: post.likes_count || 0,
   }));
 
-  useEffect(() => {
-    return () => {
-      queryClient.removeQueries({ queryKey: ["posts", "infinite"] });
-    };
-  }, [queryClient]);
+  // descomentar para reiniciar scroll cuando se sale de la pagina
+  // useEffect(() => {
+  //   return () => {
+  //     queryClient.removeQueries({ queryKey: ["posts", "infinite"] });
+  //   };
+  // }, [queryClient]);
 
   useEffect(() => {
     if (isError) {

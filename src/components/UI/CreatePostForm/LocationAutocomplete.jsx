@@ -1,12 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as classes from "./LocationAutocomplete.module.css";
 
-// Autocomplete básico de ubicación.
-// Validación: "país, estado/provincia, ciudad" (3 partes separadas por coma).
-// Nota: Para producción, integrar API como Mapbox Places, Google Places o Nominatim.
 export default function LocationAutocomplete({ label = "Ubicación", placeholder, value, onChange, className }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState(value || "");
+  const [suggestions, setSuggestions] = useState([]);
   const rootRef = useRef(null);
 
   useEffect(() => {
@@ -17,14 +15,42 @@ export default function LocationAutocomplete({ label = "Ubicación", placeholder
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [open]);
 
+  useEffect(() => {
+    if (!query.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    async function fetchSuggestions() {
+      try {
+        const response = await fetch(
+        `https://apis.datos.gob.ar/georef/api/localidades?provincia=06&nombre=${encodeURIComponent(query)}&max=10`
+      );
+        const data = await response.json();
+        if (data.localidades) {
+          // Convertimos a formato "Localidad, Provincia"
+          const formatted = data.localidades.map(
+            (loc) => `${loc.nombre}, ${loc.provincia.nombre}`
+          );
+          setSuggestions(formatted);
+        }
+      } catch (err) {
+        console.error("Error fetching locations:", err);
+      }
+    }
+
+    fetchSuggestions();
+  }, [query]);
+
   function isValidLocation(v) {
     const parts = (v || "").split(",").map((p) => p.trim()).filter(Boolean);
-    return parts.length === 3; // país, estado/provincia, ciudad
+    return parts.length === 2; // Localidad, Provincia
   }
 
   function clear() {
     setQuery("");
     onChange?.("");
+    setSuggestions([]);
   }
 
   return (
@@ -38,8 +64,9 @@ export default function LocationAutocomplete({ label = "Ubicación", placeholder
           onChange={(e) => {
             setQuery(e.target.value);
             onChange?.(e.target.value);
+            setOpen(true);
           }}
-          placeholder={placeholder || "País, Provincia, Ciudad"}
+          placeholder={placeholder || "Localidad, Provincia"}
           className={classes.input}
         />
         {!!query && (
@@ -48,11 +75,29 @@ export default function LocationAutocomplete({ label = "Ubicación", placeholder
           </button>
         )}
       </div>
+
+      {open && suggestions.length > 0 && (
+        <ul className={classes.suggestions}>
+          {suggestions.map((s, i) => (
+            <li
+              key={i}
+              onClick={() => {
+                setQuery(s);
+                onChange?.(s);
+                setOpen(false);
+              }}
+            >
+              {s}
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div className={classes.hints}>
         <button type="button" className={classes.hintBtn} onClick={() => setOpen((o) => !o)}>
           {open ? "Ocultar sugerencias" : "Mostrar sugerencias"}
         </button>
-        <span className={classes.helper}>Formato: País, Estado/Provincia, Ciudad</span>
+        <span className={classes.helper}>Formato: Localidad, Provincia</span>
       </div>
     </div>
   );

@@ -1,8 +1,10 @@
 import  api  from "./api"; 
 
 
-export const createPost = (data) => 
-  api.post("/posts/", data);
+export const createPost = (formData) =>
+    api.post("/posts/", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 
 export const getPosts = (filters) => 
   api.get("/posts/", { params: filters });
