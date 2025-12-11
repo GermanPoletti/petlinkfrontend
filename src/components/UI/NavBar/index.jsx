@@ -107,7 +107,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
         <BtnPropuestas
           className={classes.btnPropuestas}
           active={location.pathname === "/propuestas"}
-          text="Propuestas"
+          text="Necesidades"
           onClick={() => navigate("/propuestas")}
         />
         <BtnOfertas

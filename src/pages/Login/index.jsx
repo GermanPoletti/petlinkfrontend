@@ -28,17 +28,7 @@ function Login() {
       onSuccess: (res) => {
         
         localStorage.setItem("authToken", res.access_token);
-        localStorage.setItem("tokenExpiresAt", res.expires_at);
-        localStorage.setItem("userId", res.user_id)
-        const timeLeft = res.expires_at - Date.now();
-
-        if (window.logoutTimer) clearTimeout(window.logoutTimer);
-
-        window.logoutTimer = setTimeout(() => {
-          localStorage.removeItem("authToken");
-          localStorage.removeItem("tokenExpiresAt");
-          window.location.replace("/");
-        }, timeLeft);
+        
 
         navigate("/inicio");
       },

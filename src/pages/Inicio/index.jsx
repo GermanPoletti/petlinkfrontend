@@ -49,7 +49,8 @@ const Inicio = () => {
       likes: post.likes_count || 0,
     }));
   }
-
+  console.log(ultimaNecesida, ultimaOfert);
+  
   const ultimaNecesidad = useMemo(() => mapPost(ultimaNecesida?.posts || []), [ultimaNecesida]);
   const ultimaOferta = useMemo(() => mapPost(ultimaOfert?.posts || []), [ultimaOfert]);
 
@@ -75,9 +76,13 @@ const Inicio = () => {
       {error && <p>Error al cargar los posts: {error.message}</p>}
       {!loading && !error && (
           <div className={styles.cardsList}>
-            <h3 className={styles.cardTitle}>Última Propuesta:</h3>
-            {ultimaNecesidad && (
-              <Link to={`/propuesta-ampliada/${ultimaNecesidad[0].id}`} state={ultimaNecesidad[0]} className={styles.cardLink}>
+            <h3 className={styles.cardTitle}>Última Necesidad:</h3>
+            {ultimaNecesidad?.length > 0 ? (
+              <Link
+                to={`/propuesta-ampliada/${ultimaNecesidad[0].id}`}
+                state={ultimaNecesidad[0]}
+                className={styles.cardLink}
+              >
                 <FeedCard
                   title={ultimaNecesidad[0].title}
                   username={ultimaNecesidad[0].username}
@@ -87,11 +92,18 @@ const Inicio = () => {
                   publishedAt={ultimaNecesidad[0].publishedAt}
                 />
               </Link>
+            ) : (
+              <p>No hay propuestas disponibles</p>
             )}
 
+
             <h3 className={styles.cardTitle}>Última Oferta:</h3>
-            {ultimaOferta && (
-              <Link to={`/oferta-ampliada/${ultimaOferta[0].id}`} state={ultimaOferta[0]} className={styles.cardLink}>
+            {ultimaOferta?.length > 0 ? (
+              <Link
+                to={`/oferta-ampliada/${ultimaOferta[0].id}`}
+                state={ultimaOferta[0]}
+                className={styles.cardLink}
+              >
                 <FeedCard
                   title={ultimaOferta[0].title}
                   username={ultimaOferta[0].username}
@@ -101,7 +113,10 @@ const Inicio = () => {
                   publishedAt={ultimaOferta[0].publishedAt}
                 />
               </Link>
+            ) : (
+              <p>No hay ofertas disponibles</p>
             )}
+
           </div>
       )}
         </section>

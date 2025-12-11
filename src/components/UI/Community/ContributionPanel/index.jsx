@@ -17,7 +17,7 @@ export const ContributionPanel = ({
   const img = imageUrl || imageSrc || registerDog;
   const text =
     typeof contributionsCount === "number"
-      ? `Has contribuido a propuestas: ${contributionsCount} veces`
+      ? `Has contribuido a necesidades: ${contributionsCount} veces`
       : countText || "Has contribuido";
 
   return (

@@ -25,8 +25,9 @@ function MiPublicacionAmpliada() {
   const confirmDelete = window.confirm(
     "¿Estás seguro de que querés eliminar esta publicación? Esta acción no se puede deshacer."
   );
-
-  if (!confirmDelete) return;
+  // console.log(!confirmDelete);
+  
+  // if (!confirmDelete) return;
 
   deletePost.mutate(post.id, {
     onSuccess: () => {

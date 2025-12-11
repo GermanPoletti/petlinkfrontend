@@ -11,10 +11,10 @@ import { useReportsApi } from "@/hooks/useReportsApi";
 
 export default function BackOfficeDashboard() {
   const { showToast } = useToast();
-  
-  const { downloadUsersExcel } = useUsersApi();
+  const {useGetAllUsers} = useUsersApi()
 
-  
+  const { data:allUsers, isLoading, error, isError }  = useGetAllUsers()
+
   const [loading, setLoading] = useState(false);
   // Contadores
   const { useGetUsersCount } = useUsersApi();
@@ -64,7 +64,9 @@ export default function BackOfficeDashboard() {
     return true;
   };
 
-  const handleDownload = async () => {
+  // const {data:dataexcel} = exportUsersToExcel();
+
+  const handleDownload = () => {
     if (!formStartDate || !formEndDate) {
       showToast("Faltan fechas", { type: "error" });
       return;
@@ -74,17 +76,14 @@ export default function BackOfficeDashboard() {
       return;
     }
 
-    setLoading(true);
-    try {
-      await downloadUsersExcel(formStartDate, formEndDate);
-      showToast("Excel descargado correctamente", { type: "success" });
-    } catch (err) {
-      showToast("Error al descargar el archivo", { type: "error" });
-    } finally {
-      setLoading(false);
-    }
+    // downloadMutation.mutate(
+    //   { startDate: formStartDate, endDate: formEndDate },
+    //   {
+    //     onSuccess: () => showToast("Excel descargado correctamente", { type: "success" }),
+    //     onError: (err) => showToast("Error al descargar el Excel", { type: "error" }),
+    //   }
+    // );
   };
-
   return (
     <BackOfficeTemplate>
       <main className={classes.page}>
@@ -157,20 +156,22 @@ export default function BackOfficeDashboard() {
                       setAppliedAggregation(formAggregation);
                     }}
                   />
-                  <BtnSecondary
-                    text={exportUsersToExcel.isPending ? "Descargando..." : "Descargar información"}
-                    size="sm"
-                    onClick={handleDownload}
-                    disabled={exportUsersToExcel.isPending}
-                  />
+                    <BtnSecondary
+                        text={loading ? "Descargando..." : "Descargar información"}
+                        size="sm"
+                        onClick={handleDownload}
+                        disabled={loading}
+                      />
                 </div>
               </div>
 
               <RegisteredUsersChart 
+                users={allUsers || []}
                 startDate={appliedStartDate} 
                 endDate={appliedEndDate} 
                 aggregation={appliedAggregation} 
               />
+
             </div>
           </div>
         )}
