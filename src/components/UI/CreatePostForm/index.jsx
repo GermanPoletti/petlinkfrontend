@@ -97,7 +97,7 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
       patchPost.mutate({post_id, data: formData}, {
         onSuccess: () => {
           showToast?.("Publicación modificada", { type: "success" });
-          const route = type === "necesidad" ? "/necesidad" : "/ofertas";
+          const route = type === "necesidad" ? "/propuestas" : "/ofertas";
           navigate(route, { replace: true });
         },
         onError: () => {
@@ -108,7 +108,7 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
       createPost.mutate(formData, {
         onSuccess: () => {
           showToast?.("Publicación creada", { type: "success" });
-          const route = type === "necesidad" ? "/necesidad" : "/ofertas";
+          const route = type === "necesidad" ? "/propuestas" : "/ofertas";
           navigate(route, { replace: true });
         },
         onError: () => {
