@@ -14,6 +14,7 @@ import { MenuDesplegable } from "@/components/UI/Menu";
 import { useToast } from "@/components/UI/Toast";
 import { BtnPropuestas } from "@/components/UI/Buttons/BtnPropuestas";
 
+
 export const NavBar = ({ userImageUrl, onProfileClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,7 +23,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
   const { toggleChat } = useChat();
   const { showToast } = useToast();
   const [isAdmin, setIsAdmin] = useState(false);
-  const { logoutUser } = useAuthApi();
+  const { logoutUser, useIsAdmin } = useAuthApi();
 
   const handleLogout = () => {
 
@@ -31,7 +32,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
       onSuccess: () => {
           console.log("logedout")
           showToast("Logged Out", { type: "success" });
-          navigate("/login");
+          navigate("/");
         },
         onError: (error) => {
           const msg = error.response?.data?.detail || "Error al desloguear";
@@ -59,35 +60,30 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
+  const { data: adminData, isLoading, error } = useIsAdmin;
+
  useEffect(() => {
   const checkAdmin = () => {
     try {
-      // MODO DESARROLLO: ?dev=admin
-      const urlParams = new URLSearchParams(window.location.search);
-      const devMode = urlParams.get("dev") === "admin";
-
-      const raw = localStorage.getItem("user");
-      const parsed = raw ? JSON.parse(raw) : null;
-      
-      setIsAdmin(devMode || parsed?.role === "admin");
+      setIsAdmin(adminData.is_admin);
     } catch {
       setIsAdmin(false);
     }
   };
 
-  // Ejecutar al montar
+  // // Ejecutar al montar
   checkAdmin();
 
-  // Escuchar cambios de URL (cuando cambias ?dev=admin)
-  const handleLocationChange = () => checkAdmin();
-  window.addEventListener("popstate", handleLocationChange);
-  window.addEventListener("pushstate", handleLocationChange); // si usas navigate
+  // // Escuchar cambios de URL (cuando cambias ?dev=admin)
+  // const handleLocationChange = () => checkAdmin();
+  // window.addEventListener("popstate", handleLocationChange);
+  // window.addEventListener("pushstate", handleLocationChange); // si usas navigate
 
-  return () => {
-    window.removeEventListener("popstate", handleLocationChange);
-    window.removeEventListener("pushstate", handleLocationChange);
-  };
-}, []);
+  // return () => {
+  //   window.removeEventListener("popstate", handleLocationChange);
+  //   window.removeEventListener("pushstate", handleLocationChange);
+  // };
+}, [adminData]);
 
   return (
     <div className={classes.navbar}>
@@ -111,7 +107,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
         <BtnPropuestas
           className={classes.btnPropuestas}
           active={location.pathname === "/propuestas"}
-          text="Propuestas"
+          text="Necesidades"
           onClick={() => navigate("/propuestas")}
         />
         <BtnOfertas

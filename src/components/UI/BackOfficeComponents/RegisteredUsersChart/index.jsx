@@ -42,7 +42,7 @@ function getSafeUsersWithDates(rawUsers) {
   });
 }
 
-export default function RegisteredUsersChart({ startDate, endDate, aggregation = "day" }) {
+export default function RegisteredUsersChart({ users = [], startDate, endDate, aggregation = "day" }) {
   const { showToast } = useToast();
   const [data, setData] = useState([]); // [{ label, count }]
   const [total, setTotal] = useState(0);
@@ -65,14 +65,12 @@ export default function RegisteredUsersChart({ startDate, endDate, aggregation =
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("appUsers");
-      const parsed = raw ? JSON.parse(raw) : [];
-      const users = getSafeUsersWithDates(parsed);
+      const usersWithDates = getSafeUsersWithDates(users);
 
       // Filtrar por rango
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
-      const inRange = users.filter((u) => {
+      const inRange = usersWithDates.filter((u) => {
         const d = new Date(u.registeredAt);
         if (!start || !end || Number.isNaN(d.getTime())) return false;
         d.setHours(0, 0, 0, 0);
@@ -129,7 +127,7 @@ export default function RegisteredUsersChart({ startDate, endDate, aggregation =
       setTotal(0);
       showToast("Error cargando datos de usuarios", { type: "error" });
     }
-  }, [startDate, endDate, aggregation, range, showToast]);
+  }, [users, startDate, endDate, aggregation, range, showToast]);
 
   const max = data.reduce((m, d) => Math.max(m, d.count), 0);
   const labels = useMemo(() => data.map((d) => d.label), [data]);
@@ -186,7 +184,6 @@ export default function RegisteredUsersChart({ startDate, endDate, aggregation =
   const handleChartClick = (event) => {
     const chart = chartRef.current;
     if (!chart) return;
-    // En react-chartjs-2 v5, el evento nativo puede estar en event.native
     const ev = event?.native || event;
     const elems = chart.getElementsAtEventForMode(ev, "nearest", { intersect: true }, true);
     if (!elems || !elems.length) return;
@@ -194,27 +191,6 @@ export default function RegisteredUsersChart({ startDate, endDate, aggregation =
     const label = labels[idx];
     const count = data[idx]?.count ?? 0;
     setSelected({ idx, label, count });
-  };
-
-  const handlePointClick = (p) => {
-    setSelected(p);
-  };
-
-  const handleLineClick = (e) => {
-    if (!svgRef.current || !points.length) return;
-    const rect = svgRef.current.getBoundingClientRect();
-    const xPerc = ((e.clientX - rect.left) / rect.width) * 100;
-    // Buscar el punto más cercano en X
-    let closestIdx = 0;
-    let closestDist = Infinity;
-    for (let i = 0; i < points.length; i++) {
-      const dist = Math.abs(points[i].x - xPerc);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closestIdx = i;
-      }
-    }
-    setSelected(points[closestIdx]);
   };
 
   return (

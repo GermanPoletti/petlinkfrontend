@@ -13,6 +13,14 @@ export const useReportsApi = () => {
       queryFn: reportApi.listReports,
     });
 
+
+  const useGetReportsCount = () => 
+      useQuery({
+        queryKey: ["countReports"], 
+        queryFn: () => reportApi.countAllReports(),
+        refetchInterval: 10000,
+    });
+
   const useGetReportById = (report_id) =>
     useQuery({
       queryKey: ["report", report_id],
@@ -41,6 +49,7 @@ export const useReportsApi = () => {
   return {
     useListReports,
     useGetReportById,
+    useGetReportsCount,
     createReport,
     approveReport,
     dismissReport,

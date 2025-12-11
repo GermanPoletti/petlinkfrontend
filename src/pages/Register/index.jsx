@@ -38,8 +38,8 @@ function Register() {
     registerUser.mutate({email, password},
       {
         onSuccess: () => {
-          showToast("¡Registro exitoso! Bienvenido a PetLink", { type: "success" })
-          navigate("/inicio")
+          showToast("¡Registro exitoso! ¡Logueate para usar nuestro servicios!", { type: "success" })
+          navigate("/")
         },
         onError: (error) => {
           const msg = error.response?.data?.detail || "Error al registrarse";

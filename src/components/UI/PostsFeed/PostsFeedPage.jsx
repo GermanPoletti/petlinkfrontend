@@ -24,6 +24,7 @@ function PostsFeedPage({
   const { useInfinitePosts } = usePostsApi();
   const { showToast } = useToast();
 
+  
   const filters = {
     show_only_active: true,
     user_id: userId || undefined,
@@ -32,7 +33,7 @@ function PostsFeedPage({
     city: locationSearchTerm || undefined,
     keyword: keywordSearchTerm || undefined,
   };
-
+  
   const {
     data,
     isPending,
@@ -42,7 +43,8 @@ function PostsFeedPage({
     hasNextPage,
     isFetchingNextPage,
   } = useInfinitePosts(filters);
-
+  useEffect(()=>{console.log(data)},[data])
+  
   const allPosts = data?.pages.flatMap((page) => page.posts) || [];
 
   // Observer para infinite scroll

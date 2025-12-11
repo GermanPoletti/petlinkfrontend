@@ -22,6 +22,74 @@
 .table { display: flex; flex-direction: column; gap: 12px; }
 .rows { display: flex; flex-direction: column; gap: 8px; }
 
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.modalClose {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #999;
+}
+
+.modalClose:hover {
+  color: #333;
+}
+
+.modalTitle {
+  margin: 0 0 24px 0;
+  font-size: 24px;
+  text-align: center;
+  color: #333;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 16px;
+}
+
+.modalRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.modalLabel {
+  font-weight: 600;
+  color: #555;
+}
+
+.modalActions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+Resultado
+
 @media (max-width: 640px) {
   .searchRow { justify-content: center; }
   .searchInput { width: 100%; min-width: 0; }

@@ -70,10 +70,10 @@ function App() {
     
       <div className="app">
         <Routes>
-          <Route path="/NavBar" element={<NavBar />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/NavBar" element={<NavBar />} />
           <Route path="/forgot" element={<Forgot />} />
           <Route path="/inicio" element={<Inicio />} />
           <Route path="/ofertas" element={<Ofertas />} />

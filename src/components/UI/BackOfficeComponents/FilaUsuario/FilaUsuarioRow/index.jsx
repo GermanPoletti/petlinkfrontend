@@ -7,7 +7,7 @@ export const FilaUsuarioRow = ({ user, onView, onBan }) => {
     <div className={classes.row}>
       <div className={classes.cellId}>{user.id}</div>
       <div className={classes.cellEmail}>{user.email}</div>
-      <div className={classes.cellRol}>{user.role}</div>
+      <div className={classes.cellRol}>{(user.role_id == 1 ? "Usuario" : user.role_id == 2 ? "Moderador" : "Administrador")}</div>
       <div className={classes.cellAcciones}>
         <BtnSecondary text="Ver" size="sm" onClick={() => onView?.(user)} />
         <BtnDanger text="Banear" size="sm" onClick={() => onBan?.(user)} />

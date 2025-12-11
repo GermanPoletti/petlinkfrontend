@@ -87,9 +87,9 @@ export const LandingPage = () => {
             divClassName={classes.btnPrimaryText}
             onClick={() => {
               try {
-                const hasUser = !!localStorage.getItem('user');
+                
                 const hasToken = !!localStorage.getItem('authToken');
-                if (!hasUser && !hasToken) {
+                if (!hasToken) {
                   navigate('/register');
                 } else {
                   navigate('/inicio');

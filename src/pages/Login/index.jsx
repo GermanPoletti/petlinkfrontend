@@ -4,11 +4,12 @@ import { BtnPrimary } from "@/components/UI/Buttons/BtnPrimary";
 import styles from './Login.module.css';
 import loginCat from '@/assets/images/login-Cat.png';
 import { useAuthApi } from "@/hooks/useAuthApi";
+import { useToast } from "../../components/UI/Toast";
 
 function Login() {
   const navigate = useNavigate();
   const { loginUser } = useAuthApi();
-
+  const { showToast } = useToast()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,24 +28,14 @@ function Login() {
       onSuccess: (res) => {
         
         localStorage.setItem("authToken", res.access_token);
-        localStorage.setItem("tokenExpiresAt", res.expires_at);
-        localStorage.setItem("userId", res.user_id)
-        const timeLeft = res.expires_at - Date.now();
-
-        if (window.logoutTimer) clearTimeout(window.logoutTimer);
-
-        window.logoutTimer = setTimeout(() => {
-          localStorage.removeItem("authToken");
-          localStorage.removeItem("tokenExpiresAt");
-          window.location.replace("/");
-        }, timeLeft);
+        
 
         navigate("/inicio");
       },
       onError: (err) => {
         
         console.log("ERROR LOGIN:", err);
-        alert("Usuario o contraseña incorrecta");
+        showToast(err.response?.data?.detail, {type : "error"});
       },
     }
   );

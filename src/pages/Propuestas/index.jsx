@@ -4,9 +4,9 @@ import PostsFeedPage from "@/components/UI/PostsFeed/PostsFeedPage";
 function Propuestas() {
   return (
     <PostsFeedPage
-      type="propuesta"
+      type="Necesidades"
       postTypeId={2}
-      title="Propuestas"
+      title="necesidades"
       detailRoutePrefix="propuesta-ampliada"
       noMoreText="No hay más propuestas"
     />

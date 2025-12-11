@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./Chat.module.css";
 import { useChat } from "@/context/ChatContext";
+import { useUser } from "../../../context/UserContext";
 import { useChatsApi } from "@/hooks/useChatsApi";
 import { useToast } from "@/components/UI/Toast";
 import backarrowIcon from "@/assets/images/icons/backarrow.png";
@@ -26,7 +27,7 @@ export function ChatPanel() {
   const { isOpen, activeChatId, setActiveChatId, closeChat, chatsData } = useChat();
   const { showToast } = useToast();
   const { useGetChatDetail, sendMessage, resolveChat, useGetMyChats } = useChatsApi();
-  const currentUserId = Number(localStorage.getItem("userId"));
+  const { token } = useUser();
   // const { data: chatsData, isLoading: isLoadingChats, error: errorChats } = useGetMyChats(undefined, currentUserId); // Obtener todos los chats
   const { data: chatData, isLoading, error } = useGetChatDetail(activeChatId);
   console.log("CHAT DATA ->", chatData);
