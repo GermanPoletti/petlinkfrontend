@@ -1,10 +1,13 @@
 /* Página de Mi Publicación Ampliada - mobile-first (sin botones de acción) */
-.page { padding: 16px; }
+.page { padding: 16px; max-width: 1280px; margin: 0 auto; }
 
 .contentWrap {
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .secondaryBtnLabel {
@@ -29,13 +32,11 @@
   grid-template-columns: 1fr 1fr;
   align-items: center;
   margin-top: 10px;
+  width: 100%;
 }
 .leftAction { justify-self: start; }
 .rightAction { justify-self: end; }
 
 @media (min-width: 768px) {
   .page { padding: 20px; }
-  .contentWrap {
-    max-width: none;
-  }
 }

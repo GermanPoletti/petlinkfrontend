@@ -6,7 +6,7 @@ export default function CrearPropuesta() {
   return (
     <PagesTemplate showNewPost={false}>
       <main>
-        <CreatePostForm type="propuesta" />
+        <CreatePostForm type="necesidad" />
       </main>
     </PagesTemplate>
   );

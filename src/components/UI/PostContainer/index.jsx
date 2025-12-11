@@ -9,6 +9,7 @@ export const PostContainer = ({
   title = "",
   description = "",
   imageUrl,
+  username,
   location = "",
   publishedAt = "",
   leftAction,
@@ -19,6 +20,7 @@ export const PostContainer = ({
       {/* Columna izquierda: contenido */}
       <div className={classes.content}>
         {title && <h3 className={classes.title}>{title}</h3>}
+        {username && <p className={classes.username}>👤 {username}</p>}
         {description && <p className={classes.description}>{description}</p>}
       </div>
 

@@ -4,8 +4,8 @@
   right: 0;
   height: calc(100vh - 70px);
   width: clamp(280px, 35vw, 420px);
-  background: var(--bordersbackground);
-  border-left: 1px solid var(--bordersdivs);
+  background: var(--accent);
+  border: 5px solid var(--bordersdivs);
   border-radius: 24px 0 0 24px; /* look & feel redondeado para panel derecho */
   box-shadow: -2px 0 12px rgba(0, 0, 0, 0.12);
   z-index: 1000;
@@ -31,7 +31,7 @@
   padding: 8px 10px;
   background: var(--primary-green-tabs);
   border-bottom: 1px solid var(--bordersdivs);
-  border-top-left-radius: 24px;
+  border-top-left-radius: 20px;
 }
 
 .backButton {
@@ -46,9 +46,9 @@
   transition: opacity 160ms ease, box-shadow 120ms ease, background-color 120ms ease;
 }
 .backButton img {
-  width: 24px;
-  height: 24px;
-  transform: scaleX(-1); /* orientación hacia la derecha para cerrar el panel derecho */
+  width: 35px;
+  height: 35px;
+  transform: scaleX(-1); /* flecha apuntando hacia la derecha */
 }
 .backButton:hover { opacity: 0.75; }
 .backButton:active { box-shadow: 0 0 0 3px rgba(46,125,50,0.45); background-color: rgba(46,125,50,0.12); }
@@ -58,18 +58,149 @@
   align-items: center;
   gap: 8px;
   flex: 1;
-  justify-content: space-between;
+  justify-content: center; /* Centra título, botón de acuerdo y username */
+  position: relative; /* Para posicionar el dropdown */
 }
 
-.postTitle { color: var(--textprimary); font-weight: 600; }
-.username { color: var(--textsecondary); }
+.postTitle { color: var(--textprimary); font-family: 'Preahvihear', Helvetica; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+.username { color: var(--textprimary); font-family: 'Preahvihear', Helvetica; }
+.handshakeButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* position: relative; Para posicionar el dropdown */
+}
+
+.handshakeIcon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%; /* Debajo del botón */
+  right: 0;
+  background: var(--accent); /* Color de fondo del dropdown */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 1001;
+  min-width: 120px;
+  padding: 8px 0;
+}
+
+.dropdownItem {
+  background: none;
+  border: none;
+  width: 100%;
+  padding: 10px 15px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropdownItem:hover {
+  background: #e0e0e0;
+}
+
+.checkIcon {
+  color: var(--primary-green); /* Color verde para el check */
+  font-size: 18px;
+}
+
+.crossIcon {
+  color: #e74c3c; /* Color rojo para la cruz */
+  font-size: 18px;
+}
+
 .headerIcon { width: 20px; height: 20px; opacity: 0.8; }
+
+/* Estilo general para la lista de chats */
+.chatList {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  padding: 0px 16px;
+  border-radius: 0px;
+  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); */
+  max-height: 100%; /* Limitar la altura máxima para permitir scroll */
+  overflow-y: auto; /* Scroll si es necesario */
+}
+
+/* Estilo para cada item de chat */
+.chatItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Hover cuando el mouse pasa sobre un chat */
+.chatItem:hover {
+  background-color: var(--primary-green-light);
+  transform: translateY(-2px);
+}
+
+/* Estilo del nombre de usuario */
+.chatItem span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  word-wrap: break-word; /* Asegura que los nombres largos no salgan del contenedor */
+}
+
+/* Estilo para mostrar "Cargando..." */
+.chatList > div {
+  color: #555;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Estilo de error */
+.chatList > .error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Agregar una línea horizontal para separar elementos */
+.chatItem + .chatItem {
+  border-top: 1px solid #ddd;
+}
+
+/* Estilo del icono de la foto de perfil o avatar (si decides agregarlo) */
+.chatItem .avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
 
 .messages {
   flex: 1;
   overflow-y: auto;
   padding: 12px;
-  background: #f7f7f7;
+  background: var(--accent);
   border-bottom-left-radius: 24px;
 }
 
@@ -80,7 +211,7 @@
   margin: 8px 0;
   font-size: 14px;
 }
-.messageText { color: var(--textprimary); }
+.messageText { color: var(--textprimary); white-space: pre-wrap; }
 .messageTime { color: var(--textsecondary); font-size: 11px; margin-top: 4px; }
 
 .received {
@@ -114,7 +245,7 @@
   background: var(--primary-green);
   color: white;
   border-radius: 50%;
-  width: 36px;
+  width: 42px;
   height: 36px;
   cursor: pointer;
 }

@@ -3,20 +3,38 @@ import { useNavigate } from 'react-router-dom';
 import { BtnPrimary } from "@/components/UI/Buttons/BtnPrimary";
 import { BtnSecondary } from "@/components/UI/Buttons/BtnSecondary";
 import styles from './EditarPerfil.module.css';
-
+import { useToast } from '@/components/UI/Toast';
+import { useUsersApi } from '@/hooks/useUsersApi'
 function EditarPerfil() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [username, setUsername] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
+  const { patchMe } = useUsersApi()
+  const [nameIsChecked, setNameIsChecked] = useState(false);
+  const [lastNameIsChecked, setLastNameIsChecked] = useState(false);
+  const [usernameIsChecked, setUsernameIsChecked] = useState(false);
 
   const handleSave = () => {
-    // Lógica para guardar los datos del perfil
-    console.log({ nombres, apellidos, username, fechaNacimiento });
-    // Aquí podrías integrar una llamada a una API para actualizar el perfil
-    localStorage.setItem('profile', JSON.stringify({ nombres, apellidos, username, fechaNacimiento }));
-    navigate('/perfil'); // Navegar al perfil después de guardar
+    
+    const data = {}
+
+
+    //TODO: estilizar checkbox para eliminar los datos
+    if (nombres) {data.first_name = nombres} else if(nameIsChecked){data.first_name = null};
+    if (apellidos) {data.last_name = apellidos} else if(lastNameIsChecked){data.last_name = null}
+    if (username) {data.username = username} else if(usernameIsChecked){data.username = null}
+    
+    patchMe.mutate(data,{
+       onSuccess: () => {
+         navigate('/perfil')
+       },
+       onError: (err) => showToast(err, {type: "error"})
+     }
+     )    
+
+     navigate('/perfil'); // Navegar al perfil después de guardar
   };
 
   const handleSkip = () => {
@@ -37,6 +55,14 @@ function EditarPerfil() {
             value={nombres}
             onChange={(e) => setNombres(e.target.value)}
           />
+         <button
+            type="button"
+            className={styles.deleteBtn}
+            onClick={() => setNameIsChecked(prev => !prev)}
+            data-active={nameIsChecked}
+         >
+    {nameIsChecked ? "Borrado" : "Borrar nombres"}
+  </button>
         </div>
 
         {/* Campo de Apellidos */}
@@ -48,6 +74,14 @@ function EditarPerfil() {
             value={apellidos}
             onChange={(e) => setApellidos(e.target.value)}
           />
+         <button
+            type="button"
+            className={styles.deleteBtn}
+            onClick={() => setLastNameIsChecked(prev => !prev)}
+            data-active={lastNameIsChecked}
+         >
+    {lastNameIsChecked ? "Borrado" : "Borrar apellidos"}
+  </button>
         </div>
 
         {/* Campo de Username */}
@@ -59,17 +93,15 @@ function EditarPerfil() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-        </div>
+          <button
+           type="button"
+           className={styles.deleteBtn}
+           onClick={() => setUsernameIsChecked(prev => !prev)}
+            data-active={usernameIsChecked}
+          >
+    {usernameIsChecked ? "Borrado" : "Borrar username"}
+  </button>
 
-        {/* Campo de Fecha de Nacimiento */}
-        <div className={styles.field}>
-          <input
-            type="text"
-            placeholder="Fecha de Nacimiento (dd/mm/aaaa)"
-            className={styles.input}
-            value={fechaNacimiento}
-            onChange={(e) => setFechaNacimiento(e.target.value)}
-          />
         </div>
 
         <BtnSecondary

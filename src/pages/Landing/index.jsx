@@ -77,19 +77,19 @@ export const LandingPage = () => {
           </p>
 
           <p className={classes.subHeading}>
-            Somos la comunidad 100% dedicada a mascotas. Publica tu necesidad u
-            ofrece ayuda (transporte, donaciones, refugio) y conecta con otros.
-            <p>Aquí tu publicación se ve!</p>
-          </p>
+             Somos la comunidad 100% dedicada a mascotas. Publica tu necesidad u
+             ofrece ayuda (transporte, donaciones, refugio) y conecta con otros.
+           </p>
+           <p className={classes.subHeading}>Aquí tu publicación se ve!</p>
 
           <BtnPrimary
             className={classes.btnPrimary}
             divClassName={classes.btnPrimaryText}
             onClick={() => {
               try {
-                const hasUser = !!localStorage.getItem('user');
+                
                 const hasToken = !!localStorage.getItem('authToken');
-                if (!hasUser && !hasToken) {
+                if (!hasToken) {
                   navigate('/register');
                 } else {
                   navigate('/inicio');

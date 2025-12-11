@@ -4,6 +4,8 @@ import * as classes from "./Moderadores.module.css";
 import FilaModerador from "@/components/UI/BackOfficeComponents/FilaModerador";
 import FilaModeradorRow from "@/components/UI/BackOfficeComponents/FilaModerador/FilaModeradorRow";
 import { BtnSecondary, BtnDanger } from "@/components/UI/Buttons";
+import {useUsersApi} from "@/hooks/useUsersApi"
+
 
 export default function BackOfficeModeradores() {
   const [users, setUsers] = useState([]);
@@ -12,6 +14,18 @@ export default function BackOfficeModeradores() {
   const [selected, setSelected] = useState(null);
   const [editRole, setEditRole] = useState("user");
   const [editStatus, setEditStatus] = useState("inactivo");
+  const {useGetMyRole } = useUsersApi()
+
+ 
+  
+  const {
+    data: dataUsers,
+    isLoading
+  } = useGetMyRole("MODERATOR")
+
+
+  
+
 
   useEffect(() => {
     try {
@@ -108,15 +122,20 @@ export default function BackOfficeModeradores() {
         <div className={classes.table}>
           <FilaModerador />
           <div className={classes.rows}>
-            {filtered.map((u) => (
-              <FilaModeradorRow
-                key={u.id}
-                user={u}
-                onEdit={onEdit}
-                onSuspend={onSuspend}
-                onActivate={onActivate}
-              />
-            ))}
+            {isLoading ? (
+                <p>Loading...</p> // O cualquier indicador de carga que prefieras
+              ) : (
+                dataUsers && dataUsers.length > 0 && dataUsers.map((user) => (
+                  <FilaModeradorRow
+                    key={user.id}
+                    user={user}
+                    onEdit={onEdit}
+                    onSuspend={onSuspend}
+                    onActivate={onActivate}
+                  />
+                ))
+              )}
+
           </div>
         </div>
 

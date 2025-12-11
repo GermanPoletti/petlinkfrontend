@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { LandingPage } from '@/pages/Landing';
+import { useEffect } from 'react';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Forgot from '@/pages/Forgot';
@@ -23,34 +24,76 @@ import BackOfficeReportes from '@/pages/BackOffice/Reportes';
 import BackOfficeModeradores from '@/pages/BackOffice/Moderadores';
 import EditarPerfil from '@/pages/EditarPerfil';
 
+
+
 function App() {
+  useEffect(() => {
+    const checkExpiredToken = () => {
+      const expiresAt = localStorage.getItem("tokenExpiresAt");
+      if (!expiresAt) return;
+
+      const timeLeft = parseInt(expiresAt) - Date.now();
+
+      if (timeLeft <= 0) {
+        // localStorage.removeItem("authToken");
+        // localStorage.removeItem("tokenExpiresAt");
+        localStorage.clear()
+        window.location.replace("/");
+        return;
+      }
+
+      // Re-armamos el timer por si recargaste
+      if (window.logoutTimer) clearTimeout(window.logoutTimer);
+
+      window.logoutTimer = setTimeout(() => {
+        // localStorage.removeItem("authToken");
+        // localStorage.removeItem("tokenExpiresAt");
+        localStorage.clear()
+        window.location.replace("/");
+      }, timeLeft);
+    };
+
+    checkExpiredToken();
+
+    const handleStorage = (e) => {
+      if (e.key === "authToken" && !e.newValue) {
+        window.location.replace("/");
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, []);
   return (
-    <div className="app">
-      <Routes>
-        <Route path="/NavBar" element={<NavBar />} />
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot" element={<Forgot />} />
-        <Route path="/inicio" element={<Inicio />} />
-        <Route path="/ofertas" element={<Ofertas />} />
-        <Route path="/propuestas" element={<Propuestas />} />
-        <Route path="/propuesta-ampliada/:id" element={<PropuestaAmpliada />} />
-        <Route path="/oferta-ampliada/:id" element={<OfertaAmpliada />} />
-        <Route path="/mi-publicacion-ampliada/:id" element={<MiPublicacionAmpliada />} />
-        <Route path="/modificar-publicacion" element={<ModificarPublicacion />} />
-        <Route path="/mis-publicaciones" element={<MyPosts />} />
-        <Route path="/perfil" element={<Perfil />} />
-        <Route path="/configuracion" element={<UserConfig />} />
-        <Route path="/crear-oferta" element={<CrearOferta />} />
-        <Route path="/crear-propuesta" element={<CrearPropuesta />} />
-        <Route path="/back-office/dashboard" element={<BackOfficeDashboard />} />
-        <Route path="/back-office/usuarios" element={<BackOfficeUsuarios />} />
-        <Route path="/back-office/reportes" element={<BackOfficeReportes />} />
-        <Route path="/back-office/moderadores" element={<BackOfficeModeradores />} />
-        <Route path="/editar-perfil" element={<EditarPerfil />} />
-      </Routes>
-    </div>
+    
+      <div className="app">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/NavBar" element={<NavBar />} />
+          <Route path="/forgot" element={<Forgot />} />
+          <Route path="/inicio" element={<Inicio />} />
+          <Route path="/ofertas" element={<Ofertas />} />
+          <Route path="/propuestas" element={<Propuestas />} />
+          <Route path="/propuesta-ampliada/:id" element={<PropuestaAmpliada />} />
+          <Route path="/oferta-ampliada/:id" element={<OfertaAmpliada />} />
+          <Route path="/mi-publicacion-ampliada/:id" element={<MiPublicacionAmpliada />} />
+          <Route path="/modificar-publicacion" element={<ModificarPublicacion />} />
+          <Route path="/mis-publicaciones" element={<MyPosts />} />
+          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/configuracion" element={<UserConfig />} />
+          <Route path="/crear-oferta" element={<CrearOferta />} />
+          <Route path="/crear-propuesta" element={<CrearPropuesta />} />
+          <Route path="/back-office/dashboard" element={<BackOfficeDashboard />} />
+          <Route path="/back-office/usuarios" element={<BackOfficeUsuarios />} />
+          <Route path="/back-office/reportes" element={<BackOfficeReportes />} />
+          <Route path="/back-office/moderadores" element={<BackOfficeModeradores />} />
+          <Route path="/editar-perfil" element={<EditarPerfil />} />
+        </Routes>
+      </div>
   );
 }
 

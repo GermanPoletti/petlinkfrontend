@@ -34,5 +34,5 @@ BtnPropuestas.propTypes = {
 
 // Valor por defecto si no se provee texto
 BtnPropuestas.defaultProps = {
-  text: "Propuestas",
+  text: "Necesidad",
 };

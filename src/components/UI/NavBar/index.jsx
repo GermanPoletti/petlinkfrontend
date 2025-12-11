@@ -5,13 +5,15 @@ import * as classes from "./NavBar.module.css";
 
 import { BtnOfertas } from "@/components/UI/Buttons/BtnOfertas";
 import { BtnHome } from "@/components/UI/Buttons/BtnHome";
-
+import backarrowIcon from "@/assets/images/icons/backarrow.png";
+import { useAuthApi } from "@/hooks/useAuthApi";
 import defaultAvatar from "@/assets/images/icons/Profile.png";
 import chatIcon from "@/assets/images/icons/Chat.png";
 import { useChat } from "@/context/ChatContext";
 import { MenuDesplegable } from "@/components/UI/Menu";
 import { useToast } from "@/components/UI/Toast";
 import { BtnPropuestas } from "@/components/UI/Buttons/BtnPropuestas";
+
 
 export const NavBar = ({ userImageUrl, onProfileClick }) => {
   const navigate = useNavigate();
@@ -21,13 +23,30 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
   const { toggleChat } = useChat();
   const { showToast } = useToast();
   const [isAdmin, setIsAdmin] = useState(false);
+  const { logoutUser, useIsAdmin } = useAuthApi();
+
   const handleLogout = () => {
-    try {
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("user");
-    } catch (e) {}
-    navigate("/", { replace: true });
-    showToast("Sesión cerrada", { type: "success" });
+
+
+    logoutUser.mutate(undefined,{
+      onSuccess: () => {
+          console.log("logedout")
+          showToast("Logged Out", { type: "success" });
+          navigate("/");
+        },
+        onError: (error) => {
+          const msg = error.response?.data?.detail || "Error al desloguear";
+          showToast(msg, { type: "error" });
+        
+      } 
+    })
+
+    // try {
+    //   localStorage.removeItem("authToken");
+    //   localStorage.removeItem("user");
+    // } catch (e) {}
+    // navigate("/", { replace: true });
+    // showToast("Sesión cerrada", { type: "success" });
   };
 
   // Cerrar al hacer click fuera
@@ -41,41 +60,39 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
+  const { data: adminData, isLoading, error } = useIsAdmin;
+
  useEffect(() => {
   const checkAdmin = () => {
     try {
-      // MODO DESARROLLO: ?dev=admin
-      const urlParams = new URLSearchParams(window.location.search);
-      const devMode = urlParams.get("dev") === "admin";
-
-      const raw = localStorage.getItem("user");
-      const parsed = raw ? JSON.parse(raw) : null;
-      
-      setIsAdmin(devMode || parsed?.role === "admin");
+      setIsAdmin(adminData.is_admin);
     } catch {
       setIsAdmin(false);
     }
   };
 
-  // Ejecutar al montar
+  // // Ejecutar al montar
   checkAdmin();
 
-  // Escuchar cambios de URL (cuando cambias ?dev=admin)
-  const handleLocationChange = () => checkAdmin();
-  window.addEventListener("popstate", handleLocationChange);
-  window.addEventListener("pushstate", handleLocationChange); // si usas navigate
+  // // Escuchar cambios de URL (cuando cambias ?dev=admin)
+  // const handleLocationChange = () => checkAdmin();
+  // window.addEventListener("popstate", handleLocationChange);
+  // window.addEventListener("pushstate", handleLocationChange); // si usas navigate
 
-  return () => {
-    window.removeEventListener("popstate", handleLocationChange);
-    window.removeEventListener("pushstate", handleLocationChange);
-  };
-}, []);
+  // return () => {
+  //   window.removeEventListener("popstate", handleLocationChange);
+  //   window.removeEventListener("pushstate", handleLocationChange);
+  // };
+}, [adminData]);
 
   return (
     <div className={classes.navbar}>
       {/* Izquierda: Home */}
       <div className={classes.leftGroup}>
-        <BtnHome onClick={() => navigate("/inicio")} />
+                <BtnHome onClick={() => navigate("/inicio")} />
+        <button className={classes.backButton} onClick={() => navigate(-1)} aria-label="Volver atrás">
+          <img src={backarrowIcon} alt="Volver" className={classes.backIcon} />
+        </button>
       </div>
 
       {/* Centro: Propuestas y Ofertas, siempre centrados */}
@@ -90,7 +107,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
         <BtnPropuestas
           className={classes.btnPropuestas}
           active={location.pathname === "/propuestas"}
-          text="Propuestas"
+          text="Necesidades"
           onClick={() => navigate("/propuestas")}
         />
         <BtnOfertas
@@ -105,7 +122,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
       <div className={classes.rightGroup} ref={rightGroupRef}>
         <button
           className={classes.chatButton}
-          onClick={() => toggleChat({ postTitle: "Chats", counterpartUsername: "" })}
+          onClick={() => toggleChat()}
           aria-label="Abrir/Cerrar chat"
         >
           <img src={chatIcon} alt="Chat" className={classes.chatIcon} />
