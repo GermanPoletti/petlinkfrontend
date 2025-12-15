@@ -28,7 +28,9 @@ export const FeedCard = ({
 }) => {
   return (
     <article
-      className={`${classes.card} ${className || ""}`}
+      className={`${classes.card} ${!imageUrl ? classes.cardNoImage : ""} ${
+        className || ""
+      }`}
       onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}

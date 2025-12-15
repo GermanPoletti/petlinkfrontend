@@ -71,7 +71,7 @@ function PostsFeedPage({
     title: post.title,
     username: post.username,
     description: post.message,
-    imageUrl: post.multimedia?.[0]?.url || "https://placehold.co/600x400",
+    imageUrl: post.multimedia?.[0]?.url || null,
     location: post.city_name || "Sin ubicación",
     publishedAt: post.created_at,
     type: post.post_type_id === 1 ? "propuesta" : "oferta",
