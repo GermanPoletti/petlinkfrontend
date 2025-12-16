@@ -37,8 +37,17 @@
   align-items: center;
   margin-top: 10px;
 }
-.leftAction { justify-self: start; }
-.rightAction { justify-self: end; }
+
+.leftAction {
+  justify-self: start;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rightAction {
+  justify-self: end;
+}
 
 @media (min-width: 768px) {
   .page { padding: 20px; }

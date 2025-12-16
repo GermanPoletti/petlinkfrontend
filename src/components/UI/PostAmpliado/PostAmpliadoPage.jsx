@@ -1,24 +1,30 @@
 import React from "react";
 import PagesTemplate from "@/components/UI/PagesTemplate";
 import { PostContainer } from "@/components/UI/PostContainer";
-import { BtnPrimary, BtnDanger } from "@/components/UI/Buttons";
+import { BtnPrimary, BtnDanger, BtnSecondary } from "@/components/UI/Buttons";
 import { useToast } from "@/components/UI/Toast";
 import { useChatsApi } from "@/hooks/useChatsApi";
 import { useChat } from "@/context/ChatContext";
 import { useReportsApi } from "@/hooks/useReportsApi";
 import styles from "./PostAmpliadoPage.module.css";
+import { usePostsApi } from "@/hooks/usePostsApi";
 
 function PostAmpliadoBase({ post, isOwner, classes }) {
   const { showToast } = useToast();
   const { createChat, useGetMyChats } = useChatsApi();
   const { openChat } = useChat();
   const { createReport } = useReportsApi();
+  const {useGetPostById, likePost} = usePostsApi();
 
   const [customReason, setCustomReason] = React.useState("");
   const [selectedReason, setSelectedReason] = React.useState("");
 
   const [hasReported, setHasReported] = React.useState(false);
   const [showReportModal, setShowReportModal] = React.useState(false);
+
+
+  const { data: postData } = useGetPostById(post?.id);
+  console.log("PostData:", postData);
 
   const { data: myChats = [] } = useGetMyChats(
     { post_id: post?.id },
@@ -102,17 +108,33 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
             publishedAt={post.created_at || post.publishedAt}
           />
 
-          <div className={classes.actionsWrap}>
+        <div className={classes.actionsWrap}>
             <div className={classes.leftAction}>
-              {!isOwner && (
+            {!isOwner && (
+              <>
                 <BtnPrimary
                   text={createChat.isPending ? "Creando chat..." : "Me Interesa"}
                   onClick={handleMeInteresa}
                   disabled={createChat.isPending}
                   size="lg"
                 />
-              )}
-            </div>
+                 
+              </>
+            )}
+
+            <BtnSecondary
+                  text={postData?.is_liked ? "Quitar like" : "Like"}
+                   onClick={() => {
+                      console.log("Like button clicked", post?.id);
+                      likePost.mutate(post.id, {
+                        onSuccess: () => console.log("Like mutation success"),
+                        onError: (e) => console.error("Like mutation error", e)
+                      });
+                    }}
+                    disabled={likePost.isPending}
+                    size="lg"
+                  />
+          </div>
 
             <div className={classes.rightAction}>
               <BtnDanger
