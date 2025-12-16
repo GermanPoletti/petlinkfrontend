@@ -43,7 +43,6 @@ function PostsFeedPage({
     hasNextPage,
     isFetchingNextPage,
   } = useInfinitePosts(filters);
-  useEffect(()=>{console.log(data)},[data])
   
   const allPosts = data?.pages.flatMap((page) => page.posts) || [];
 
@@ -78,6 +77,7 @@ function PostsFeedPage({
     category: post.category,
     likes: post.likes_count || 0,
   }));
+  
 
   // descomentar para reiniciar scroll cuando se sale de la pagina
   // useEffect(() => {

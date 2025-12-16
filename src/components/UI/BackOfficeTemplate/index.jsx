@@ -11,7 +11,6 @@ export const BackOfficeTemplate = ({
   onDashboardClick,
   onUsuariosClick,
   onReportesClick,
-  onModeradoresClick,
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,7 +20,6 @@ export const BackOfficeTemplate = ({
       || (section === "dashboard" && onDashboardClick?.())
       || (section === "usuarios" && onUsuariosClick?.())
       || (section === "reportes" && onReportesClick?.())
-      || (section === "moderadores" && onModeradoresClick?.());
     if (!handled) navigate(`/back-office/${section}`);
   };
 
@@ -29,7 +27,6 @@ export const BackOfficeTemplate = ({
   const isDashboard = pathname.includes("/back-office/dashboard");
   const isUsuarios = pathname.includes("/back-office/usuarios");
   const isReportes = pathname.includes("/back-office/reportes");
-  const isModeradores = pathname.includes("/back-office/moderadores");
 
   return (
     <div className={classes.bgTemplateBack}>
@@ -41,7 +38,6 @@ export const BackOfficeTemplate = ({
           <BtnPropuestas text="Dashboard" active={isDashboard} onClick={() => go("dashboard")} />
           <BtnPropuestas text="Usuarios" active={isUsuarios} onClick={() => go("usuarios")} />
           <BtnOfertas text="Reportes" active={isReportes} onClick={() => go("reportes")} />
-          <BtnOfertas text="Moderadores" active={isModeradores} onClick={() => go("moderadores")} />
         </div>
         <div className={classes.rightGroup} />
       </header>

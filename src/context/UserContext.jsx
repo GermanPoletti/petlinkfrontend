@@ -7,15 +7,16 @@ const UserContext = createContext(null);
 // Proveedor del contexto que envolverá tu aplicación
 export const UserProvider = ({ children }) => {
   const [role, setRole] = useState(null);
-
+  const [userId, setUserId] = useState(null);
+  
   useEffect(() => {
-    // Obtén el token desde localStorage o sessionStorage
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        setRole(decodedToken.role);  // Extrae el rol del token y guárdalo en el estado
+        setRole(decodedToken.role);  
+        setUserId(decodedToken.user_id);
       } catch (error) {
         console.error("Error al decodificar el token:", error);
       }
@@ -23,7 +24,7 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ role }}>
+    <UserContext.Provider value={{ role, userId }}>
       {children}
     </UserContext.Provider>
   );

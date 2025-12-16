@@ -17,9 +17,8 @@ export const isAdmin = () => api.get("auth/is_admin");
 
 export const logout = () => {
   const token = localStorage.getItem('authToken')
-  localStorage.clear()
   if(token){
-    api.post("/auth/logout").catch(() => {})
+    api.post("/auth/logout").catch(() => {}).finally(()=> localStorage.clear())
   }else{
     window.location.replace("/")  
   }
