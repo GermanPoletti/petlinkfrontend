@@ -96,10 +96,10 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
           <PostContainer
             title={post.title}
             username = {post.username}
-            description={post.description}
-            imageUrl={post.imageUrl}
-            location={post.location}
-            publishedAt={post.publishedAt}
+            description={post.message || post.description}
+            imageUrl={post.imageUrl ||post?.multimedia[0]?.url}
+            location={post.city_name || post.location}
+            publishedAt={post.created_at || post.publishedAt}
           />
 
           <div className={classes.actionsWrap}>

@@ -13,6 +13,7 @@ import { useChat } from "@/context/ChatContext";
 import { MenuDesplegable } from "@/components/UI/Menu";
 import { useToast } from "@/components/UI/Toast";
 import { BtnPropuestas } from "@/components/UI/Buttons/BtnPropuestas";
+import { useUser } from "@/context/UserContext";
 
 
 export const NavBar = ({ userImageUrl, onProfileClick }) => {
@@ -22,15 +23,14 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
   const rightGroupRef = useRef(null);
   const { toggleChat } = useChat();
   const { showToast } = useToast();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const { logoutUser, useIsAdmin } = useAuthApi();
-
+  const { logoutUser } = useAuthApi();
+  const { role } = useUser();
+  
   const handleLogout = () => {
 
 
     logoutUser.mutate(undefined,{
       onSuccess: () => {
-          console.log("logedout")
           showToast("Logged Out", { type: "success" });
           navigate("/");
         },
@@ -40,13 +40,6 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
         
       } 
     })
-
-    // try {
-    //   localStorage.removeItem("authToken");
-    //   localStorage.removeItem("user");
-    // } catch (e) {}
-    // navigate("/", { replace: true });
-    // showToast("Sesión cerrada", { type: "success" });
   };
 
   // Cerrar al hacer click fuera
@@ -60,31 +53,6 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
-  const { data: adminData, isLoading, error } = useIsAdmin;
-
- useEffect(() => {
-  const checkAdmin = () => {
-    try {
-      setIsAdmin(adminData.is_admin);
-    } catch {
-      setIsAdmin(false);
-    }
-  };
-
-  // // Ejecutar al montar
-  checkAdmin();
-
-  // // Escuchar cambios de URL (cuando cambias ?dev=admin)
-  // const handleLocationChange = () => checkAdmin();
-  // window.addEventListener("popstate", handleLocationChange);
-  // window.addEventListener("pushstate", handleLocationChange); // si usas navigate
-
-  // return () => {
-  //   window.removeEventListener("popstate", handleLocationChange);
-  //   window.removeEventListener("pushstate", handleLocationChange);
-  // };
-}, [adminData]);
-
   return (
     <div className={classes.navbar}>
       {/* Izquierda: Home */}
@@ -97,7 +65,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
 
       {/* Centro: Propuestas y Ofertas, siempre centrados */}
       <div className={classes.centerGroup}>
-        {isAdmin && (
+        {(role === 'admin' || role === 'moderator') && (
           <BtnPropuestas
             active={location.pathname.startsWith("/back-office")}
             text="Back Office"

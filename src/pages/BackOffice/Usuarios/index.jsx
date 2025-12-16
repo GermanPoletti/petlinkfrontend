@@ -9,7 +9,7 @@ import { BtnSecondary } from "@/components/UI/Buttons";
 
 export default function BackOfficeUsuarios() {
   const { showToast } = useToast();
-  const { useGetAllUsers, deleteUser } = useUsersApi();
+  const { useGetAllUsers, deleteUser, patchUserRole } = useUsersApi();
 
   const { data: users, isLoading, error } = useGetAllUsers();
   useEffect(() => console.log(users), [users]);
@@ -17,6 +17,10 @@ export default function BackOfficeUsuarios() {
   const [query, setQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [editRoleModalOpen, setEditRoleModalOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [newRole, setNewRole] = useState(null);
 
   // Búsqueda por email
   const normalized = query.trim().toLowerCase();
@@ -35,6 +39,33 @@ export default function BackOfficeUsuarios() {
     setSelectedUser(user);
     setModalOpen(true);
   };
+
+  const handleEditRole = (user) => {
+    setUserToEdit(user);
+    setNewRole(user.role_id ?? 1);
+    setNewRole(user.role_id);
+    setEditRoleModalOpen(true);
+  };
+
+
+    const saveRole = () => {
+    if (!userToEdit) return;
+    patchUserRole.mutate(
+      { user_id: userToEdit.id, role_id: parseInt(newRole) },
+      {
+        onSuccess: () => {
+          showToast(`Rol de usuario actualizado`, { type: "success" });
+          setEditRoleModalOpen(false);
+          setUserToEdit(null);
+        },
+        onError: () => {
+          showToast("Error al actualizar rol", { type: "error" });
+        },
+      }
+    );
+  };
+
+
 
   const handleBan = (user) => {
     if (!user?.id) return;
@@ -79,6 +110,7 @@ export default function BackOfficeUsuarios() {
                   key={user.id}
                   user={user}
                   onView={() => handleView(user)}
+                  onEdit={() => handleEditRole(user)}
                   onBan={() => handleBan(user)}
                 />
               ))
@@ -134,6 +166,46 @@ export default function BackOfficeUsuarios() {
             </div>
           </div>
         )}
+
+        {/* MODAL EDITAR ROL */}
+        {editRoleModalOpen && userToEdit && (
+          <div className={classes.modalOverlay} onClick={() => setEditRoleModalOpen(false)}>
+            <div className={classes.modal} onClick={(e) => e.stopPropagation()}>
+              <button
+                className={classes.modalClose}
+                onClick={() => setEditRoleModalOpen(false)}
+                aria-label="Cerrar"
+              >
+                ×
+              </button>
+              <h3 className={classes.modalTitle}>Editar Rol de Usuario</h3>
+              <div className={classes.modalBody}>
+                <div className={classes.modalRow}>
+                  <span className={classes.modalLabel}>Usuario:</span> {userToEdit.email}
+                </div>
+                <label className={classes.modalRow}>
+                  <span className={classes.modalLabel}>Nuevo Rol:</span>
+                  <select
+                    className={classes.select}
+                    value={newRole}
+                    onChange={(e) => setNewRole(e.target.value)}
+                    style={{ padding: '5px', borderRadius: '5px', border: '1px solid #ccc' }}
+                  >
+                    <option value="1">Usuario</option>
+                    <option value="2">Moderador</option>
+                    <option value="3">Administrador</option>
+                  </select>
+                </label>
+              </div>
+              <div className={classes.modalActions}>
+                <BtnSecondary text="Cancelar" size="sm" onClick={() => setEditRoleModalOpen(false)} />
+                <BtnSecondary text="Guardar Cambios" size="sm" onClick={saveRole} />
+              </div>
+            </div>
+          </div>
+        )}
+
+
       </main>
     </BackOfficeTemplate>
   );

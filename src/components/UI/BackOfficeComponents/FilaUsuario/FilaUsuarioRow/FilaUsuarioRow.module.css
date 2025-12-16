@@ -3,7 +3,7 @@
   border: 1px solid var(--bordersdivs);
   border-radius: 12px;
   display: grid;
-  grid-template-columns: minmax(60px, 90px) 1.6fr minmax(120px, 160px) minmax(160px, 220px);
+  grid-template-columns: minmax(60px, 90px) 1.7fr minmax(120px, 160px) minmax(160px, 330px);
   column-gap: 12px;
   align-items: center;
   padding: 10px 16px;

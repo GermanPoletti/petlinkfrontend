@@ -3,7 +3,7 @@
   top: 70px; /* altura de la navbar */
   right: 0;
   height: calc(100vh - 70px);
-  width: clamp(280px, 35vw, 420px);
+  width: clamp(280px, 35vw, 35vw);
   background: var(--accent);
   border: 5px solid var(--bordersdivs);
   border-radius: 24px 0 0 24px; /* look & feel redondeado para panel derecho */
