@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo, useState } from "react";
 import * as chatApi from "@/services/chatService";
 import { useQueryClient } from "@tanstack/react-query";
 import { useChatsApi } from "@/hooks/useChatsApi";
+import { useUser } from "./UserContext";
 // Estado global y API para abrir/cerrar el panel de chat y
 // seleccionar el chat activo (por publicación o general)
 const ChatContext = createContext(null);
@@ -11,8 +12,8 @@ export function ChatProvider({ children }) {
   const [activeChatId, setActiveChatId] = useState(null);
   const queryClient = useQueryClient();
   const { useGetMyChats } = useChatsApi();
-  const currentUserId = Number(localStorage.getItem("userId"));
-  const { data: chatsData, refetch  } = useGetMyChats(undefined, currentUserId); 
+  const {userId} = useUser();
+  const { data: chatsData, refetch  } = useGetMyChats(undefined, userId); 
 
   const openChat = (chatId) => {
     setActiveChatId(chatId); 

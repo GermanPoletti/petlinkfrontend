@@ -1,14 +1,26 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useUser } from "../../context/UserContext";
+import { usePostsApi } from "../../hooks/usePostsApi";
+import { useLocation,useParams } from "react-router-dom";
 import PostAmpliadoBase from "@/components/UI/PostAmpliado/PostAmpliadoPage";
 import * as classes from "./OfertaAmpliada.module.css";
 
 function OfertaAmpliada() {
-  const { state: post } = useLocation();
-  const currentUserId = Number(localStorage.getItem("userId"));
+  const location = useLocation();
+  const { id } = useParams();
+  const {useGetPostById} = usePostsApi()
+  const [post, setPost] = useState(location.state || null);
+  const { userId } = useUser()
+  const {data: postData, isLoading, error} = useGetPostById(id)
+  useEffect(()=>{
+    if(!post){
+      setPost(postData)
+    }
+  }, [])
 
   const isOwner =
-    post?.userId === currentUserId || post?.user_id === currentUserId;
+    post?.userId === userId || post?.user_id === userId;
 
   return (
     <PostAmpliadoBase

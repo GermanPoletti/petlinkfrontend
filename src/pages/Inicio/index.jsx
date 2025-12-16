@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { useUser } from "../../context/UserContext";
 import { useNavigate, Link } from "react-router-dom";
 import { FeedCard } from "@/components/UI/Cards";
 import PagesTemplate from "@/components/UI/PagesTemplate";
@@ -19,7 +20,8 @@ const Inicio = () => {
     isError: isErrorOferta,
     error: errorOferta,
   } = useGetPosts({limit: 1, post_type_id: 1})
-
+  const { role } = useUser();
+  
   const {
     data: userData,
     isLoading: userIsLoading,
@@ -33,27 +35,6 @@ const Inicio = () => {
     isError: isErrorNecesidad,
     error: errorNecesidad,
   } = useGetPosts({limit: 1, post_type_id: 2})
-
-  const mapPost = (post) => {
-    return post?.map(post => ({
-      id: post.id,
-      userId: post.user_id,
-      title: post.title,
-      username: post.username,
-      description: post.message,
-      imageUrl: post.multimedia?.[0]?.url || "https://placehold.co/600x400",
-      location: post.city_name || "Sin ubicación",
-      publishedAt: post.created_at,
-      type: post.post_type_id === 1 ? "propuesta" : "oferta",
-      category: post.category,
-      likes: post.likes_count || 0,
-    }));
-  }
-  console.log(ultimaNecesida, ultimaOfert);
-  
-  const ultimaNecesidad = useMemo(() => mapPost(ultimaNecesida?.posts || []), [ultimaNecesida]);
-  const ultimaOferta = useMemo(() => mapPost(ultimaOfert?.posts || []), [ultimaOfert]);
-
   
   const loading = cargandoNecesidad || cargandoOferta
   const error = errorOferta || errorNecesidad
@@ -77,19 +58,19 @@ const Inicio = () => {
       {!loading && !error && (
           <div className={styles.cardsList}>
             <h3 className={styles.cardTitle}>Última Necesidad:</h3>
-            {ultimaNecesidad?.length > 0 ? (
+            {ultimaNecesida?.posts?.length > 0 ? (
               <Link
-                to={`/propuesta-ampliada/${ultimaNecesidad[0].id}`}
-                state={ultimaNecesidad[0]}
+                to={`/propuesta-ampliada/${ultimaNecesida.posts[0].id}`}
+                state={ultimaNecesida.posts[0]}
                 className={styles.cardLink}
               >
                 <FeedCard
-                  title={ultimaNecesidad[0].title}
-                  username={ultimaNecesidad[0].username}
-                  description={ultimaNecesidad[0].description}
-                  imageUrl={ultimaNecesidad[0].imageUrl}
-                  location={ultimaNecesidad[0].location}
-                  publishedAt={ultimaNecesidad[0].publishedAt}
+                  title={ultimaNecesida.posts[0].title}
+                  username={ultimaNecesida.posts[0].username}
+                  description={ultimaNecesida.posts[0].message}
+                  imageUrl={ultimaNecesida.posts[0].multimedia[0]?.url}
+                  location={ultimaNecesida.posts[0].city_name}
+                  publishedAt={ultimaNecesida.posts[0].created_at}
                 />
               </Link>
             ) : (
@@ -98,19 +79,19 @@ const Inicio = () => {
 
 
             <h3 className={styles.cardTitle}>Última Oferta:</h3>
-            {ultimaOferta?.length > 0 ? (
+            {ultimaOfert?.posts?.length > 0 ? (
               <Link
-                to={`/oferta-ampliada/${ultimaOferta[0].id}`}
-                state={ultimaOferta[0]}
+                to={`/oferta-ampliada/${ultimaOfert.posts[0].id}`}
+                state={ultimaOfert.posts[0]}
                 className={styles.cardLink}
               >
                 <FeedCard
-                  title={ultimaOferta[0].title}
-                  username={ultimaOferta[0].username}
-                  description={ultimaOferta[0].description}
-                  imageUrl={ultimaOferta[0].imageUrl}
-                  location={ultimaOferta[0].location}
-                  publishedAt={ultimaOferta[0].publishedAt}
+                  title={ultimaOfert.posts[0].title}
+                  username={ultimaOfert.posts[0].username}
+                  description={ultimaOfert.posts[0].message}
+                  imageUrl={ultimaOfert.posts[0].multimedia[0]?.url}
+                  location={ultimaOfert.posts[0].city_name}
+                  publishedAt={ultimaOfert.posts[0].created_at}
                 />
               </Link>
             ) : (

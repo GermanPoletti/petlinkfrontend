@@ -27,11 +27,10 @@ export function ChatPanel() {
   const { isOpen, activeChatId, setActiveChatId, closeChat, chatsData } = useChat();
   const { showToast } = useToast();
   const { useGetChatDetail, sendMessage, resolveChat, useGetMyChats } = useChatsApi();
-  const { token } = useUser();
+  const { token, currentUserId } = useUser();
   // const { data: chatsData, isLoading: isLoadingChats, error: errorChats } = useGetMyChats(undefined, currentUserId); // Obtener todos los chats
   const { data: chatData, isLoading, error } = useGetChatDetail(activeChatId);
-  console.log("CHAT DATA ->", chatData);
-  console.log("CHATS DATA ->", chatsData);
+
   
   const [input, setInput] = useState("");
   const dropdownRef = useRef(null);

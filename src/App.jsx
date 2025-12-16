@@ -21,7 +21,6 @@ import ModificarPublicacion from '@/pages/ModificarPublicacion';
 import BackOfficeDashboard from '@/pages/BackOffice/Dashboard';
 import BackOfficeUsuarios from '@/pages/BackOffice/Usuarios';
 import BackOfficeReportes from '@/pages/BackOffice/Reportes';
-import BackOfficeModeradores from '@/pages/BackOffice/Moderadores';
 import EditarPerfil from '@/pages/EditarPerfil';
 
 
@@ -90,7 +89,6 @@ function App() {
           <Route path="/back-office/dashboard" element={<BackOfficeDashboard />} />
           <Route path="/back-office/usuarios" element={<BackOfficeUsuarios />} />
           <Route path="/back-office/reportes" element={<BackOfficeReportes />} />
-          <Route path="/back-office/moderadores" element={<BackOfficeModeradores />} />
           <Route path="/editar-perfil" element={<EditarPerfil />} />
         </Routes>
       </div>
