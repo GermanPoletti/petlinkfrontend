@@ -33,6 +33,15 @@ export const usePostsApi = () => {
       enabled: !!user_id,
     });
 
+    const useIsLikedByUser = (post_id) =>
+    useQuery({
+      queryKey: ["isLiked", post_id],
+      queryFn: () => postApi.isLikedByUser(post_id),
+      enabled: !!post_id,
+      retry: false,
+    });
+
+
   // --------------------
   // INFINITE SCROLL (NUEVO)
   // --------------------
@@ -99,6 +108,7 @@ export const usePostsApi = () => {
     useGetPostCount,
     useGetPostById,
     useGetPostsByUser,
+    useIsLikedByUser,
     useInfinitePosts,
     createPost,
     patchPost,

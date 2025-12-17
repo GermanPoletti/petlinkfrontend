@@ -41,8 +41,12 @@ export const useUsersApi = () => {
       refetchInterval: 10000,
   });
 
+  const useGetUserRanking = () => useQuery({
+    queryKey: ["userRanking"], 
+    queryFn: userApi.getUserRank
+  })
 
-const downloadUsersExcel = async (startDate, endDate) => {
+  const downloadUsersExcel = async (startDate, endDate) => {
     
       const blob = await userApi.exportUsersToExcel(startDate, endDate);
 
@@ -88,6 +92,7 @@ const downloadUsersExcel = async (startDate, endDate) => {
     useGetMyRole,
     useGetUsersCount,
     downloadUsersExcel,
+    useGetUserRanking,
     deleteMe,
     patchMe,
     patchUserRole,

@@ -15,6 +15,8 @@ export const getMyRole = (role) => {
   });
 };
 
+export const getUserRank = () => api.get("/users/ranking")
+
 export const exportUsersToExcel = async (date_from, date_to) => {
   const response = await api.get("/users/export/excel", {
     params: {
