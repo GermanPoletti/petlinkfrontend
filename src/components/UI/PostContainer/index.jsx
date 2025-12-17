@@ -15,6 +15,7 @@ export const PostContainer = ({
   leftAction,
   rightAction,
 }) => {
+  
   return (
     <article className={`${classes.container} ${className || ""}`}>
       {/* Columna izquierda: contenido */}
@@ -25,12 +26,12 @@ export const PostContainer = ({
       </div>
 
       {/* Columna derecha: imagen (si existe) */}
-      {(imageUrl || postImageFallback) && (
+      {(imageUrl || null) && (
         <div className={classes.imageWrap}>
           <img
             className={classes.image}
             alt={title || "Imagen de la publicación"}
-            src={imageUrl || postImageFallback}
+            src={imageUrl || null}
           />
         </div>
         

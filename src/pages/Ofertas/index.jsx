@@ -4,9 +4,9 @@ import PostsFeedPage from "@/components/UI/PostsFeed/PostsFeedPage";
 function Ofertas() {
   return (
     <PostsFeedPage
-      type="oferta"
+      type="Ofertas"
       postTypeId={1}
-      title="Ofertas"
+      title="ofertas"
       detailRoutePrefix="oferta-ampliada"
       noMoreText="No hay más ofertas"
     />

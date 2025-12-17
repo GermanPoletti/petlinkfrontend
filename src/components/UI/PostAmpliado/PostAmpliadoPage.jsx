@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import PagesTemplate from "@/components/UI/PagesTemplate";
 import { PostContainer } from "@/components/UI/PostContainer";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +19,8 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
   const { openChat } = useChat();
   const { role } = useUser();
   const { createReport } = useReportsApi();
-  const {useGetPostById, likePost, deletePost } = usePostsApi();
+  const {useGetPostById, likePost, deletePost, useIsLikedByUser } = usePostsApi();
+  const queryClient = useQueryClient();
 
   const [customReason, setCustomReason] = React.useState("");
   const [selectedReason, setSelectedReason] = React.useState("");
@@ -27,8 +29,10 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
   const [showReportModal, setShowReportModal] = React.useState(false);
 
 
-  const { data: postData } = useGetPostById(post?.id);
-  console.log("PostData:", postData);
+  const { data: postData, isLoading } = useGetPostById(post.id);
+  
+  const { data: isLikedByUser } = useIsLikedByUser(post?.id);
+
 
   const { data: myChats = [] } = useGetMyChats(
     { post_id: post?.id },
@@ -103,14 +107,15 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
     <PagesTemplate showNewPost={false}>
       <main className={classes.page}>
         <div className={classes.contentWrap}>
+          {isLoading ? "Cargando post..." : 
           <PostContainer
             title={post.title}
             username = {post.username}
             description={post.message || post.description}
-            imageUrl={post.imageUrl ||post?.multimedia[0]?.url}
+            imageUrl={post.imageUrl || post?.multimedia?.[0]?.url}
             location={post.city_name || post.location}
             publishedAt={post.created_at || post.publishedAt}
-          />
+          />}
 
         <div className={classes.actionsWrap}>
             <div className={classes.leftAction}>
@@ -127,14 +132,13 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
             )}
 
             <BtnSecondary
-                  text={postData?.is_liked ? "Quitar like" : "Like"}
-                   onClick={() => {
-                      console.log("Like button clicked", post?.id);
-                      likePost.mutate(post.id, {
-                        onSuccess: () => console.log("Like mutation success"),
-                        onError: (e) => console.error("Like mutation error", e)
-                      });
-                    }}
+                  text={isLikedByUser ? "Quitar like" : "Like"}
+                  onClick={() => likePost.mutate(post.id, {
+                      onSuccess: () => {
+                        // Invalidate isLiked query to refresh UI
+                        queryClient.invalidateQueries({ queryKey: ["isLiked", post.id] });
+                      }
+                    })}
                     disabled={likePost.isPending}
                     size="lg"
                   />
