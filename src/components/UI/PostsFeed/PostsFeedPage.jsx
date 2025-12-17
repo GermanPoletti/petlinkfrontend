@@ -43,6 +43,7 @@ function PostsFeedPage({
     hasNextPage,
     isFetchingNextPage,
   } = useInfinitePosts(filters);
+  console.log(data);
   
   const allPosts = data?.pages.flatMap((page) => page.posts) || [];
 
@@ -70,7 +71,7 @@ function PostsFeedPage({
     title: post.title,
     username: post.username,
     description: post.message,
-    imageUrl: post.multimedia?.[0]?.url || "https://placehold.co/600x400",
+    imageUrl: post.multimedia?.[0]?.url || null,
     location: post.city_name || "Sin ubicación",
     publishedAt: post.created_at,
     type: post.post_type_id === 1 ? "propuesta" : "oferta",
@@ -105,7 +106,7 @@ function PostsFeedPage({
           onLocationChange={setLocationSearchTerm}
           onKeywordChange={setKeywordSearchTerm}
         />
-        <div className={classes.feedWrap}>
+        {!data?.pages?.some(page => page.posts && page.posts.length > 0) ? <p className={classes.noResults}>No hay {title}</p>: <div className={classes.feedWrap}>
           {isPending && <div style={{ textAlign: "center", padding: "2rem" }}>Cargando {type}s...</div>}
           {isError && <div style={{ textAlign: "center", padding: "2rem", color: "red" }}>Error cargando {type}s</div>}
 
@@ -130,7 +131,7 @@ function PostsFeedPage({
               {noMoreText}
             </div>
           )}
-        </div>
+        </div>}
       </main>
     </PagesTemplate>
 

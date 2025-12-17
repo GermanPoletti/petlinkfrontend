@@ -9,7 +9,9 @@
   font-size: 22px;
   font-weight: 400;
 }
-
+.noResults{
+  text-align: center;
+}
 .feedWrap {
   margin-top: 8px;
 }

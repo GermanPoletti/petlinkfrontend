@@ -27,4 +27,7 @@ export const deletePost = (post_id) =>
 export const likePost = (post_id) =>
   api.post(`/posts/${post_id}/like`);
 
+export const isLikedByUser = (post_id) =>
+  api.get("/posts/liked", { params: { post_id } });
+
 export const countAllPost = () => api.get("/posts/count")

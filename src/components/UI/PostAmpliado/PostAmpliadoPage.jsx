@@ -1,24 +1,51 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import PagesTemplate from "@/components/UI/PagesTemplate";
 import { PostContainer } from "@/components/UI/PostContainer";
-import { BtnPrimary, BtnDanger } from "@/components/UI/Buttons";
+import { useNavigate } from "react-router-dom";
+import { BtnPrimary, BtnDanger, BtnSecondary } from "@/components/UI/Buttons";
 import { useToast } from "@/components/UI/Toast";
 import { useChatsApi } from "@/hooks/useChatsApi";
 import { useChat } from "@/context/ChatContext";
+import { useUser } from "@/context/UserContext";
 import { useReportsApi } from "@/hooks/useReportsApi";
 import styles from "./PostAmpliadoPage.module.css";
+import { usePostsApi } from "@/hooks/usePostsApi";
+
+const formatToSQLDateTime = (isoString) => {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
 
 function PostAmpliadoBase({ post, isOwner, classes }) {
   const { showToast } = useToast();
   const { createChat, useGetMyChats } = useChatsApi();
+  const navigate = useNavigate();
   const { openChat } = useChat();
+  const { role } = useUser();
   const { createReport } = useReportsApi();
+  const {useGetPostById, likePost, deletePost, useIsLikedByUser } = usePostsApi();
+  const queryClient = useQueryClient();
 
   const [customReason, setCustomReason] = React.useState("");
   const [selectedReason, setSelectedReason] = React.useState("");
 
   const [hasReported, setHasReported] = React.useState(false);
   const [showReportModal, setShowReportModal] = React.useState(false);
+
+
+  const { data: postData, isLoading } = useGetPostById(post.id);
+  
+  const { data: isLikedByUser } = useIsLikedByUser(post?.id);
+
 
   const { data: myChats = [] } = useGetMyChats(
     { post_id: post?.id },
@@ -89,32 +116,76 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
     );
   };
 
+  const handleLike = () => {
+    likePost.mutate(post.id, {
+      onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["isLiked", post.id] });
+      }
+    })
+  }
+
+  console.log(post);
+  
   return (
     <PagesTemplate showNewPost={false}>
       <main className={classes.page}>
         <div className={classes.contentWrap}>
+          {isLoading ? "Cargando post..." : 
           <PostContainer
-            title={post.title}
-            username = {post.username}
-            description={post.message || post.description}
-            imageUrl={post.imageUrl ||post?.multimedia[0]?.url}
-            location={post.city_name || post.location}
-            publishedAt={post.created_at || post.publishedAt}
-          />
+            title={postData.title}
+            username = {postData.username}
+            description={postData.message || postData.description}
+            imageUrl={postData.imageUrl || postData?.multimedia?.[0]?.url || null}
+            location={postData.city_name || postData.location}
+            publishedAt={formatToSQLDateTime(postData.created_at) || formatToSQLDateTime(postData.publishedAt)}
+            likesNumber={postData.likes_count}
+          />}
 
-          <div className={classes.actionsWrap}>
+        <div className={classes.actionsWrap}>
             <div className={classes.leftAction}>
-              {!isOwner && (
+            {!isOwner && (
+              <>
                 <BtnPrimary
                   text={createChat.isPending ? "Creando chat..." : "Me Interesa"}
                   onClick={handleMeInteresa}
                   disabled={createChat.isPending}
                   size="lg"
                 />
-              )}
-            </div>
+                 
+              </>
+            )}
+
+            <BtnSecondary
+                  text={isLikedByUser ? "Quitar like" : "Like"}
+                  onClick={() => handleLike()}
+                    disabled={likePost.isPending}
+                    size="lg"
+                  />
+          </div>
 
             <div className={classes.rightAction}>
+
+              {(role === 'admin' || role === 'moderator') && (
+                <BtnDanger
+                  text={deletePost.isPending ? "Eliminando..." : "Eliminar"}
+                  className={classes.dangerBtn}
+                  divClassName={classes.dangerBtnLabel}
+                  size="sm"
+                  onClick={() => {
+                    if (window.confirm("¿Estás seguro que deseas eliminar esta publicación?")) {
+                      deletePost.mutate(post.id, {
+                        onSuccess: () => {
+                          showToast("Publicación eliminada correctamente", { type: "success" });
+                          navigate(-1); 
+                        },
+                        onError: () => showToast("Error al eliminar la publicación", { type: "error" })
+                      });
+                    }
+                  }}
+                  disabled={deletePost.isPending}
+                />
+              )}
+
               <BtnDanger
                 text={hasReported ? "Reportado" : "Reportar"}
                 className={classes.dangerBtn}

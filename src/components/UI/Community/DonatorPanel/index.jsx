@@ -21,7 +21,7 @@ export const DonatorPanel = ({
     (typeof donorRank === "number" && typeof donorsTotal === "number"
       ? `Ranking de donadores: #${donorRank} de ${donorsTotal}`
       : typeof donorsTotal === "number"
-      ? `Estás entre los ${donorsTotal} donadores!`
+      ? `Estás en el puesto N° ${donorsTotal} de donadores!`
       : "Estás entre los donadores!");
 
   return (

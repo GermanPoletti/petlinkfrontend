@@ -205,7 +205,7 @@
 }
 
 .message {
-  max-width: 85%;
+  max-width: 60%;
   padding: 8px 12px;
   border-radius: 12px;
   margin: 8px 0;
@@ -264,4 +264,121 @@
   bottom: 0;
   background: transparent;
   z-index: 999; /* por debajo del panel */
+}
+
+.tabs {
+  display: flex;
+  background: var(--primary-green-tabs);
+  border-bottom: 1px solid var(--bordersdivs);
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  color: var(--textsecondary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tabActive {
+  flex: 1;
+  padding: 10px;
+  background: var(--accent);
+  border: none;
+  color: var(--textprimary);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filtersHeader {
+  padding: 8px 16px;
+  background: var(--primary-green-tabs);
+  border-bottom: 1px solid var(--bordersdivs);
+  position: relative;
+}
+
+.filterToggle {
+  background: none;
+  border: none;
+  color: var(--textprimary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filtersDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--accent);
+  border: 1px solid var(--bordersdivs);
+  border-radius: 0 0 12px 12px;
+  padding: 12px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.filterSearch {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--bordersdivs);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.filterOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.filterOptions label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.postItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.postTitleItem {
+  font-weight: 600;
+  flex: 1;
+}
+
+.postChatsCount {
+  color: var(--primary-green);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.loadMoreBtn {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-green-light);
+  border: none;
+  color: var(--textprimary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chatClosedInfo {
+  text-align: center;
+  padding: 16px;
+  color: #888;
+  font-style: italic;
+  background: #f8f8f8;
+  border-top: 1px solid var(--bordersdivs);
 }

@@ -66,7 +66,9 @@ export default function BackOfficeDashboard() {
 
   // const {data:dataexcel} = exportUsersToExcel();
 
-  const handleDownload = () => {
+  const { downloadUsersExcel } = useUsersApi();
+
+  const handleDownload = async () => {
     if (!formStartDate || !formEndDate) {
       showToast("Faltan fechas", { type: "error" });
       return;
@@ -76,14 +78,18 @@ export default function BackOfficeDashboard() {
       return;
     }
 
-    // downloadMutation.mutate(
-    //   { startDate: formStartDate, endDate: formEndDate },
-    //   {
-    //     onSuccess: () => showToast("Excel descargado correctamente", { type: "success" }),
-    //     onError: (err) => showToast("Error al descargar el Excel", { type: "error" }),
-    //   }
-    // );
+    try {
+      setLoading(true);
+      await downloadUsersExcel(formStartDate, formEndDate);
+      showToast("Excel descargado correctamente", { type: "success" });
+    } catch (error) {
+      console.error(error);
+      showToast("Error al descargar el Excel", { type: "error" });
+    } finally {
+      setLoading(false);
+    }
   };
+  
   return (
     <BackOfficeTemplate>
       <main className={classes.page}>
@@ -108,7 +114,9 @@ export default function BackOfficeDashboard() {
         <div className={classes.actionsRow}>
           <BtnSecondary text="Usuarios registrados por día" onClick={() => setModalOpen(true)} />
         </div>
-
+        <div>
+          <a target="_blank" href="https://analytics.google.com/analytics/web/#/a377929816p516764100/reports/intelligenthome?params=_u..nav%3Dmaui">Analitycs</a>
+        </div>
         {/* MODAL */}
         {modalOpen && (
           <div className={classes.modalOverlay} onClick={() => setModalOpen(false)}>
@@ -171,6 +179,7 @@ export default function BackOfficeDashboard() {
                 endDate={appliedEndDate} 
                 aggregation={appliedAggregation} 
               />
+              
 
             </div>
           </div>

@@ -11,8 +11,31 @@ export const useChatsApi = () => {
   useQuery({
     queryKey: ["myChats", filters?.post_id],
     queryFn: () => chatApi.getMyChats(filters),
-    // enabled: !!filters?.post_id, 
-    enabled: !!userId
+   enabled: !!userId,
+      select: (data) => {
+        const chatList = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.results)
+            ? data.results
+            : Array.isArray(data?.items)
+              ? data.items
+              : [];
+
+        // Ordenar: primero por fecha de último mensaje, luego por actualización/creación
+        return chatList.sort((a, b) => {
+          // Obtener fecha más relevante para A
+          const dateA = new Date(
+            a.last_message?.created_at || a.updated_at || a.created_at || 0
+          );
+          // Obtener fecha más relevante para B
+          const dateB = new Date(
+            b.last_message?.created_at || b.updated_at || b.created_at || 0
+          );
+
+          // Orden descendente (más nuevo primero)
+          return dateB - dateA;
+        });
+      },
   });
 
 

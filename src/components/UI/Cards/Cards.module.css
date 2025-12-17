@@ -143,3 +143,8 @@
     gap: 4px; /* Pequeño espacio entre location y published */
   }
 }
+
+
+.likesCount{
+  font-size: 16px;
+}
