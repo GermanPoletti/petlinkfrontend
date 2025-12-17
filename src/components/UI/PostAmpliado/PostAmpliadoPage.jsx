@@ -12,6 +12,19 @@ import { useReportsApi } from "@/hooks/useReportsApi";
 import styles from "./PostAmpliadoPage.module.css";
 import { usePostsApi } from "@/hooks/usePostsApi";
 
+const formatToSQLDateTime = (isoString) => {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+
 function PostAmpliadoBase({ post, isOwner, classes }) {
   const { showToast } = useToast();
   const { createChat, useGetMyChats } = useChatsApi();
@@ -103,18 +116,29 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
     );
   };
 
+  const handleLike = () => {
+    likePost.mutate(post.id, {
+      onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["isLiked", post.id] });
+      }
+    })
+  }
+
+  console.log(post);
+  
   return (
     <PagesTemplate showNewPost={false}>
       <main className={classes.page}>
         <div className={classes.contentWrap}>
           {isLoading ? "Cargando post..." : 
           <PostContainer
-            title={post.title}
-            username = {post.username}
-            description={post.message || post.description}
-            imageUrl={post.imageUrl || post?.multimedia?.[0]?.url}
-            location={post.city_name || post.location}
-            publishedAt={post.created_at || post.publishedAt}
+            title={postData.title}
+            username = {postData.username}
+            description={postData.message || postData.description}
+            imageUrl={postData.imageUrl || postData?.multimedia?.[0]?.url || null}
+            location={postData.city_name || postData.location}
+            publishedAt={formatToSQLDateTime(postData.created_at) || formatToSQLDateTime(postData.publishedAt)}
+            likesNumber={postData.likes_count}
           />}
 
         <div className={classes.actionsWrap}>
@@ -133,12 +157,7 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
 
             <BtnSecondary
                   text={isLikedByUser ? "Quitar like" : "Like"}
-                  onClick={() => likePost.mutate(post.id, {
-                      onSuccess: () => {
-                        // Invalidate isLiked query to refresh UI
-                        queryClient.invalidateQueries({ queryKey: ["isLiked", post.id] });
-                      }
-                    })}
+                  onClick={() => handleLike()}
                     disabled={likePost.isPending}
                     size="lg"
                   />

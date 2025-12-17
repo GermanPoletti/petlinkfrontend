@@ -92,12 +92,11 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
     }
     if(mode == "edit"){
       const post_id = initialData?.id
-      console.log(post_id);
       
       patchPost.mutate({post_id, data: formData}, {
         onSuccess: () => {
           showToast?.("Publicación modificada", { type: "success" });
-          const route = type === "necesidad" ? "/propuestas" : "/ofertas";
+          const route = "/mis-publicaciones";
           navigate(route, { replace: true });
         },
         onError: () => {
@@ -206,9 +205,9 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
           text={mode === "edit" ? "Guardar cambios" : "Publicar"} 
           type="submit"  
           size="sm" 
-          disabled={createPost.isPending}
+          disabled={createPost.isPending || patchPost.isPending}
         />
-        {createPost.isPending && <span className={classes.loading}>Publicando...</span>}
+        {createPost.isPending || patchPost.isPending && <span className={classes.loading}>{mode === "edit" ? "Guardando cambios..." : "Publicando..."}</span>}
       </div>
 
     </form>

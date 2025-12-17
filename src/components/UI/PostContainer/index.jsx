@@ -12,6 +12,7 @@ export const PostContainer = ({
   username,
   location = "",
   publishedAt = "",
+  likesNumber,
   leftAction,
   rightAction,
 }) => {
@@ -26,7 +27,7 @@ export const PostContainer = ({
       </div>
 
       {/* Columna derecha: imagen (si existe) */}
-      {(imageUrl || null) && (
+      {(imageUrl) && (
         <div className={classes.imageWrap}>
           <img
             className={classes.image}
@@ -38,8 +39,9 @@ export const PostContainer = ({
       )}
       <div className={classes.metaRow}>
           <span className={classes.location}>📍 {location}</span>
+          <span className={classes.likeCount}>❤️{likesNumber}</span>
           {publishedAt && (
-            <span className={classes.published}>Publicado hace: {publishedAt}</span>
+            <span className={classes.published}>Publicado: {publishedAt}</span>
           )}
         </div>
 

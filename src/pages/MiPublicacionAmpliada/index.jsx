@@ -8,13 +8,14 @@ import { useToast } from "@/components/UI/Toast";
 import * as classes from "./MiPublicacionAmpliada.module.css";
 import { usePostsApi } from "@/hooks/usePostsApi";
 
+
 function MiPublicacionAmpliada() {
   const locationData = useLocation();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const post = locationData.state || {};
-
-  const { deletePost } = usePostsApi();
+   const {useGetPostById, deletePost } = usePostsApi();
+  const { data: postData, isLoading, refetch } = useGetPostById(post.id);
 
   const handleDelete = () => {
   if (!post?.id) {
@@ -47,13 +48,16 @@ function MiPublicacionAmpliada() {
   <PagesTemplate showNewPost={false}>
     <main className={classes.page}>
       <div className={classes.contentWrap}>
+        {isLoading ? "Cargando post..." : 
         <PostContainer
-          title={post.title}
-          description={post.description}
-          imageUrl={post.imageUrl}
-          location={post.location}
-          publishedAt={post.publishedAt}
-        />
+          title={postData.title}
+          username = {postData.username}
+          description={postData.message || postData.description}
+          imageUrl={postData.imageUrl || postData?.multimedia?.[0]?.url || null}
+          location={postData.city_name || postData.location}
+          publishedAt={postData.created_at || postData.publishedAt}
+          likesNumber={postData.likes_count}
+        />}
         <UserChatList postId={post.id} postTitle={post.title} />
 
         <div className={classes.actionsWrap}>
