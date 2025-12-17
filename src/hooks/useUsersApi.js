@@ -50,7 +50,18 @@ export const useUsersApi = () => {
     
       const blob = await userApi.exportUsersToExcel(startDate, endDate);
 
-      const url = window.URL.createObjectURL(blob);
+      if (!blob) {
+      throw new Error("No se recibieron datos del servidor");
+    }
+
+
+      if (blob.type && blob.type.includes("application/json")) {
+      const text = await blob.text();
+      const errorData = JSON.parse(text);
+      throw new Error(errorData.detail || "Error al exportar usuarios");
+    }
+
+      const url = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement("a");
       link.href = url;
       link.download = `usuarios_${startDate}_a_${endDate}.xlsx`;

@@ -17,6 +17,15 @@
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
+.btnSecondary:disabled, .btnSecondary:disabled:hover {
+  color: white;
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: gray;
+  border-color: rgb(53, 53, 53);
+  /* TODO: Modificar color boton cuando ta deshabilitado */
+}
+
 .btnSecondary:hover {
   border-color: var(--primary-green-light);
   background-color: var(--primary-green);

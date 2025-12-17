@@ -32,11 +32,11 @@ function monthLabel(date) {
 function getSafeUsersWithDates(rawUsers) {
   const users = Array.isArray(rawUsers) ? rawUsers : [];
   const today = new Date();
-  // Mapear usuarios sin registeredAt a una fecha aleatoria de los últimos 30 días
+ 
   return users.map((u, idx) => {
     if (u.registeredAt) return u;
     const fallback = new Date(today);
-    const offset = (idx % 30) + 1; // distribución estable
+    const offset = (idx % 30) + 1; 
     fallback.setDate(today.getDate() - offset);
     return { ...u, registeredAt: fallback.toISOString() };
   });

@@ -26,5 +26,6 @@ export const exportUsersToExcel = async (date_from, date_to) => {
     responseType: "blob", // CLAVE: le dice a Axios que viene un archivo binario
   });
 
-  return response.data; // ← esto es un Blob
+   console.log("exportUsersToExcel response:", response);
+  return response; // ← esto es un Blob
 };

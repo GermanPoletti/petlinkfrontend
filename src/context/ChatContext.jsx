@@ -20,17 +20,17 @@ export function ChatProvider({ children }) {
     setIsOpen(true);
   };
 
-  const toggleChat = () => {
-      if (isOpen) {
-        setActiveChatId(null)
-        closeChat();
-      } else {
-        console.log("refetched");
-        
-        refetch();
-        setIsOpen(true);
-      }
-    };  
+const toggleChat = () => {
+  if (isOpen) {
+    setActiveChatId(null);
+    closeChat();
+  } else {
+    setActiveChatId(null);
+
+    refetch();
+    setIsOpen(true);
+  }
+};
 
   const openChatForPublication = async ({ publicationId, postTitle, counterpartUsername }) => {
     // Abre el panel y trata de resolver el chatId real de esta publicación

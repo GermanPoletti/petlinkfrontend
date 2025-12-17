@@ -29,8 +29,8 @@ function Login() {
         
         localStorage.setItem("authToken", res.access_token);
         
-
-        navigate("/inicio");
+        
+        window.location.href = "/inicio"; 
       },
       onError: (err) => {
         

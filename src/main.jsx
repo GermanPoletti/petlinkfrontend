@@ -10,6 +10,10 @@ import { ToastProvider } from './components/UI/Toast';
 import { ChatPanel } from './components/UI/Chat';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
+import ReactGA from 'react-ga4';
+
+ReactGA.initialize('G-EFDMJQHXTJ');
+ReactGA.send({ hitType: 'pageview', page: window.location.pathname,  platform: /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop" });
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>

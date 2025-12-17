@@ -7,15 +7,18 @@ import { BtnSecondary, BtnDanger } from "@/components/UI/Buttons";
 import { useToast } from "@/components/UI/Toast";
 import * as classes from "./MiPublicacionAmpliada.module.css";
 import { usePostsApi } from "@/hooks/usePostsApi";
-
+import { useUser } from "../../context/UserContext";
 
 function MiPublicacionAmpliada() {
   const locationData = useLocation();
   const navigate = useNavigate();
+  const { userId: currentUserId } = useUser();
   const { showToast } = useToast();
   const post = locationData.state || {};
    const {useGetPostById, deletePost } = usePostsApi();
-  const { data: postData, isLoading, refetch } = useGetPostById(post.id);
+const { data: postData, isLoading } = useGetPostById(post.id, {
+  enabled: !!post.id && !!currentUserId, // ← SOLO SI HAY ID Y USUARIO LOGUEADO
+});
 
   const handleDelete = () => {
   if (!post?.id) {
@@ -48,8 +51,7 @@ function MiPublicacionAmpliada() {
   <PagesTemplate showNewPost={false}>
     <main className={classes.page}>
       <div className={classes.contentWrap}>
-        {isLoading ? "Cargando post..." : 
-        <PostContainer
+        {isLoading ? "Cargando post..." :<PostContainer
           title={postData.title}
           username = {postData.username}
           description={postData.message || postData.description}
@@ -58,7 +60,7 @@ function MiPublicacionAmpliada() {
           publishedAt={postData.created_at || postData.publishedAt}
           likesNumber={postData.likes_count}
         />}
-        <UserChatList postId={post.id} postTitle={post.title} />
+        
 
         <div className={classes.actionsWrap}>
           <div className={classes.leftAction}>

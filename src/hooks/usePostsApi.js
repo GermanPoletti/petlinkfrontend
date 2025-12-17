@@ -45,31 +45,20 @@ export const usePostsApi = () => {
   // --------------------
   // INFINITE SCROLL (NUEVO)
   // --------------------
-  const useInfinitePosts = (filters = {}) => {
+const useInfinitePosts = (filters = {}, options = {}) => {
   return useInfiniteQuery({
     queryKey: ["posts", "infinite", filters],
     queryFn: ({ pageParam = 0 }) =>
       postApi.getPosts({ ...filters, skip: pageParam, limit: 10 }),
-
     getNextPageParam: (lastPage, allPages) => {
-      // allPages tiene todas las páginas cargadas
       const totalLoaded = allPages.flatMap(p => p.posts).length;
-      
-      // Si la última página trajo menos de 10 → no hay más
-      if (lastPage.posts.length < 10) {
-        return undefined;
-      }
-      
-      // Si limit_reached es false → hay más
-      if (!lastPage.limit_reached) {
-        return totalLoaded; // ← skip para la próxima página
-      }
-      
+      if (lastPage.posts.length < 10) return undefined;
+      if (!lastPage.limit_reached) return totalLoaded;
       return undefined;
     },
-
     initialPageParam: 0,
-    // staleTime: 1000 * 60 * 5,
+    enabled: options.enabled !== false, // ← AQUÍ ESTÁ LA CLAVE
+    // staleTime si querés
   });
 };
 

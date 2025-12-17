@@ -156,7 +156,7 @@ export default function CreatePostForm({ type = "oferta", mode = "create", initi
       {/* Ubicación */}
       <LocationAutocomplete
         label="Ubicación"
-        placeholder="País, Estado/Provincia, Ciudad"
+        placeholder="Ciudad"
         value={location}
         onChange={setLocation}
         className={classes.location}

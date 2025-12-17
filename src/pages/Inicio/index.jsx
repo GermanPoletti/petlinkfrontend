@@ -76,6 +76,7 @@ const Inicio = () => {
                   imageUrl={ultimaNecesida.posts[0].multimedia[0]?.url}
                   location={ultimaNecesida.posts[0].city_name}
                   publishedAt={ultimaNecesida.posts[0].created_at}
+                  likes={ultimaNecesida.posts[0].likes_count}
                 />
               </Link>
             ) : (
@@ -97,6 +98,7 @@ const Inicio = () => {
                   imageUrl={ultimaOfert.posts[0].multimedia[0]?.url}
                   location={ultimaOfert.posts[0].city_name}
                   publishedAt={ultimaOfert.posts[0].created_at}
+                  likes={ultimaOfert.posts[0].likes_count}
                 />
               </Link>
             ) : (
