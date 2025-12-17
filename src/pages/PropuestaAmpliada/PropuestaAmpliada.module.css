@@ -47,10 +47,15 @@
 
 .rightAction {
   justify-self: end;
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 
 @media (min-width: 768px) {
-  .page { padding: 20px; }
+  .page {
+    padding: 20px;
+  }
   .contentWrap {
     max-width: none;
   }

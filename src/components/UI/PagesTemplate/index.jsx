@@ -43,7 +43,7 @@ export const PagesTemplate = ({ children, userImageUrl, onProfileClick, onNewPos
                   if (!handled) navigate("/crear-oferta");
                 }
               },
-              { label: "Publicar Propuesta", onClick: () => {
+              { label: "Publicar Necesidad", onClick: () => {
                   const handled = (onSelectNewPostType && onSelectNewPostType("propuesta")) || (onNewPostClick && onNewPostClick("propuesta"));
                   if (!handled) navigate("/crear-propuesta");
                 }

@@ -1,10 +1,12 @@
 import React from "react";
 import PagesTemplate from "@/components/UI/PagesTemplate";
 import { PostContainer } from "@/components/UI/PostContainer";
+import { useNavigate } from "react-router-dom";
 import { BtnPrimary, BtnDanger, BtnSecondary } from "@/components/UI/Buttons";
 import { useToast } from "@/components/UI/Toast";
 import { useChatsApi } from "@/hooks/useChatsApi";
 import { useChat } from "@/context/ChatContext";
+import { useUser } from "@/context/UserContext";
 import { useReportsApi } from "@/hooks/useReportsApi";
 import styles from "./PostAmpliadoPage.module.css";
 import { usePostsApi } from "@/hooks/usePostsApi";
@@ -12,9 +14,11 @@ import { usePostsApi } from "@/hooks/usePostsApi";
 function PostAmpliadoBase({ post, isOwner, classes }) {
   const { showToast } = useToast();
   const { createChat, useGetMyChats } = useChatsApi();
+  const navigate = useNavigate();
   const { openChat } = useChat();
+  const { role } = useUser();
   const { createReport } = useReportsApi();
-  const {useGetPostById, likePost} = usePostsApi();
+  const {useGetPostById, likePost, deletePost } = usePostsApi();
 
   const [customReason, setCustomReason] = React.useState("");
   const [selectedReason, setSelectedReason] = React.useState("");
@@ -137,6 +141,28 @@ function PostAmpliadoBase({ post, isOwner, classes }) {
           </div>
 
             <div className={classes.rightAction}>
+
+              {(role === 'admin' || role === 'moderator') && (
+                <BtnDanger
+                  text={deletePost.isPending ? "Eliminando..." : "Eliminar"}
+                  className={classes.dangerBtn}
+                  divClassName={classes.dangerBtnLabel}
+                  size="sm"
+                  onClick={() => {
+                    if (window.confirm("¿Estás seguro que deseas eliminar esta publicación?")) {
+                      deletePost.mutate(post.id, {
+                        onSuccess: () => {
+                          showToast("Publicación eliminada correctamente", { type: "success" });
+                          navigate(-1); 
+                        },
+                        onError: () => showToast("Error al eliminar la publicación", { type: "error" })
+                      });
+                    }
+                  }}
+                  disabled={deletePost.isPending}
+                />
+              )}
+
               <BtnDanger
                 text={hasReported ? "Reportado" : "Reportar"}
                 className={classes.dangerBtn}
