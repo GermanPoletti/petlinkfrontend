@@ -42,6 +42,33 @@ function getSafeUsersWithDates(rawUsers) {
   });
 }
 
+function getWeekRange(start, end) {
+  const weeks = [];
+  let cur = startOfWeekISO(start);
+  const last = startOfWeekISO(end);
+
+  while (cur <= last) {
+    weeks.push(new Date(cur));
+    cur.setDate(cur.getDate() + 7);
+  }
+
+  return weeks;
+}
+
+function getMonthRange(start, end) {
+  const months = [];
+  let cur = new Date(start.getFullYear(), start.getMonth(), 1);
+  const last = new Date(end.getFullYear(), end.getMonth(), 1);
+
+  while (cur <= last) {
+    months.push(new Date(cur));
+    cur.setMonth(cur.getMonth() + 1);
+  }
+
+  return months;
+}
+
+
 export default function RegisteredUsersChart({ users = [], startDate, endDate, aggregation = "day" }) {
   const { showToast } = useToast();
   const [data, setData] = useState([]); // [{ label, count }]
@@ -96,18 +123,35 @@ export default function RegisteredUsersChart({ users = [], startDate, endDate, a
           map.set(label, (map.get(label) || 0) + 1);
         });
       } else if (aggregation === "week") {
+        const weeks = getWeekRange(start, end);
+
+        // inicializar semanas en 0
+        weeks.forEach((w) => {
+          const label = `Semana ${formatDay(w)}`;
+          map.set(label, 0);
+        });
+
+        // sumar usuarios
         inRange.forEach((u) => {
           const d = new Date(u.registeredAt);
           const sow = startOfWeekISO(d);
           const label = `Semana ${formatDay(sow)}`;
-          map.set(label, (map.get(label) || 0) + 1);
+          map.set(label, map.get(label) + 1);
         });
       } else {
-        // month
+        const months = getMonthRange(start, end);
+
+        // inicializar meses en 0
+        months.forEach((m) => {
+          const label = monthLabel(m);
+          map.set(label, 0);
+        });
+
+        // sumar usuarios
         inRange.forEach((u) => {
           const d = new Date(u.registeredAt);
           const label = monthLabel(d);
-          map.set(label, (map.get(label) || 0) + 1);
+          map.set(label, map.get(label) + 1);
         });
       }
 

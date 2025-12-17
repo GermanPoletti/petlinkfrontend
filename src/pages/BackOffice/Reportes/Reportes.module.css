@@ -22,6 +22,11 @@
 .table { display: flex; flex-direction: column; gap: 12px; }
 .rows { display: flex; flex-direction: column; gap: 8px; }
 
+
+.noResults{
+  text-align: center;
+}
+
 .modalOverlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.35);
   display: grid; place-items: center; z-index: 1000;
