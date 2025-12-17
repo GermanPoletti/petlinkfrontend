@@ -17,6 +17,10 @@
   margin: 8px 0 12px 0;
 }
 
+.noResults{
+  text-align: center;
+}
+
 .searchInput {
   height: 40px;
   padding: 0 12px;

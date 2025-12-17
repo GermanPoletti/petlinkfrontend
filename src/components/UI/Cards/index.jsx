@@ -23,6 +23,7 @@ export const FeedCard = ({
   location,
   publishedAt,
   username,
+  likes,
   className,
   onClick,
 }) => {
@@ -41,6 +42,7 @@ export const FeedCard = ({
         <p className={classes.description}>{description}</p>
         <div className={classes.metaRow}>
           <span className={classes.location}>📍 {location}</span>
+          <span className={classes.likesCount}>❤️{likes}</span>
           <span className={classes.published}>Publicado: {formatToSQLDateTime(publishedAt)}</span>
         </div>
       </div>
@@ -59,7 +61,7 @@ export const CardsFeed = ({ items = [], onCardClick }) => {
   for (let i = 0; i < items.length; i += 4) {
     pages.push(items.slice(i, i + 4));
   }
-
+  
   return (
     <div className={classes.feedContainer}>
       {pages.map((pageItems, idx) => (

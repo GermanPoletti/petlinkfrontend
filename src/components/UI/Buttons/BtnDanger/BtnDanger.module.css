@@ -23,6 +23,14 @@
   color: white;
 }
 
+
+.btnDanger:disabled{
+  background-color: grey;
+  border-color: rgb(56, 56, 56);
+  color: var(--textprimary);
+  cursor: not-allowed;
+}
+
 .btnDanger:active {
   background-color: var(--red-light);
   border-color: var(--error);

@@ -26,6 +26,7 @@ export const LandingPage = () => {
 
   // Tu función handleLogin (aunque ya no se usa en el botón)
   const handleLogin = () => {
+    
     navigate('/login');
   };
 

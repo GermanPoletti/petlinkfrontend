@@ -15,6 +15,7 @@ function OfertaAmpliada() {
   const {data: postData, isLoading, error} = useGetPostById(id)
   useEffect(()=>{
     if(!post){
+      console.log("updated by endpoint");
       setPost(postData)
     }
   }, [])

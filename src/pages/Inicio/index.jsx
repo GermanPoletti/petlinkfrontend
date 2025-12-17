@@ -12,7 +12,7 @@ import { usePostsApi } from "../../hooks/usePostsApi";
 import { useUsersApi } from "../../hooks/useUsersApi"
 const Inicio = () => {
   const navigate = useNavigate();
-  const { useGetMe } = useUsersApi()
+  const { useGetMe, useGetUserRanking } = useUsersApi()
   const { useGetPosts } = usePostsApi()
   const {
     data: ultimaOfert,
@@ -22,6 +22,11 @@ const Inicio = () => {
   } = useGetPosts({limit: 1, post_type_id: 1})
   const { role } = useUser();
   
+  const {
+    data: rankData,
+    isLoading: rankIsLoading,
+  } = useGetUserRanking()
+
   const {
     data: userData,
     isLoading: userIsLoading,
@@ -71,6 +76,7 @@ const Inicio = () => {
                   imageUrl={ultimaNecesida.posts[0].multimedia[0]?.url}
                   location={ultimaNecesida.posts[0].city_name}
                   publishedAt={ultimaNecesida.posts[0].created_at}
+                  likes={ultimaNecesida.posts[0].likes_count}
                 />
               </Link>
             ) : (
@@ -92,6 +98,7 @@ const Inicio = () => {
                   imageUrl={ultimaOfert.posts[0].multimedia[0]?.url}
                   location={ultimaOfert.posts[0].city_name}
                   publishedAt={ultimaOfert.posts[0].created_at}
+                  likes={ultimaOfert.posts[0].likes_count}
                 />
               </Link>
             ) : (
@@ -104,7 +111,7 @@ const Inicio = () => {
 
         <aside className={styles.sidebar}>
           <ContributionPanel contributionsCount={userData?.help_count} imageUrl={registerDog} />
-          <DonatorPanel donorsTotal={200} imageUrl={badgeCat} />
+          <DonatorPanel donorsTotal={rankData} imageUrl={badgeCat} />
         </aside>
       </main>
     </PagesTemplate>

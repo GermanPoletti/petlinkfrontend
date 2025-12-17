@@ -32,7 +32,7 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
     logoutUser.mutate(undefined,{
       onSuccess: () => {
           showToast("Logged Out", { type: "success" });
-          navigate("/");
+          window.location.href = "/"; 
         },
         onError: (error) => {
           const msg = error.response?.data?.detail || "Error al desloguear";
@@ -116,7 +116,6 @@ export const NavBar = ({ userImageUrl, onProfileClick }) => {
           onClose={() => setMenuOpen(false)}
           items={[
             { label: "Perfil", onClick: () => navigate("/perfil") },
-            { label: "Configuración", onClick: () => navigate("/configuracion") },
             { label: "Mis Publicaciones", onClick: () => navigate("/mis-publicaciones") },
             { label: "Cerrar Sesión", onClick: handleLogout },
           ]}
