@@ -8,17 +8,32 @@ import { useToast } from "@/components/UI/Toast";
 import backarrowIcon from "@/assets/images/icons/backarrow.png";
 import handshake from "@/assets/images/icons/handshake.png";
 
-function MessageBubble({ msg, currentUserId }) {
-  const isMine = msg.sender_id === currentUserId || msg.is_from_current_user === true;
+function MessageBubble({ msg, currentUserId, senderName }) {
+  const isMine =
+    msg.sender_id === currentUserId || msg.is_from_current_user === true;
+
+  const messageDate = new Date(msg.created_at);
+  const formattedDate = messageDate.toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "short",
+  });
+  const formattedTime = messageDate.toLocaleTimeString("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const dateTime = `${formattedDate}, ${formattedTime}`;
 
   return (
-    <div className={`${styles.message} ${isMine ? styles.sent : styles.received}`}>
+    <div
+      className={`${styles.message} ${isMine ? styles.sent : styles.received}`}
+    >
       <div className={styles.messageText}>{msg.message || msg.content}</div>
-      <div className={styles.messageTime}>
-        {new Date(msg.created_at).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
+
+      <div className={styles.messageFooter}>
+        <span className={styles.senderName}>
+          {senderName ? `${senderName}` : "Usuario"}
+        </span>
+        <span className={styles.messageDateTime}>{dateTime}</span>
       </div>
     </div>
   );
@@ -29,7 +44,7 @@ function InitiatedChatItem({ chat, onSelect }) {
   const { useGetPostById } = usePostsApi();
   const { data: post, isLoading: loadingPost } = useGetPostById(chat.post_id);
   console.log(chat);
-  
+
   return (
     <div className={styles.chatItem} onClick={() => onSelect(chat.id)}>
       <div className={styles.chatPostTitle}>
@@ -47,8 +62,9 @@ export function ChatPanel() {
   const { isOpen, activeChatId, setActiveChatId, closeChat } = useChat();
   const { showToast } = useToast();
   const { userId: currentUserId } = useUser();
-
-  const { useGetMyChats, useGetChatDetail, sendMessage, resolveChat } = useChatsApi();
+  const [chatsFilter, setChatsFilter] = useState("active"); // "active" | "inactive" | "all"
+  const { useGetMyChats, useGetChatDetail, sendMessage, resolveChat } =
+    useChatsApi();
   const { useInfinitePosts, useGetPostById } = usePostsApi();
 
   // Estados de navegación
@@ -70,41 +86,57 @@ export function ChatPanel() {
   const postsFilters = {
     user_id: tab === "myPosts" ? currentUserId : undefined,
     keyword: searchTitle || undefined,
-    show_only_active: showOnlyActive ? true : showOnlyActive === false ? false : undefined,
+    show_only_active: showOnlyActive
+      ? true
+      : showOnlyActive === false
+      ? false
+      : undefined,
   };
   console.log("aaaa", currentUserId);
-  
-const {
-  data: postsPages,
-  fetchNextPage: fetchNextPosts,
-  hasNextPage: hasNextPosts,
-  isFetchingNextPage: loadingMorePosts,
-  isLoading: loadingPosts,
-} = useInfinitePosts(postsFilters, {
-  enabled: !!currentUserId, // ← SOLO SI ESTÁS LOGUEADO
-});
-  
-  const posts = postsPages?.pages.flatMap(page => page.posts) || [];
 
-  // === Chats iniciados por mí (pestaña "Chats Iniciados") ===
   const {
-    data: initiatedChats = [],
-    isLoading: loadingInitiatedChats,
-  } = useGetMyChats({}, currentUserId);
+    data: postsPages,
+    fetchNextPage: fetchNextPosts,
+    hasNextPage: hasNextPosts,
+    isFetchingNextPage: loadingMorePosts,
+    isLoading: loadingPosts,
+  } = useInfinitePosts(postsFilters, {
+    enabled: !!currentUserId, // ← SOLO SI ESTÁS LOGUEADO
+  });
 
-  const myInitiatedChats = initiatedChats.filter(chat => chat.initiator_id === currentUserId);
+  const posts = postsPages?.pages.flatMap((page) => page.posts) || [];
+  const initiatedChatsFilters = {
+    only_active: showOnlyActive === null ? undefined : showOnlyActive,
+  };
+  // === Chats iniciados por mí (pestaña "Chats Iniciados") ===
+  const { data: initiatedChats = [], isLoading: loadingInitiatedChats } =
+    useGetMyChats(initiatedChatsFilters, currentUserId, {
+      enabled: !!currentUserId,
+    });
+
+  const myInitiatedChats = initiatedChats.filter(
+    (chat) => chat.initiator_id === currentUserId
+  );
 
   // === NIVEL 2: Chats de un post seleccionado ===
-  const {
-    data: chatsOfPost,
-    isLoading: loadingChatsOfPost,
-  } = useGetMyChats({ post_id: selectedPostId }, currentUserId);
+  const chatsOfPostFilters = {
+    post_id: selectedPostId,
+    only_active: chatsFilter === "all" ? undefined : chatsFilter === "active",
+  };
+
+  const { data: chatsOfPost = [], isLoading: loadingChatsOfPost } =
+    useGetMyChats(chatsOfPostFilters, currentUserId, {
+      enabled: !!selectedPostId && viewLevel === "chats",
+    });
 
   // === NIVEL 3: Conversación individual ===
-  const { data: chatData, isLoading: loadingMessages } = useGetChatDetail(activeChatId);
+  const { data: chatData, isLoading: loadingMessages } =
+    useGetChatDetail(activeChatId);
 
   // === Título del nivel 2 (post seleccionado) ===
-  const { data: selectedPost } = useGetPostById(selectedPostId, {enabled: !!currentUserId});
+  const { data: selectedPost } = useGetPostById(selectedPostId, {
+    enabled: !!currentUserId,
+  });
 
   // Handlers de navegación
   const goToPosts = () => {
@@ -113,35 +145,37 @@ const {
     setActiveChatId(null);
   };
 
-const goToChatsOfPost = (postId) => {
-  setPreviousTab(tab); // ← también guardamos aquí
-  setViewLevel("chats");
-  setSelectedPostId(postId);
-  setActiveChatId(null);
-};
-
-const goToConversation = (chatId) => {
-  setPreviousTab(tab); // ← GUARDAMOS la pestaña actual
-  setViewLevel("conversation");
-  setActiveChatId(chatId);
-};
-
-const handleBack = () => {
-  if (viewLevel === "conversation") {
-    setViewLevel("posts");
-    setTab(previousTab); // ← VOLVEMOS a la pestaña desde donde vinimos
+  const goToChatsOfPost = (postId) => {
+    setPreviousTab(tab); // ← también guardamos aquí
+    setViewLevel("chats");
+    setSelectedPostId(postId);
     setActiveChatId(null);
-  } else if (viewLevel === "chats") {
-    setViewLevel("posts");
-    setSelectedPostId(null);
-    setActiveChatId(null);
-  } else {
-    closeChat();
-  }
-};
+  };
+
+  const goToConversation = (chatId) => {
+    setPreviousTab(tab); // ← GUARDAMOS la pestaña actual
+    setViewLevel("conversation");
+    setActiveChatId(chatId);
+  };
+
+  const handleBack = () => {
+    if (viewLevel === "conversation") {
+      setViewLevel("posts");
+      setTab(previousTab); // ← VOLVEMOS a la pestaña desde donde vinimos
+      setActiveChatId(null);
+    } else if (viewLevel === "chats") {
+      setViewLevel("posts");
+      setChatsFilter("active");
+      setSelectedPostId(null);
+      setActiveChatId(null);
+    } else {
+      closeChat();
+    }
+  };
   // Título dinámico
   const getTitle = () => {
-    if (viewLevel === "posts") return tab === "myPosts" ? "Mis Publicaciones" : "Chats Iniciados";
+    if (viewLevel === "posts")
+      return tab === "myPosts" ? "Mis Publicaciones" : "Chats Iniciados";
     if (viewLevel === "chats") return selectedPost?.title || "Cargando post...";
     return chatData?.post_title || "Chat";
   };
@@ -180,17 +214,18 @@ const handleBack = () => {
   };
 
   useEffect(() => {
-  if (isOpen) {
-    // Al abrir el panel, siempre empezamos en nivel 1, pestaña "Mis Publicaciones"
-    setViewLevel("posts");
-    setTab("myPosts");
-    setSelectedPostId(null);
-    setActiveChatId(null);
-    setShowFilters(false);
-    setSearchTitle("");
-    setShowOnlyActive(true);
-  }
-}, [isOpen]);
+    if (isOpen) {
+      // Al abrir el panel, siempre empezamos en nivel 1, pestaña "Mis Publicaciones"
+      setViewLevel("posts");
+      setTab("myPosts");
+      setSelectedPostId(null);
+      setActiveChatId(null);
+      setShowFilters(false);
+      setSearchTitle("");
+      setChatsFilter("active");
+      setShowOnlyActive(true);
+    }
+  }, [isOpen]);
 
   // Scroll automático
   const messagesEndRef = useRef(null);
@@ -198,9 +233,40 @@ const handleBack = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatData?.messages]);
 
+  // Cerrar filtros al hacer click fuera
+  useEffect(() => {
+    if (!showFilters) return;
+
+    const handleClickOutside = (event) => {
+      // Si el click no está dentro del contenedor de filtros, cerramos
+      const filtersContainer = document.querySelector(
+        `.${styles.filtersContainer}`
+      );
+      if (filtersContainer && !filtersContainer.contains(event.target)) {
+        setShowFilters(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showFilters]);
+
   if (!isOpen) return null;
- 
-  
+
+  console.log(
+    "chatdata: ",
+    chatData,
+    " chatofpost:",
+    chatsOfPost,
+    " post:",
+    posts,
+    "postpage",
+    postsPages
+  );
+  console.log("myinit", myInitiatedChats);
+
   return (
     <>
       <div className={styles.backdrop} onClick={closeChat} />
@@ -212,24 +278,48 @@ const handleBack = () => {
           </button>
           <div className={styles.headerCenter}>
             <span className={styles.postTitle}>{getTitle()}</span>
-            {viewLevel === "conversation" && isOwner && (
+            {viewLevel === "conversation" && isOwner && chatData?.is_active ? (
               <button
                 className={styles.handshakeButton}
-                onClick={() => setShowDropdown(p => !p)}
+                onClick={() => setShowDropdown((p) => !p)}
               >
-                <img src={handshake} alt="Handshake" className={styles.handshakeIcon} />
+                <img
+                  src={handshake}
+                  alt="Handshake"
+                  className={styles.handshakeIcon}
+                />
               </button>
+            ) : viewLevel === "conversation" ? (
+              <span>-</span>
+            ) : null}
+            {viewLevel === "conversation" && !loadingMessages && chatData && (
+              <span>
+                {isOwner
+                  ? chatData.initiator_username
+                  : chatData.receiver_username}
+              </span>
             )}
-            {showDropdown && viewLevel === "conversation" && isOwner && (
-              <div className={styles.dropdownMenu} ref={dropdownRef}>
-                <button className={styles.dropdownItem} onClick={() => handleResolve(true)}>
-                  <span className={styles.checkIcon}>Sí</span> Acuerdo concretado
-                </button>
-                <button className={styles.dropdownItem} onClick={() => handleResolve(false)}>
-                  <span className={styles.crossIcon}>No</span> Acuerdo no concretado
-                </button>
-              </div>
-            )}
+            {showDropdown &&
+              viewLevel === "conversation" &&
+              isOwner &&
+              chatData?.is_active && (
+                <div className={styles.dropdownMenu} ref={dropdownRef}>
+                  <button
+                    className={styles.dropdownItem}
+                    onClick={() => handleResolve(true)}
+                  >
+                    <span className={styles.checkIcon}>Sí</span> Acuerdo
+                    concretado
+                  </button>
+                  <button
+                    className={styles.dropdownItem}
+                    onClick={() => handleResolve(false)}
+                  >
+                    <span className={styles.crossIcon}>No</span> Acuerdo no
+                    concretado
+                  </button>
+                </div>
+              )}
           </div>
         </div>
 
@@ -243,7 +333,9 @@ const handleBack = () => {
               Mis Publicaciones
             </button>
             <button
-              className={tab === "initiatedChats" ? styles.tabActive : styles.tab}
+              className={
+                tab === "initiatedChats" ? styles.tabActive : styles.tab
+              }
               onClick={() => setTab("initiatedChats")}
             >
               Chats Iniciados
@@ -253,22 +345,25 @@ const handleBack = () => {
 
         {/* FILTROS */}
         {viewLevel === "posts" && (
-          <div className={styles.filtersHeader}>
+          <div className={styles.filtersContainer}>
             <button
               className={styles.filterToggle}
-              onClick={() => setShowFilters(p => !p)}
+              onClick={() => setShowFilters((prev) => !prev)}
             >
               Filtros {showFilters ? "▲" : "▼"}
             </button>
+
             {showFilters && (
               <div className={styles.filtersDropdown}>
-                <input
-                  type="text"
-                  placeholder="Buscar por título..."
-                  value={searchTitle}
-                  onChange={(e) => setSearchTitle(e.target.value)}
-                  className={styles.filterSearch}
-                />
+                {tab === "myPosts" && (
+                  <input
+                    type="text"
+                    placeholder="Buscar por título..."
+                    value={searchTitle}
+                    onChange={(e) => setSearchTitle(e.target.value)}
+                    className={styles.filterSearch}
+                  />
+                )}
                 <div className={styles.filterOptions}>
                   <label>
                     <input
@@ -317,13 +412,14 @@ const handleBack = () => {
                         onClick={() => goToChatsOfPost(post.id)}
                       >
                         <div className={styles.postTitleItem}>{post.title}</div>
-                        <div className={styles.postChatsCount}>
-                          chats →
-                        </div>
+                        <div className={styles.postChatsCount}>chats →</div>
                       </div>
                     ))}
                     {hasNextPosts && (
-                      <button onClick={() => fetchNextPosts()} disabled={loadingMorePosts}>
+                      <button
+                        onClick={() => fetchNextPosts()}
+                        disabled={loadingMorePosts}
+                      >
                         {loadingMorePosts ? "Cargando..." : "Cargar más"}
                       </button>
                     )}
@@ -334,7 +430,9 @@ const handleBack = () => {
               <>
                 {loadingInitiatedChats && <div>Cargando chats...</div>}
                 {myInitiatedChats.length === 0 ? (
-                  <div className={styles.noChats}>No has iniciado ningún chat</div>
+                  <div className={styles.noChats}>
+                    No has iniciado ningún chat
+                  </div>
                 ) : (
                   myInitiatedChats.map((chat) => (
                     <InitiatedChatItem
@@ -351,27 +449,72 @@ const handleBack = () => {
 
         {/* NIVEL 2: Chats de un post */}
         {viewLevel === "chats" && (
-          <div className={styles.chatList}>
-            {loadingChatsOfPost && <div>Cargando chats...</div>}
-            {chatsOfPost?.length === 0 ? (
-              <div className={styles.noChats}>No hay chats en esta publicación</div>
-            ) : (
-              chatsOfPost?.map((chat) => (
-                <div
-                  key={chat.id}
-                  className={styles.chatItem}
-                  onClick={() => goToConversation(chat.id)}
-                >
-                  <div className={styles.chatUser}>
-                    @{chat.counterpart_username || chat.receiver.email?.split("@")[0] || "Usuario"}
-                  </div>
-                  <div className={styles.lastMessagePreview}>
-                    {chat.last_message?.message || "Sin mensajes"}
-                  </div>
+          <>
+            {/* Pestañas de filtro para chats del post */}
+            <div className={styles.tabs}>
+              <button
+                className={
+                  chatsFilter === "active" ? styles.tabActive : styles.tab
+                }
+                onClick={() => setChatsFilter("active")}
+              >
+                Activos
+              </button>
+              <button
+                className={
+                  chatsFilter === "inactive" ? styles.tabActive : styles.tab
+                }
+                onClick={() => setChatsFilter("inactive")}
+              >
+                Inactivos
+              </button>
+              <button
+                className={
+                  chatsFilter === "all" ? styles.tabActive : styles.tab
+                }
+                onClick={() => setChatsFilter("all")}
+              >
+                Todos
+              </button>
+            </div>
+
+            <div className={styles.chatList}>
+              {loadingChatsOfPost && <div>Cargando chats...</div>}
+              {chatsOfPost?.length === 0 ? (
+                <div className={styles.noChats}>
+                  {chatsFilter === "active" &&
+                    "No hay chats activos en esta publicación"}
+                  {chatsFilter === "inactive" && "No hay chats inactivos"}
+                  {chatsFilter === "all" && "No hay chats"}
                 </div>
-              ))
-            )}
-          </div>
+              ) : (
+                chatsOfPost?.map((chat) => (
+                  <div
+                    key={chat.id}
+                    className={`${styles.chatItem} ${
+                      !chat.is_active ? styles.inactive : ""
+                    }`}
+                    onClick={() => goToConversation(chat.id)}
+                  >
+                    <div className={styles.chatUser}>
+                      @
+                      {chat.counterpart_username ||
+                        chat.receiver?.email?.split("@")[0] ||
+                        "Usuario"}
+                      {!chat.is_active && (
+                        <span className={styles.chatClosedLabel}>
+                          (cerrado)
+                        </span>
+                      )}
+                    </div>
+                    <div className={styles.lastMessagePreview}>
+                      {chat.last_message?.message || "Sin mensajes"}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
         )}
 
         {/* NIVEL 3: Conversación */}
@@ -380,11 +523,17 @@ const handleBack = () => {
             <div className={styles.messages}>
               {loadingMessages && <div>Cargando mensajes...</div>}
               {chatData?.messages?.map((msg) => (
-                <MessageBubble key={msg.id} msg={msg} currentUserId={currentUserId} />
+                <MessageBubble
+                  key={msg.id}
+                  msg={msg}
+                  currentUserId={currentUserId}
+                  senderName={msg.sender_username}
+                />
               ))}
               <div ref={messagesEndRef} />
             </div>
 
+            {/* Input para enviar mensaje o info de chat cerrado */}
             {chatData?.is_active ? (
               <div className={styles.inputBar}>
                 <textarea
@@ -400,7 +549,11 @@ const handleBack = () => {
                   className={styles.textInput}
                   rows={1}
                 />
-                <button onClick={handleSend} disabled={!input.trim()} className={styles.sendButton}>
+                <button
+                  onClick={handleSend}
+                  disabled={!input.trim()}
+                  className={styles.sendButton}
+                >
                   Send
                 </button>
               </div>

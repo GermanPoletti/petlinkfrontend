@@ -114,8 +114,30 @@ export default function BackOfficeDashboard() {
         <div className={classes.actionsRow}>
           <BtnSecondary text="Usuarios registrados por día" onClick={() => setModalOpen(true)} />
         </div>
-        <div>
-          <a target="_blank" href="https://analytics.google.com/analytics/web/#/a377929816p516764100/reports/intelligenthome?params=_u..nav%3Dmaui">Analitycs</a>
+       <div className={classes.analyticsButtonWrapper}>
+          <a
+            href="https://analytics.google.com/analytics/web/#/a377929816p516764100/reports/intelligenthome?params=_u..nav%3Dmaui"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={classes.analyticsButton}
+          >
+            <span>Ver en Google Analytics</span>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={classes.analyticsIcon}
+            >
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
         </div>
         {/* MODAL */}
         {modalOpen && (
