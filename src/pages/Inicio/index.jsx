@@ -12,7 +12,7 @@ import { usePostsApi } from "../../hooks/usePostsApi";
 import { useUsersApi } from "../../hooks/useUsersApi"
 const Inicio = () => {
   const navigate = useNavigate();
-  const { useGetMe } = useUsersApi()
+  const { useGetMe, useGetUserRanking } = useUsersApi()
   const { useGetPosts } = usePostsApi()
   const {
     data: ultimaOfert,
@@ -22,6 +22,11 @@ const Inicio = () => {
   } = useGetPosts({limit: 1, post_type_id: 1})
   const { role } = useUser();
   
+  const {
+    data: rankData,
+    isLoading: rankIsLoading,
+  } = useGetUserRanking()
+
   const {
     data: userData,
     isLoading: userIsLoading,
@@ -104,7 +109,7 @@ const Inicio = () => {
 
         <aside className={styles.sidebar}>
           <ContributionPanel contributionsCount={userData?.help_count} imageUrl={registerDog} />
-          <DonatorPanel donorsTotal={200} imageUrl={badgeCat} />
+          <DonatorPanel donorsTotal={rankData} imageUrl={badgeCat} />
         </aside>
       </main>
     </PagesTemplate>
