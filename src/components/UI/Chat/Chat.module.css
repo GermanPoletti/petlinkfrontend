@@ -62,7 +62,15 @@
   position: relative; /* Para posicionar el dropdown */
 }
 
-.postTitle { color: var(--textprimary); font-family: 'Preahvihear', Helvetica; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+.postTitle { 
+  color: var(--textprimary); 
+  font-family: 'Preahvihear', Helvetica; 
+  display: -webkit-box; 
+  -webkit-line-clamp: 1; 
+  -webkit-box-orient: vertical; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
 .username { color: var(--textprimary); font-family: 'Preahvihear', Helvetica; }
 .handshakeButton {
   background: transparent;
@@ -72,7 +80,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* position: relative; Para posicionar el dropdown */
 }
 
 .handshakeIcon {
@@ -84,7 +91,7 @@
 .dropdownMenu {
   position: absolute;
   top: 100%; /* Debajo del botón */
-  right: 0;
+  right: 25%;
   background: var(--accent); /* Color de fondo del dropdown */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -131,9 +138,9 @@
   gap: 0px;
   padding: 0px 16px;
   border-radius: 0px;
-  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); */
   max-height: 100%; /* Limitar la altura máxima para permitir scroll */
   overflow-y: auto; /* Scroll si es necesario */
+  flex: 1; /* Para que ocupe el espacio restante */
 }
 
 /* Estilo para cada item de chat */
@@ -161,7 +168,7 @@
   font-size: 16px;
   font-weight: 600;
   color: #333;
-  word-wrap: break-word; /* Asegura que los nombres largos no salgan del contenedor */
+  word-wrap: break-word;
 }
 
 /* Estilo para mostrar "Cargando..." */
@@ -186,7 +193,7 @@
   border-top: 1px solid #ddd;
 }
 
-/* Estilo del icono de la foto de perfil o avatar (si decides agregarlo) */
+/* Estilo del icono de la foto de perfil o avatar */
 .chatItem .avatar {
   width: 36px;
   height: 36px;
@@ -194,7 +201,6 @@
   margin-right: 12px;
   object-fit: cover;
 }
-
 
 .messages {
   flex: 1;
@@ -255,6 +261,7 @@
     width: 100vw;
   }
 }
+
 /* Fondo para cerrar al hacer click fuera del panel */
 .backdrop {
   position: fixed;
@@ -293,65 +300,103 @@
   cursor: pointer;
 }
 
-.filtersHeader {
-  padding: 8px 16px;
+/* === NUEVO BLOQUE DE FILTROS (push content, no overlay) === */
+.filtersContainer {
+  width: 100%;
   background: var(--primary-green-tabs);
   border-bottom: 1px solid var(--bordersdivs);
-  position: relative;
 }
 
 .filterToggle {
+  width: 100%;
+  padding: 12px 16px;
   background: none;
   border: none;
   color: var(--textprimary);
   font-size: 14px;
   cursor: pointer;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.filterToggle:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .filtersDropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+  width: 100%;
   background: var(--accent);
-  border: 1px solid var(--bordersdivs);
-  border-radius: 0 0 12px 12px;
-  padding: 12px;
-  z-index: 10;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 16px;
+  border-top: 1px solid var(--bordersdivs);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: slideDown 0.25s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 200px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
 }
 
 .filterSearch {
   width: 100%;
-  padding: 8px;
+  padding: 10px 12px;
   border: 1px solid var(--bordersdivs);
   border-radius: 8px;
-  margin-bottom: 12px;
+  font-size: 14px;
+  background: white;
 }
 
 .filterOptions {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   font-size: 14px;
 }
 
 .filterOptions label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
+  padding: 6px 0;
+  color: var(--textprimary);
 }
+
+/* Fin del nuevo bloque de filtros */
 
 .postItem {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 12px;
-  background: #fff;
-  border-bottom: 1px solid #eee;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
   cursor: pointer;
+  color: #333;
 }
+
+.postItem:hover {
+  background-color: var(--primary-green-light);
+  transform: translateY(-2px);
+}
+
 
 .postTitleItem {
   font-weight: 600;
@@ -381,4 +426,59 @@
   font-style: italic;
   background: #f8f8f8;
   border-top: 1px solid var(--bordersdivs);
+}
+
+.senderName {
+  font-size: 12px;
+  color: var(--textsecondary);
+  margin-bottom: 4px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.messageFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--textsecondary);
+  opacity: 0.9;
+}
+
+.senderName {
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.messageDateTime {
+  font-weight: normal;
+}
+
+.received .messageFooter,
+.sent .messageFooter {
+  justify-content: space-between;
+}
+
+.noChats {
+  text-align: center;
+  padding: 20px;
+  color: var(--textsecondary);
+  font-style: italic;
+}
+
+.chatItem.inactive {
+  opacity: 0.6;
+  background-color: #f5f5f5 !important;
+  /* Quitar esta línea: pointer-events: none; */
+}
+
+.chatItem.inactive:hover {
+  background-color: #f0f0f0 !important;
+  transform: translateY(-2px); /* Volvemos a permitir el hover lift */
+}
+
+.chatItem.inactive .chatUser,
+.chatItem.inactive .lastMessagePreview {
+  color: #888;
 }
